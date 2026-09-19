@@ -85,9 +85,9 @@ export const ReminderCard: React.FC<ReminderCardProps> = ({ reminders, onToggle 
       {reminders.map((rem) => (
         <div key={rem.id} className={`reminder-card ${rem.completed ? 'completed' : ''}`}>
           <div className="reminder-card-left">
-            <div className="reminder-time-badge">
+            <div className={`reminder-time-badge ${rem.period}`}>
               <div>{rem.time}</div>
-              <div style={{ fontSize: '0.72rem', fontWeight: 600, opacity: 0.85 }}>{getPeriodLabel(rem.period)}</div>
+              <div style={{ fontSize: '0.74rem', fontWeight: 700, opacity: 0.9 }}>{getPeriodLabel(rem.period)}</div>
             </div>
 
             <div className="reminder-details">

@@ -57,17 +57,8 @@ export const SOSButton: React.FC = () => {
         title="Bấm để gọi cấp cứu hoặc người thân khi gặp nạn"
       >
         <div className="sos-content">
-          <div style={{
-            background: 'white',
-            borderRadius: '50%',
-            width: 48,
-            height: 48,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0
-          }}>
-            <AlertTriangle size={28} color="#DC2626" />
+          <div className="sos-icon-circle">
+            <AlertTriangle size={30} color="#DC2626" />
           </div>
           <div>
             <div className="sos-title">NÚT CỨU HỘ KHẨN CẤP (SOS)</div>

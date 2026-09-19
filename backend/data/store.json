@@ -376,6 +376,12 @@
       "description": "Bác trò chuyện: \"hãy chỉ tôi cách điện bên Zalo\" -> AI phản hồi ân cần.",
       "id": "log-1789839962319",
       "timestamp": "2026-09-19T17:46:02.319Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Chỉ tôi cách gọi Zalo cho con\" -> AI phản hồi ân cần.",
+      "id": "log-1789840207355",
+      "timestamp": "2026-09-19T17:50:07.355Z"
     }
   ],
   "chats": [
@@ -576,6 +582,18 @@
       "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
       "id": "chat-1789839962318",
       "timestamp": "2026-09-19T17:46:02.318Z"
+    },
+    {
+      "sender": "user",
+      "text": "Chỉ tôi cách gọi Zalo cho con",
+      "id": "chat-1789840207354",
+      "timestamp": "2026-09-19T17:50:07.354Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
+      "id": "chat-1789840207354",
+      "timestamp": "2026-09-19T17:50:07.354Z"
     }
   ]
 }

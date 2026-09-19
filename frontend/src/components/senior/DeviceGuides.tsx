@@ -158,29 +158,19 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides, contacts = [
           <div
             key={guide.id}
             onClick={() => handleOpenGuide(guide)}
-            style={{
-              background: '#FFFFFF',
-              border: '2.5px solid #E2E8F0',
-              borderRadius: '18px',
-              padding: '16px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: 'var(--shadow-sm)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between'
-            }}
+            className="guide-card-tile"
           >
             <div>
               <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: '14px',
+                width: 52,
+                height: 52,
+                borderRadius: '16px',
                 background: getGuideBgColor(guide.id),
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginBottom: '10px'
+                marginBottom: '12px',
+                boxShadow: guide.id.includes('zalo') ? '0 6px 16px rgba(2, 132, 199, 0.35)' : guide.id.includes('fraud') ? '0 6px 16px rgba(220, 38, 38, 0.35)' : '0 6px 16px rgba(5, 150, 105, 0.35)'
               }}>
                 {getGuideIcon(guide.id)}
               </div>

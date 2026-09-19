@@ -305,24 +305,28 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       <div className="quick-prompts-list">
         <button
           className="prompt-chip"
+          style={{ background: '#F0F9FF', borderColor: '#BAE6FD', color: '#0369A1' }}
           onClick={() => handlePromptClick("Hôm nay thời tiết thế nào?")}
         >
           🌤️ Hôm nay thời tiết thế nào?
         </button>
         <button
           className="prompt-chip"
+          style={{ background: '#F0FDF4', borderColor: '#BBF7D0', color: '#15803D' }}
           onClick={() => handlePromptClick("Tôi cần uống thuốc gì hôm nay?")}
         >
           💊 Tôi cần uống thuốc gì?
         </button>
         <button
           className="prompt-chip"
+          style={{ background: '#FFFBEB', borderColor: '#FDE68A', color: '#B45309' }}
           onClick={() => handlePromptClick("Đọc tin tức hôm nay cho tôi")}
         >
           📰 Đọc tin tức hôm nay
         </button>
         <button
           className="prompt-chip"
+          style={{ background: '#EFF6FF', borderColor: '#BFDBFE', color: '#1D4ED8' }}
           onClick={() => handlePromptClick("Chỉ tôi cách gọi Zalo cho con")}
         >
           📱 Chỉ tôi cách gọi Zalo
