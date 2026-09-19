@@ -1,7 +1,7 @@
 {
   "seniorProfile": {
     "fullName": "Anh",
-    "preferredGreeting": "Bác",
+    "preferredGreeting": "Ba",
     "birthYear": 1952,
     "healthNotes": "Huyết áp hơi cao, hay quên giờ uống thuốc sau ăn sáng."
   },
@@ -382,6 +382,24 @@
       "description": "Bác trò chuyện: \"Chỉ tôi cách gọi Zalo cho con\" -> AI phản hồi ân cần.",
       "id": "log-1789840207355",
       "timestamp": "2026-09-19T17:50:07.355Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Tôi muốn xem tin tức ngày hôm nay\" -> AI phản hồi ân cần.",
+      "id": "log-1789840793646",
+      "timestamp": "2026-09-19T17:59:53.646Z"
+    },
+    {
+      "type": "sos_alert",
+      "description": "[CẢNH BÁO KHẨN CẤP SOS] Bác đã bấm nút trợ giúp khẩn cấp! Đã kích hoạt liên lạc tới Nguyễn Thị Mai Lan (0912 345 678). Lý do: Bác bấm nút khẩn cấp SOS trên ứng dụng.",
+      "id": "log-1789840807389",
+      "timestamp": "2026-09-19T18:00:07.389Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"nay là ngày mấy\" -> AI phản hồi ân cần.",
+      "id": "log-1789840917157",
+      "timestamp": "2026-09-19T18:01:57.157Z"
     }
   ],
   "chats": [
@@ -594,6 +612,30 @@
       "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
       "id": "chat-1789840207354",
       "timestamp": "2026-09-19T17:50:07.354Z"
+    },
+    {
+      "sender": "user",
+      "text": "Tôi muốn xem tin tức ngày hôm nay",
+      "id": "chat-1789840793624",
+      "timestamp": "2026-09-19T17:59:53.624Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, bây giờ là 00:59, Chủ Nhật, 20 tháng 9, 2026 ạ.",
+      "id": "chat-1789840793645",
+      "timestamp": "2026-09-19T17:59:53.645Z"
+    },
+    {
+      "sender": "user",
+      "text": "nay là ngày mấy",
+      "id": "chat-1789840917155",
+      "timestamp": "2026-09-19T18:01:57.155Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, bây giờ là 01:01, Chủ Nhật, 20 tháng 9, 2026 ạ.",
+      "id": "chat-1789840917156",
+      "timestamp": "2026-09-19T18:01:57.156Z"
     }
   ]
 }

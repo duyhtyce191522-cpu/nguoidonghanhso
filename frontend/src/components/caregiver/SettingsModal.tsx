@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../services/api';
 import { EmergencyContact } from '../../types';
-import { Save, Plus, Trash2, Phone, User, Check, KeyRound } from 'lucide-react';
+import { Save, Plus, Trash2, Phone, User, Check, KeyRound, Bell, BellRing } from 'lucide-react';
+import { notificationService } from '../../services/notificationService';
 
 interface SettingsModalProps {
   contacts: EmergencyContact[];
@@ -83,8 +84,102 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
     }
   };
 
+  const [notifPermission, setNotifPermission] = useState<string>(() => {
+    return notificationService.getPermission();
+  });
+  const [isTestSent, setIsTestSent] = useState(false);
+
+  const handleRequestNotification = async () => {
+    const granted = await notificationService.requestPermission();
+    setNotifPermission(granted ? 'granted' : 'denied');
+  };
+
+  const handleSendTestNotification = async () => {
+    setIsTestSent(true);
+    await notificationService.sendTestNotification();
+    setTimeout(() => setIsTestSent(false), 3000);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+      {/* Web Push Notification Settings */}
+      <div
+        style={{
+          background: '#FFFFFF',
+          border: '1.5px solid #CBD5E1',
+          borderRadius: '16px',
+          padding: '18px',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+          <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <BellRing size={20} color="#2563EB" />
+            <span>Thông Báo Đẩy & Chuông Nhắc Uống Thuốc</span>
+          </h4>
+
+          <span style={{
+            fontSize: '0.82rem',
+            padding: '3px 10px',
+            borderRadius: '9999px',
+            fontWeight: 800,
+            background: notifPermission === 'granted' ? '#DCFCE7' : '#FEF2F2',
+            color: notifPermission === 'granted' ? '#166534' : '#991B1B',
+            border: notifPermission === 'granted' ? '1px solid #86EFAC' : '1px solid #FECACA'
+          }}>
+            {notifPermission === 'granted' ? '✓ Đã Bật Quyền' : 'Chưa Cấp Quyền'}
+          </span>
+        </div>
+
+        <p style={{ fontSize: '0.88rem', color: '#64748B', marginBottom: '14px', lineHeight: 1.45 }}>
+          Khi đến giờ thuốc, điện thoại sẽ tự động rung và hiện thông báo chuẩn hệ thống. Bấm vào thông báo sẽ mở ứng dụng và AI cất giọng nhắc bác.
+        </p>
+
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          {notifPermission !== 'granted' ? (
+            <button
+              onClick={handleRequestNotification}
+              style={{
+                padding: '10px 18px',
+                background: '#2563EB',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <Bell size={16} />
+              <span>Bật Thông Báo Trên Máy</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleSendTestNotification}
+              style={{
+                padding: '10px 18px',
+                background: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <BellRing size={16} />
+              <span>{isTestSent ? '✓ Đã Bắn Thông Báo Thử!' : '🧪 Thử Nghiệm Chuông & Rung Ngay'}</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* PIN Protection Setting */}
       <form
         onSubmit={handleSavePin}

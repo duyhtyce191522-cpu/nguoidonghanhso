@@ -10,6 +10,8 @@ import { NewsReader } from './components/senior/NewsReader';
 import { DeviceGuides } from './components/senior/DeviceGuides';
 import { SOSButton } from './components/senior/SOSButton';
 import { CaregiverHome } from './components/caregiver/CaregiverHome';
+import { PWAInstallBanner } from './components/common/PWAInstallBanner';
+import { notificationService } from './services/notificationService';
 
 export const AppContent: React.FC = () => {
   const { mode } = useApp();
@@ -42,6 +44,14 @@ export const AppContent: React.FC = () => {
     fetchData();
   }, []);
 
+  // Run notification scheduler in background for active reminders
+  useEffect(() => {
+    if (reminders.length > 0) {
+      notificationService.startScheduler(() => reminders);
+    }
+    return () => notificationService.stopScheduler();
+  }, [reminders]);
+
   const handleToggleReminder = async (id: string) => {
     try {
       const updated = await api.toggleReminder(id);
@@ -56,6 +66,9 @@ export const AppContent: React.FC = () => {
   return (
     <DeviceFrame>
       <div className="app-container">
+        {/* PWA Home Screen Install Banner */}
+        <PWAInstallBanner />
+
         <Header />
 
         <main className="main-content">

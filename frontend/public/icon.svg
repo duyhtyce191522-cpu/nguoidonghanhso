@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EFF6FF"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background Rounded Rect -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+
+  <!-- Inner Soft Glow Circle -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="4"/>
+
+  <!-- Medical Cross / Heart Icon -->
+  <g filter="url(#shadow)" transform="translate(256, 256) scale(0.9) translate(-256, -256)">
+    <!-- Heart Base -->
+    <path d="M256,420 C256,420 80,310 80,195 C80,125 135,70 205,70 C240,70 256,105 256,105 C256,105 272,70 307,70 C377,70 432,125 432,195 C432,310 256,420 256,420 Z" fill="url(#heartGrad)"/>
+    
+    <!-- AI Pulse Line in Center -->
+    <path d="M160,205 L215,205 L235,160 L260,250 L285,185 L305,205 L352,205" fill="none" stroke="#2563EB" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

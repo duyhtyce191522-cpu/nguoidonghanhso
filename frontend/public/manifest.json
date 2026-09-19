@@ -1,0 +1,19 @@
+{
+  "name": "Người Đồng Hành Số - Trợ Lý AI Cho Người Cao Tuổi",
+  "short_name": "Đồng Hành Số",
+  "description": "Ứng dụng AI thông minh bằng giọng nói hỗ trợ trò chuyện, nhắc uống thuốc và cẩm nang cho người lớn tuổi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F7FB",
+  "theme_color": "#2563EB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health", "lifestyle"]
+}
