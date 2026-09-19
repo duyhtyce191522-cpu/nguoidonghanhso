@@ -352,6 +352,30 @@
       "description": "Bác trò chuyện: \"Chỉ tôi cách gọi Zalo cho con\" -> AI phản hồi ân cần.",
       "id": "log-1789839722065",
       "timestamp": "2026-09-19T17:42:02.065Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi ân cần.",
+      "id": "log-1789839918674",
+      "timestamp": "2026-09-19T17:45:18.674Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"hãy chỉ tôi cách\" -> AI phản hồi ân cần.",
+      "id": "log-1789839929621",
+      "timestamp": "2026-09-19T17:45:29.621Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"hãy chỉ tôi cách qua Zalo\" -> AI phản hồi ân cần.",
+      "id": "log-1789839934927",
+      "timestamp": "2026-09-19T17:45:34.927Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"hãy chỉ tôi cách điện bên Zalo\" -> AI phản hồi ân cần.",
+      "id": "log-1789839962319",
+      "timestamp": "2026-09-19T17:46:02.319Z"
     }
   ],
   "chats": [
@@ -504,6 +528,54 @@
       "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
       "id": "chat-1789839722062",
       "timestamp": "2026-09-19T17:42:02.062Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789839918671",
+      "timestamp": "2026-09-19T17:45:18.671Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, thời tiết hôm nay ấm áp, gió mát và không khí rất dễ chịu. Chiều nay bác có thể ra sân hoặc ban công hít thở khí trời và đi dạo 15 phút cho khỏe gân cốt ạ!",
+      "id": "chat-1789839918673",
+      "timestamp": "2026-09-19T17:45:18.673Z"
+    },
+    {
+      "sender": "user",
+      "text": "hãy chỉ tôi cách",
+      "id": "chat-1789839929618",
+      "timestamp": "2026-09-19T17:45:29.618Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, cháu đã nghe bác nói rồi ạ. Cháu luôn đồng hành cùng bác từng ngày. Bác muốn cháu đọc tin tức hôm nay hay nhắc nhở lịch sinh hoạt tiếp theo cho bác ạ?",
+      "id": "chat-1789839929619",
+      "timestamp": "2026-09-19T17:45:29.619Z"
+    },
+    {
+      "sender": "user",
+      "text": "hãy chỉ tôi cách qua Zalo",
+      "id": "chat-1789839934926",
+      "timestamp": "2026-09-19T17:45:34.926Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
+      "id": "chat-1789839934927",
+      "timestamp": "2026-09-19T17:45:34.927Z"
+    },
+    {
+      "sender": "user",
+      "text": "hãy chỉ tôi cách điện bên Zalo",
+      "id": "chat-1789839962317",
+      "timestamp": "2026-09-19T17:46:02.317Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
+      "id": "chat-1789839962318",
+      "timestamp": "2026-09-19T17:46:02.318Z"
     }
   ]
 }

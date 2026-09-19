@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from './context/AppContext';
 import { api } from './services/api';
-import { Reminder, NewsItem, GuideItem } from './types';
+import { Reminder, NewsItem, GuideItem, EmergencyContact } from './types';
 import { Header } from './components/common/Header';
 import { DeviceFrame } from './components/common/DeviceFrame';
 import { VoiceAssistant } from './components/senior/VoiceAssistant';
@@ -16,18 +16,21 @@ export const AppContent: React.FC = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
   const [guides, setGuides] = useState<GuideItem[]>([]);
+  const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     try {
-      const [remList, newsList, guideList] = await Promise.all([
+      const [remList, newsList, guideList, contactList] = await Promise.all([
         api.getReminders(),
         api.getNews(),
-        api.getGuides()
+        api.getGuides(),
+        api.getContacts()
       ]);
       setReminders(remList);
       setNews(newsList);
       setGuides(guideList);
+      setContacts(contactList);
     } catch (e) {
       console.error("Initial fetch error", e);
     } finally {
@@ -79,7 +82,7 @@ export const AppContent: React.FC = () => {
 
               {/* Step-by-Step Tech Guides */}
               <div id="guides-section">
-                <DeviceGuides guides={guides} />
+                <DeviceGuides guides={guides} contacts={contacts} />
               </div>
 
               {/* Elderly News & Weather Reader */}

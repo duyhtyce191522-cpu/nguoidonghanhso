@@ -266,6 +266,36 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
             </>
           )}
         </div>
+
+        {/* Quick Zalo Trigger if mentioned */}
+        {(assistantReply.toLowerCase().includes('zalo') || transcript.toLowerCase().includes('zalo')) && (
+          <button
+            onClick={() => {
+              speechService.stopSpeaking();
+              speechService.speak("Dạ, cháu đang mở ứng dụng Zalo để bác gọi cho con gái Mai Lan đây ạ!");
+              window.open('https://zalo.me/0912345678', '_blank');
+            }}
+            style={{
+              marginTop: '12px',
+              width: '100%',
+              padding: '12px 18px',
+              background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '12px',
+              fontWeight: 900,
+              fontSize: '1.02rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
+            }}
+          >
+            <span>📱 BẤM ĐỂ MỞ ZALO GỌI CHO CON GÁI NGAY</span>
+          </button>
+        )}
       </div>
 
       {/* Quick Prompts For Fast Interaction */}

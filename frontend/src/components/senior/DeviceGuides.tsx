@@ -1,15 +1,55 @@
-import React, { useState } from 'react';
-import { GuideItem } from '../../types';
+import React, { useState, useEffect } from 'react';
+import { GuideItem, EmergencyContact } from '../../types';
 import { speechService } from '../../services/speechService';
-import { BookOpen, Video, ShieldAlert, Thermometer, ChevronRight, X, Volume2, ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+  BookOpen,
+  Video,
+  ShieldAlert,
+  Thermometer,
+  ChevronRight,
+  X,
+  Volume2,
+  ArrowLeft,
+  ArrowRight,
+  PhoneCall,
+  ExternalLink,
+  CheckCircle2
+} from 'lucide-react';
 
 interface DeviceGuidesProps {
   guides: GuideItem[];
+  contacts?: EmergencyContact[];
 }
 
-export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
+export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides, contacts = [] }) => {
   const [activeGuide, setActiveGuide] = useState<GuideItem | null>(null);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
+
+  // Zalo calling & auto-redirect states
+  const [selectedContactPhone, setSelectedContactPhone] = useState<string>('');
+  const [zaloCountdown, setZaloCountdown] = useState<number | null>(null);
+  const [isZaloOpened, setIsZaloOpened] = useState(false);
+
+  // Set default contact
+  useEffect(() => {
+    if (contacts.length > 0 && !selectedContactPhone) {
+      const primary = contacts.find(c => c.isPrimary) || contacts[0];
+      setSelectedContactPhone(primary.phone);
+    }
+  }, [contacts, selectedContactPhone]);
+
+  // Handle countdown when on the last step of Zalo guide
+  useEffect(() => {
+    let timer: any;
+    if (zaloCountdown !== null && zaloCountdown > 0) {
+      timer = setTimeout(() => {
+        setZaloCountdown(zaloCountdown - 1);
+      }, 1000);
+    } else if (zaloCountdown === 0) {
+      handleTriggerZaloCall();
+    }
+    return () => clearTimeout(timer);
+  }, [zaloCountdown]);
 
   const getGuideIcon = (id: string) => {
     if (id.includes('zalo')) return <Video size={28} color="white" />;
@@ -26,6 +66,9 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
   const handleOpenGuide = (guide: GuideItem) => {
     setActiveGuide(guide);
     setActiveStepIndex(0);
+    setZaloCountdown(null);
+    setIsZaloOpened(false);
+
     // Read the first step aloud automatically
     const firstStep = guide.steps[0];
     if (firstStep) {
@@ -38,13 +81,28 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
     speechService.speak(stepText);
   };
 
+  const currentContact = contacts.find(c => c.phone === selectedContactPhone) || contacts[0] || {
+    name: 'Con gái Mai Lan',
+    phone: '0912 345 678',
+    relation: 'Con gái cả'
+  };
+
   const handleNextStep = () => {
     if (!activeGuide) return;
     if (activeStepIndex < activeGuide.steps.length - 1) {
       const nextIdx = activeStepIndex + 1;
       setActiveStepIndex(nextIdx);
       const step = activeGuide.steps[nextIdx];
-      handleReadStep(`Bước ${step.stepNumber}: ${step.title}. ${step.instruction}`);
+
+      // If entering final step of Zalo guide, trigger auto-countdown
+      if (activeGuide.id.includes('zalo') && nextIdx === activeGuide.steps.length - 1) {
+        handleReadStep(
+          `Bước ${step.stepNumber}: ${step.title}. ${step.instruction}. Bác đã hoàn thành các bước! Ứng dụng sẽ tự động chuyển sang Zalo gọi cho ${currentContact.name} sau 4 giây nữa nhé!`
+        );
+        setZaloCountdown(4);
+      } else {
+        handleReadStep(`Bước ${step.stepNumber}: ${step.title}. ${step.instruction}`);
+      }
     }
   };
 
@@ -53,12 +111,34 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
     if (activeStepIndex > 0) {
       const prevIdx = activeStepIndex - 1;
       setActiveStepIndex(prevIdx);
+      setZaloCountdown(null);
       const step = activeGuide.steps[prevIdx];
       handleReadStep(`Bước ${step.stepNumber}: ${step.title}. ${step.instruction}`);
     }
   };
 
+  const handleTriggerZaloCall = () => {
+    setZaloCountdown(null);
+    setIsZaloOpened(true);
+
+    const cleanPhone = (selectedContactPhone || currentContact.phone || '0912345678').replace(/\s+/g, '');
+    const zaloUrl = `https://zalo.me/${cleanPhone}`;
+
+    speechService.stopSpeaking();
+    speechService.speak(`Dạ, cháu đang chuyển sang Zalo để bác gọi cho ${currentContact.name} đây ạ!`);
+
+    // Open Zalo in a new tab or trigger Zalo native app
+    window.open(zaloUrl, '_blank');
+  };
+
+  const handleCancelAutoZalo = () => {
+    setZaloCountdown(null);
+    speechService.stopSpeaking();
+  };
+
   const handleClose = () => {
+    setZaloCountdown(null);
+    setIsZaloOpened(false);
     speechService.stopSpeaking();
     setActiveGuide(null);
   };
@@ -123,7 +203,9 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
               borderTop: '1px solid #F1F5F9',
               paddingTop: '10px'
             }}>
-              <span>Xem hướng dẫn ({guide.steps.length} bước)</span>
+              <span>
+                {guide.id.includes('zalo') ? 'Xem & Gọi Zalo ngay' : `Xem hướng dẫn (${guide.steps.length} bước)`}
+              </span>
               <ChevronRight size={18} />
             </div>
           </div>
@@ -167,6 +249,7 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
                   key={s.stepNumber}
                   onClick={() => {
                     setActiveStepIndex(idx);
+                    setZaloCountdown(null);
                     handleReadStep(`Bước ${s.stepNumber}: ${s.title}. ${s.instruction}`);
                   }}
                   style={{
@@ -185,6 +268,9 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
             {/* Active Step Card */}
             {(() => {
               const currentStep = activeGuide.steps[activeStepIndex];
+              const isLastStep = activeStepIndex === activeGuide.steps.length - 1;
+              const isZaloGuide = activeGuide.id.includes('zalo');
+
               return (
                 <div
                   style={{
@@ -248,9 +334,147 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides }) => {
                       borderRadius: '0 8px 8px 0',
                       fontSize: '0.9rem',
                       color: '#92400E',
-                      fontWeight: 600
+                      fontWeight: 600,
+                      marginBottom: '10px'
                     }}>
                       💡 <strong>Mẹo nhỏ:</strong> {currentStep.tip}
+                    </div>
+                  )}
+
+                  {/* SPECIAL AUTOMATIC ZALO CALL CARD ON FINAL STEP */}
+                  {isZaloGuide && isLastStep && (
+                    <div style={{
+                      marginTop: '16px',
+                      background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)',
+                      border: '2.5px solid #3B82F6',
+                      borderRadius: '16px',
+                      padding: '16px',
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.15)'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <div style={{
+                          background: '#0284C7',
+                          color: 'white',
+                          borderRadius: '8px',
+                          padding: '4px 8px',
+                          fontSize: '0.82rem',
+                          fontWeight: 800
+                        }}>
+                          ZALO
+                        </div>
+                        <strong style={{ fontSize: '1.05rem', color: '#1E3A8A' }}>
+                          Tự Động Kết Nối Zalo Người Thân
+                        </strong>
+                      </div>
+
+                      {/* Select Contact if multiple */}
+                      {contacts.length > 1 && (
+                        <div style={{ marginBottom: '10px' }}>
+                          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '4px' }}>
+                            Chọn người muốn gọi:
+                          </label>
+                          <select
+                            value={selectedContactPhone}
+                            onChange={(e) => {
+                              setSelectedContactPhone(e.target.value);
+                              setZaloCountdown(4);
+                            }}
+                            className="form-select"
+                            style={{ padding: '8px 12px', fontSize: '0.95rem' }}
+                          >
+                            {contacts.map(c => (
+                              <option key={c.id} value={c.phone}>
+                                {c.name} ({c.relation}) - {c.phone}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      {/* Countdown & Status */}
+                      {zaloCountdown !== null && zaloCountdown > 0 && (
+                        <div style={{
+                          background: '#FEF3C7',
+                          border: '1.5px solid #FCD34D',
+                          borderRadius: '12px',
+                          padding: '10px 14px',
+                          margin: '10px 0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '10px'
+                        }}>
+                          <div style={{ fontSize: '0.95rem', color: '#92400E', fontWeight: 700 }}>
+                            ⏱️ Đang tự động chuyển sang Zalo sau: <strong>{zaloCountdown} giây...</strong>
+                          </div>
+                          <button
+                            onClick={handleCancelAutoZalo}
+                            style={{
+                              background: '#FDE68A',
+                              border: 'none',
+                              padding: '6px 12px',
+                              borderRadius: '8px',
+                              fontSize: '0.82rem',
+                              fontWeight: 800,
+                              color: '#78350F',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Dừng lại
+                          </button>
+                        </div>
+                      )}
+
+                      {isZaloOpened && (
+                        <div style={{
+                          background: '#DCFCE7',
+                          border: '1.5px solid #86EFAC',
+                          borderRadius: '12px',
+                          padding: '10px 14px',
+                          margin: '10px 0',
+                          color: '#166534',
+                          fontWeight: 700,
+                          fontSize: '0.95rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}>
+                          <CheckCircle2 size={18} />
+                          <span>Đã mở Zalo để kết nối tới {currentContact.name}!</span>
+                        </div>
+                      )}
+
+                      {/* Big Action Button to Open Zalo */}
+                      <button
+                        onClick={handleTriggerZaloCall}
+                        style={{
+                          width: '100%',
+                          minHeight: '56px',
+                          padding: '12px 20px',
+                          borderRadius: '14px',
+                          background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                          color: 'white',
+                          border: 'none',
+                          fontSize: '1.1rem',
+                          fontWeight: 900,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '10px',
+                          boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)',
+                          transition: 'all 0.15s ease',
+                          marginTop: '8px'
+                        }}
+                      >
+                        <Video size={24} />
+                        <span>MỞ ZALO GỌI CHO {currentContact.name.toUpperCase()} NGAY</span>
+                        <ExternalLink size={18} />
+                      </button>
+
+                      <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '0.8rem', color: '#64748B' }}>
+                        (Bấm nút này sẽ tự động mở ứng dụng Zalo trên điện thoại để bác gọi nói chuyện)
+                      </div>
                     </div>
                   )}
                 </div>
