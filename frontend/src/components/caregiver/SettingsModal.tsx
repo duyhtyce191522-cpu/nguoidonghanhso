@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../services/api';
 import { EmergencyContact } from '../../types';
-import { Save, Plus, Trash2, Phone, User, Check } from 'lucide-react';
+import { Save, Plus, Trash2, Phone, User, Check, KeyRound } from 'lucide-react';
 
 interface SettingsModalProps {
   contacts: EmergencyContact[];
@@ -10,12 +10,17 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefreshContacts }) => {
-  const { profile, setProfile } = useApp();
+  const { profile, setProfile, caregiverPin, setCaregiverPin } = useApp();
   const [fullName, setFullName] = useState(profile.fullName);
   const [preferredGreeting, setPreferredGreeting] = useState(profile.preferredGreeting);
   const [birthYear, setBirthYear] = useState(profile.birthYear);
   const [healthNotes, setHealthNotes] = useState(profile.healthNotes);
   const [isSaved, setIsSaved] = useState(false);
+
+  // Caregiver PIN management
+  const [newPin, setNewPin] = useState(caregiverPin);
+  const [isPinSaved, setIsPinSaved] = useState(false);
+  const [pinError, setPinError] = useState('');
 
   // New contact form
   const [newContactName, setNewContactName] = useState('');
@@ -37,6 +42,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
     } catch (e) {
       console.error("Save profile error", e);
     }
+  };
+
+  const handleSavePin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{4}$/.test(newPin)) {
+      setPinError('Mã PIN phải gồm đúng 4 chữ số (0-9)');
+      return;
+    }
+    setCaregiverPin(newPin);
+    setPinError('');
+    setIsPinSaved(true);
+    setTimeout(() => setIsPinSaved(false), 2500);
   };
 
   const handleAddContact = async (e: React.FormEvent) => {
@@ -67,24 +84,92 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+      {/* PIN Protection Setting */}
+      <form
+        onSubmit={handleSavePin}
+        style={{
+          background: '#FFFFFF',
+          border: '1.5px solid #CBD5E1',
+          borderRadius: '16px',
+          padding: '18px',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <KeyRound size={20} color="#D97706" />
+          <span>Mã PIN Khóa Chế Độ Người Nhà</span>
+        </h4>
+        <p style={{ fontSize: '0.88rem', color: '#64748B', marginBottom: '14px' }}>
+          Mã PIN này được dùng để bảo vệ quyền truy cập, tránh người lớn tuổi bấm nhầm vào trang quản trị.
+        </p>
+
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ width: '140px' }}>
+            <input
+              className="form-input"
+              type="password"
+              maxLength={4}
+              value={newPin}
+              onChange={(e) => {
+                setNewPin(e.target.value);
+                setPinError('');
+              }}
+              style={{ textAlign: 'center', fontSize: '1.3rem', letterSpacing: '0.3em', fontWeight: 800 }}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              padding: '10px 18px',
+              background: '#0284C7',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {isPinSaved ? (
+              <>
+                <Check size={16} />
+                <span>Đã Đổi Mã PIN!</span>
+              </>
+            ) : (
+              <span>Cập Nhật PIN</span>
+            )}
+          </button>
+        </div>
+
+        {pinError && (
+          <div style={{ color: '#DC2626', fontSize: '0.85rem', fontWeight: 700, marginTop: '8px' }}>
+            {pinError}
+          </div>
+        )}
+      </form>
+
       {/* Profile Form */}
       <form
         onSubmit={handleSaveProfile}
         style={{
           background: '#FFFFFF',
-          border: '1px solid #CBD5E1',
+          border: '1.5px solid #CBD5E1',
           borderRadius: '16px',
-          padding: '20px',
+          padding: '18px',
           boxShadow: 'var(--shadow-sm)'
         }}
       >
-        <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <User size={20} color="#0284C7" />
-          <span>Hồ Sơ & Xưng Hô Của Người Lớn Tuổi</span>
+          <span>Hồ Sơ & Cách Xưng Hô Của Người Lớn Tuổi</span>
         </h4>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
           <div className="form-group">
             <label className="form-label">Họ và tên</label>
             <input
@@ -137,11 +222,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
             background: '#0284C7',
             color: 'white',
             border: 'none',
-            padding: '10px 20px',
+            padding: '10px 18px',
             borderRadius: '10px',
             fontWeight: 800,
             cursor: 'pointer',
-            marginTop: '8px'
+            marginTop: '4px'
           }}
         >
           {isSaved ? (
@@ -161,18 +246,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
       {/* Emergency Contacts Management */}
       <div style={{
         background: '#FFFFFF',
-        border: '1px solid #CBD5E1',
+        border: '1.5px solid #CBD5E1',
         borderRadius: '16px',
-        padding: '20px',
+        padding: '18px',
         boxShadow: 'var(--shadow-sm)'
       }}>
-        <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#991B1B', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#991B1B', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Phone size={20} color="#DC2626" />
           <span>Danh Bạ Khẩn Cấp (Nút SOS Sẽ Gọi Đến Đây)</span>
         </h4>
 
         {/* Existing Contacts List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
           {contacts.map((c) => (
             <div
               key={c.id}
@@ -180,25 +265,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
                 background: '#F8FAFC',
                 border: '1px solid #E2E8F0',
                 borderRadius: '12px',
-                padding: '12px 16px',
+                padding: '10px 14px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between'
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <strong style={{ fontSize: '1rem', color: '#0F172A' }}>{c.name}</strong>
-                  <span style={{ fontSize: '0.8rem', background: '#E2E8F0', padding: '2px 8px', borderRadius: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <strong style={{ fontSize: '0.95rem', color: '#0F172A' }}>{c.name}</strong>
+                  <span style={{ fontSize: '0.78rem', background: '#E2E8F0', padding: '2px 6px', borderRadius: '6px' }}>
                     {c.relation}
                   </span>
                   {c.isPrimary && (
-                    <span style={{ fontSize: '0.8rem', background: '#FEF2F2', color: '#DC2626', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>
-                      Ưu tiên gọi trước
+                    <span style={{ fontSize: '0.78rem', background: '#FEF2F2', color: '#DC2626', padding: '2px 6px', borderRadius: '6px', fontWeight: 700 }}>
+                      Ưu tiên
                     </span>
                   )}
                 </div>
-                <div style={{ fontSize: '0.95rem', color: '#0284C7', fontWeight: 700, marginTop: '2px' }}>
+                <div style={{ fontSize: '0.9rem', color: '#0284C7', fontWeight: 700, marginTop: '2px' }}>
                   {c.phone}
                 </div>
               </div>
@@ -214,16 +299,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
                 }}
                 title="Xóa người liên hệ"
               >
-                <Trash2 size={18} />
+                <Trash2 size={16} />
               </button>
             </div>
           ))}
         </div>
 
         {/* Add Contact Form */}
-        <form onSubmit={handleAddContact} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', alignItems: 'flex-end' }}>
+        <form onSubmit={handleAddContact} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', alignItems: 'flex-end' }}>
           <div>
-            <label className="form-label" style={{ fontSize: '0.85rem' }}>Tên người liên hệ</label>
+            <label className="form-label" style={{ fontSize: '0.82rem' }}>Tên người nhận</label>
             <input
               className="form-input"
               placeholder="VD: Con gái Mai Lan"
@@ -234,7 +319,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
           </div>
 
           <div>
-            <label className="form-label" style={{ fontSize: '0.85rem' }}>Quan hệ</label>
+            <label className="form-label" style={{ fontSize: '0.82rem' }}>Quan hệ</label>
             <input
               className="form-input"
               placeholder="VD: Con gái cả"
@@ -244,7 +329,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
           </div>
 
           <div>
-            <label className="form-label" style={{ fontSize: '0.85rem' }}>Số điện thoại</label>
+            <label className="form-label" style={{ fontSize: '0.82rem' }}>Số điện thoại</label>
             <input
               className="form-input"
               placeholder="VD: 0912 345 678"
@@ -257,20 +342,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
           <button
             type="submit"
             style={{
-              padding: '12px 18px',
+              padding: '10px 16px',
               background: '#059669',
               color: 'white',
               border: 'none',
-              borderRadius: '12px',
+              borderRadius: '10px',
               fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px'
+              gap: '4px'
             }}
           >
-            <Plus size={18} />
+            <Plus size={16} />
             <span>Thêm Số</span>
           </button>
         </form>

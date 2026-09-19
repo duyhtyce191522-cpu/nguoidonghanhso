@@ -12,10 +12,10 @@ export const NewsReader: React.FC<NewsReaderProps> = ({ newsList }) => {
 
   const getCategoryIcon = (category: NewsItem['category']) => {
     switch (category) {
-      case 'weather': return <CloudSun size={20} color="#0284C7" />;
-      case 'health': return <HeartPulse size={20} color="#059669" />;
-      case 'tips': return <ShieldAlert size={20} color="#DC2626" />;
-      default: return <Sparkles size={20} color="#D97706" />;
+      case 'weather': return <CloudSun size={18} color="#0284C7" />;
+      case 'health': return <HeartPulse size={18} color="#059669" />;
+      case 'tips': return <ShieldAlert size={18} color="#DC2626" />;
+      default: return <Sparkles size={18} color="#D97706" />;
     }
   };
 
@@ -39,29 +39,34 @@ export const NewsReader: React.FC<NewsReaderProps> = ({ newsList }) => {
     setReadingId(item.id);
 
     const fullTextToRead = `${item.title}. ${item.audioText || item.summary}`;
-    speechService.speak(fullTextToRead, () => {
-      setReadingId(null);
+    speechService.speak(fullTextToRead, {
+      onEnd: () => {
+        setReadingId(null);
+      },
+      onError: () => {
+        setReadingId(null);
+      }
     });
   };
 
   return (
-    <div style={{ marginTop: '30px' }}>
+    <div id="news-section" style={{ marginTop: '24px' }}>
       <div className="section-header">
         <div className="section-title">
-          <Newspaper size={28} color="#1E40AF" />
-          <span>Bản Tin Sức Khỏe & Đời Sống Chọn Lọc</span>
+          <Newspaper size={24} color="#1E40AF" />
+          <span>Bản Tin Sức Khỏe & Đời Sống</span>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         {newsList.map((item) => (
           <div
             key={item.id}
             style={{
               background: '#FFFFFF',
               border: '2px solid #E2E8F0',
-              borderRadius: '20px',
-              padding: '20px',
+              borderRadius: '18px',
+              padding: '16px',
               boxShadow: 'var(--shadow-sm)'
             }}
           >
@@ -69,11 +74,11 @@ export const NewsReader: React.FC<NewsReaderProps> = ({ newsList }) => {
               <span style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '5px',
                 background: '#F1F5F9',
-                padding: '4px 12px',
+                padding: '3px 10px',
                 borderRadius: '9999px',
-                fontSize: '0.85rem',
+                fontSize: '0.8rem',
                 fontWeight: 700,
                 color: '#334155'
               }}>
@@ -81,16 +86,16 @@ export const NewsReader: React.FC<NewsReaderProps> = ({ newsList }) => {
                 {getCategoryName(item.category)}
               </span>
 
-              <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
                 {item.source} • {item.date}
               </span>
             </div>
 
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px', lineHeight: 1.4 }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px', lineHeight: 1.35 }}>
               {item.title}
             </h3>
 
-            <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: 1.6, marginBottom: '14px' }}>
+            <p style={{ fontSize: '0.98rem', color: '#334155', lineHeight: 1.55, marginBottom: '12px' }}>
               {item.summary}
             </p>
 
@@ -100,12 +105,12 @@ export const NewsReader: React.FC<NewsReaderProps> = ({ newsList }) => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '10px 20px',
+                padding: '9px 18px',
                 borderRadius: '9999px',
                 border: 'none',
                 background: readingId === item.id ? '#FEE2E2' : '#EFF6FF',
                 color: readingId === item.id ? '#DC2626' : '#1D4ED8',
-                fontSize: '1rem',
+                fontSize: '0.92rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
@@ -113,12 +118,12 @@ export const NewsReader: React.FC<NewsReaderProps> = ({ newsList }) => {
             >
               {readingId === item.id ? (
                 <>
-                  <Square size={18} fill="#DC2626" />
+                  <Square size={16} fill="#DC2626" />
                   <span>Dừng đọc</span>
                 </>
               ) : (
                 <>
-                  <Volume2 size={18} />
+                  <Volume2 size={16} />
                   <span>🔊 Bấm để nghe đọc to</span>
                 </>
               )}

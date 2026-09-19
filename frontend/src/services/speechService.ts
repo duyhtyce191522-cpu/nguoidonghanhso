@@ -1,16 +1,15 @@
 // Speech Recognition & Synthesis Service for Vietnamese Elderly Companion
 
-// Web Audio sound synthesizer for instant audio feedback without external mp3 files
 class AudioFeedback {
   private ctx: AudioContext | null = null;
 
-  private getContext(): AudioContext {
+  public getContext(): AudioContext {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       this.ctx = new AudioCtx();
     }
     if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
     return this.ctx;
   }
@@ -33,7 +32,7 @@ class AudioFeedback {
       osc2.frequency.setValueAtTime(659.25, now + 0.15);
       osc2.frequency.exponentialRampToValueAtTime(783.99, now + 0.35); // G5
 
-      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.setValueAtTime(0.18, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
 
       osc1.connect(gain);
@@ -61,7 +60,7 @@ class AudioFeedback {
       osc.frequency.setValueAtTime(440, now);
       osc.frequency.setValueAtTime(880, now + 0.08);
 
-      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.setValueAtTime(0.12, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
 
       osc.connect(gain);
@@ -87,7 +86,7 @@ class AudioFeedback {
       osc.frequency.setValueAtTime(440, now + 0.2);
       osc.frequency.setValueAtTime(880, now + 0.4);
 
-      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.setValueAtTime(0.25, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
 
       osc.connect(gain);
@@ -107,10 +106,29 @@ export class SpeechService {
   private recognition: any = null;
   private isListening = false;
   private selectedVoice: SpeechSynthesisVoice | null = null;
+  private currentUtterance: SpeechSynthesisUtterance | null = null;
+  private isAudioUnlocked = false;
 
   constructor() {
     this.initSpeechRecognition();
     this.initSpeechSynthesis();
+  }
+
+  // Unlock mobile browser audio restriction on first user gesture
+  unlockAudio() {
+    if (this.isAudioUnlocked) return;
+    try {
+      audioFeedback.getContext();
+      if ('speechSynthesis' in window) {
+        // Speak empty utterance to prime mobile speech synthesis
+        const silentUtterance = new SpeechSynthesisUtterance(' ');
+        silentUtterance.volume = 0.01;
+        window.speechSynthesis.speak(silentUtterance);
+      }
+      this.isAudioUnlocked = true;
+    } catch (e) {
+      console.warn("Failed to unlock audio:", e);
+    }
   }
 
   private initSpeechRecognition() {
@@ -128,13 +146,25 @@ export class SpeechService {
     if ('speechSynthesis' in window) {
       const updateVoices = () => {
         const voices = window.speechSynthesis.getVoices();
-        // Look for Vietnamese voice first (e.g. Google Tiếng Việt, Microsoft HoaiMy, etc.)
-        const viVoice = voices.find(v => v.lang.startsWith('vi') || v.lang.includes('VIE') || v.name.toLowerCase().includes('vietnam') || v.name.toLowerCase().includes('hoaimy') || v.name.toLowerCase().includes('namminh'));
-        if (viVoice) {
-          this.selectedVoice = viVoice;
-        } else if (voices.length > 0) {
-          this.selectedVoice = voices[0];
-        }
+        if (!voices || voices.length === 0) return;
+
+        // 1. First priority: High-quality natural Vietnamese voices
+        const naturalViVoice = voices.find(v => {
+          const name = v.name.toLowerCase();
+          const lang = v.lang.toLowerCase();
+          return (
+            lang.startsWith('vi') &&
+            (name.includes('natural') || name.includes('online') || name.includes('google') || name.includes('hoaimy') || name.includes('linh') || name.includes('an'))
+          );
+        });
+
+        // 2. Second priority: Any voice with lang starting with 'vi'
+        const anyViVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi'));
+
+        // 3. Fallback: Any voice matching Vietnam
+        const viNamedVoice = voices.find(v => v.name.toLowerCase().includes('vietnam') || v.name.toLowerCase().includes('tiếng việt'));
+
+        this.selectedVoice = naturalViVoice || anyViVoice || viNamedVoice || voices[0];
       };
 
       updateVoices();
@@ -142,6 +172,10 @@ export class SpeechService {
         window.speechSynthesis.onvoiceschanged = updateVoices;
       }
     }
+  }
+
+  getSelectedVoiceName(): string {
+    return this.selectedVoice?.name || 'Mặc định';
   }
 
   isSpeechRecognitionSupported(): boolean {
@@ -153,12 +187,14 @@ export class SpeechService {
     onError: (error: string) => void;
     onEnd: () => void;
   }) {
+    this.unlockAudio();
+
     if (!this.recognition) {
       this.initSpeechRecognition();
     }
 
     if (!this.recognition) {
-      callbacks.onError("Trình duyệt không hỗ trợ nhận diện giọng nói trực tiếp. Bác có thể chọn các câu hỏi gợi ý bên dưới ạ.");
+      callbacks.onError("Trình duyệt chưa hỗ trợ nhận diện giọng nói. Bác có thể bấm vào các câu hỏi gợi ý bên dưới ạ.");
       return;
     }
 
@@ -167,6 +203,9 @@ export class SpeechService {
         this.recognition.stop();
       } catch (e) {}
     }
+
+    // Stop speaking while listening
+    this.stopSpeaking();
 
     audioFeedback.playMicStart();
     this.isListening = true;
@@ -194,9 +233,9 @@ export class SpeechService {
       this.isListening = false;
       console.warn("Speech recognition error:", event.error);
       if (event.error === 'not-allowed') {
-        callbacks.onError("Vui lòng cho phép ứng dụng sử dụng micro để trò chuyện bằng giọng nói ạ.");
+        callbacks.onError("Vui lòng cho phép quyền micro để nói chuyện bằng giọng nói ạ.");
       } else if (event.error !== 'no-speech') {
-        callbacks.onError("Chưa nhận được âm thanh, bác vui lòng thử bấm nói lại nhé.");
+        callbacks.onError("Cháu chưa nghe rõ, bác bấm micro nói lại nhé.");
       }
     };
 
@@ -222,27 +261,41 @@ export class SpeechService {
     }
   }
 
-  // Text-To-Speech
-  speak(text: string, onEnd?: () => void): void {
+  // Text-To-Speech with synchronized callbacks and controls
+  speak(
+    text: string,
+    options?: {
+      onStart?: () => void;
+      onEnd?: () => void;
+      onError?: () => void;
+      onBoundary?: (charIndex: number) => void;
+    }
+  ): void {
+    this.unlockAudio();
+
     if (!('speechSynthesis' in window)) {
       console.warn("Speech synthesis not supported");
-      if (onEnd) onEnd();
+      if (options?.onEnd) options.onEnd();
       return;
     }
 
-    // Cancel current speaking
-    window.speechSynthesis.cancel();
+    // Cancel current speech before starting new one
+    this.stopSpeaking();
 
-    // Clean text of emojis or special markdown if any
-    const cleanText = text.replace(/[*#_`~>]/g, '').trim();
+    // Clean text: strip markdown symbols and emojis for smoother pronunciation
+    const cleanText = text
+      .replace(/[*#_`~>]/g, '')
+      .replace(/[\u{1F600}-\u{1F6FF}]/gu, '')
+      .trim();
+
     if (!cleanText) {
-      if (onEnd) onEnd();
+      if (options?.onEnd) options.onEnd();
       return;
     }
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.lang = 'vi-VN';
-    utterance.rate = 0.92; // Slightly slower, clear and comfortable for seniors
+    utterance.rate = 0.90; // Standard clear elderly cadence
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
@@ -250,26 +303,58 @@ export class SpeechService {
       utterance.voice = this.selectedVoice;
     }
 
+    utterance.onstart = () => {
+      if (options?.onStart) options.onStart();
+    };
+
+    utterance.onboundary = (e) => {
+      if (options?.onBoundary) {
+        options.onBoundary(e.charIndex);
+      }
+    };
+
     utterance.onend = () => {
-      if (onEnd) onEnd();
+      this.currentUtterance = null;
+      if (options?.onEnd) options.onEnd();
     };
 
     utterance.onerror = (e) => {
-      console.warn("TTS error:", e);
-      if (onEnd) onEnd();
+      console.warn("TTS playback warning:", e);
+      this.currentUtterance = null;
+      if (options?.onEnd) options.onEnd();
     };
 
+    this.currentUtterance = utterance;
+
+    // Workaround for Chrome bug where speech drops on long sentences
     window.speechSynthesis.speak(utterance);
+  }
+
+  pauseSpeaking() {
+    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+    }
+  }
+
+  resumeSpeaking() {
+    if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
   }
 
   stopSpeaking() {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+      this.currentUtterance = null;
     }
   }
 
   isSpeaking(): boolean {
     return 'speechSynthesis' in window && window.speechSynthesis.speaking;
+  }
+
+  isPaused(): boolean {
+    return 'speechSynthesis' in window && window.speechSynthesis.paused;
   }
 }
 

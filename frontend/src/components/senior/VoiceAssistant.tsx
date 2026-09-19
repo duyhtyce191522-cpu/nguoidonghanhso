@@ -2,7 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { speechService } from '../../services/speechService';
 import { api } from '../../services/api';
-import { Mic, MicOff, Volume2, Sparkles, MessageCircle, RefreshCw } from 'lucide-react';
+import {
+  Mic,
+  MicOff,
+  Volume2,
+  Sparkles,
+  MessageCircle,
+  RefreshCw,
+  Pause,
+  Play,
+  Square,
+  RotateCcw
+} from 'lucide-react';
 
 interface VoiceAssistantProps {
   onOpenNews?: () => void;
@@ -15,9 +26,10 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   onOpenGuides,
   onRefreshReminders
 }) => {
-  const { profile } = useApp();
+  const { profile, unlockAudio } = useApp();
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [assistantReply, setAssistantReply] = useState<string>(
@@ -25,23 +37,27 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   );
 
   useEffect(() => {
-    // Check if browser is currently speaking
-    const checkSpeaking = setInterval(() => {
+    // Monitor speaking / paused states
+    const timer = setInterval(() => {
       setIsSpeaking(speechService.isSpeaking());
-    }, 400);
-    return () => clearInterval(checkSpeaking);
+      setIsPaused(speechService.isPaused());
+    }, 300);
+    return () => clearInterval(timer);
   }, []);
 
   const handleStartMic = () => {
+    unlockAudio();
+
     if (isListening) {
       speechService.stopListening();
       setIsListening(false);
       return;
     }
 
-    // Stop speaking if assistant is currently talking
+    // Stop previous audio playback before listening
     speechService.stopSpeaking();
     setIsSpeaking(false);
+    setIsPaused(false);
     setTranscript('');
     setIsListening(true);
 
@@ -62,6 +78,27 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     });
   };
 
+  const speakText = (text: string) => {
+    unlockAudio();
+    setIsSpeaking(true);
+    setIsPaused(false);
+
+    speechService.speak(text, {
+      onStart: () => {
+        setIsSpeaking(true);
+        setIsPaused(false);
+      },
+      onEnd: () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+      },
+      onError: () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+      }
+    });
+  };
+
   const processUserSpeech = async (spokenText: string) => {
     setIsListening(false);
     setIsLoadingAI(true);
@@ -69,48 +106,58 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       const res = await api.sendChatMessage(spokenText);
       if (res && res.reply) {
         setAssistantReply(res.reply);
-        // Automatically speak reply out loud in Vietnamese
-        speechService.speak(res.reply, () => {
-          setIsSpeaking(false);
-        });
-        setIsSpeaking(true);
+        // Automatic speech playback in Vietnamese as approved in grill-me
+        speakText(res.reply);
 
-        // If user asked about news or guides, notify parent
+        // Smooth jump if user asked about features
         const lower = spokenText.toLowerCase();
         if (lower.includes('tin tức') && onOpenNews) {
-          onOpenNews();
+          setTimeout(onOpenNews, 1500);
         } else if ((lower.includes('hướng dẫn') || lower.includes('zalo')) && onOpenGuides) {
-          onOpenGuides();
+          setTimeout(onOpenGuides, 1500);
         } else if ((lower.includes('thuốc') || lower.includes('lịch')) && onRefreshReminders) {
           onRefreshReminders();
         }
       }
     } catch (e) {
-      const fallback = "Dạ thưa bác, cháu luôn ở bên cạnh bác ạ. Bác muốn kiểm tra lịch thuốc hay nghe đọc tin tức không ạ?";
+      const fallback = `Dạ thưa ${profile.preferredGreeting}, cháu luôn ở bên cạnh bác ạ. Bác muốn kiểm tra lịch uống thuốc hay nghe đọc tin tức không ạ?`;
       setAssistantReply(fallback);
-      speechService.speak(fallback);
+      speakText(fallback);
     } finally {
       setIsLoadingAI(false);
     }
   };
 
   const handlePromptClick = (text: string) => {
+    unlockAudio();
     setTranscript(text);
     processUserSpeech(text);
   };
 
   const handleReplayVoice = () => {
     if (assistantReply) {
-      speechService.stopSpeaking();
-      speechService.speak(assistantReply, () => {
-        setIsSpeaking(false);
-      });
-      setIsSpeaking(true);
+      speakText(assistantReply);
     }
   };
 
+  const handleTogglePause = () => {
+    if (isPaused) {
+      speechService.resumeSpeaking();
+      setIsPaused(false);
+    } else {
+      speechService.pauseSpeaking();
+      setIsPaused(true);
+    }
+  };
+
+  const handleStopVoice = () => {
+    speechService.stopSpeaking();
+    setIsSpeaking(false);
+    setIsPaused(false);
+  };
+
   return (
-    <div className="voice-hero-card">
+    <div className="voice-hero-card" id="voice-section">
       <div className="voice-greeting">
         Người Đồng Hành Cùng {profile.preferredGreeting}
       </div>
@@ -119,22 +166,22 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       <div>
         {isListening ? (
           <span className="voice-status-pill listening">
-            <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#DC2626' }}></span>
+            <span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', background: '#DC2626' }}></span>
             Đang lắng nghe bác nói...
           </span>
         ) : isLoadingAI ? (
           <span className="voice-status-pill">
-            <RefreshCw className="animate-spin" size={16} />
+            <RefreshCw className="animate-spin" size={15} />
             Cháu đang suy nghĩ câu trả lời...
           </span>
         ) : isSpeaking ? (
           <span className="voice-status-pill speaking">
-            <Volume2 size={18} />
-            Cháu đang trò chuyện cùng bác...
+            <Volume2 size={16} />
+            {isPaused ? 'Đã tạm dừng giọng đọc' : 'Cháu đang đọc câu trả lời...'}
           </span>
         ) : (
           <span className="voice-status-pill">
-            <Sparkles size={16} />
+            <Sparkles size={15} />
             Chạm vào Micro để nói chuyện
           </span>
         )}
@@ -149,36 +196,76 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
           aria-label={isListening ? "Đang nghe bác nói, bấm để dừng" : "Bấm vào đây để nói chuyện với AI"}
           title="Bấm vào để nói chuyện"
         >
-          {isListening ? <MicOff size={46} /> : <Mic size={46} />}
+          {isListening ? <MicOff size={44} /> : <Mic size={44} />}
           <span className="mic-label">{isListening ? "Đang Nghe" : "Nói Ngay"}</span>
         </button>
       </div>
 
       {/* Spoken transcript if available */}
       {transcript && (
-        <div style={{ marginBottom: 12, fontStyle: 'italic', color: '#475569', fontSize: '1.05rem' }}>
+        <div style={{ marginBottom: 10, fontStyle: 'italic', color: '#475569', fontSize: '1rem' }}>
           "{transcript}"
         </div>
       )}
 
-      {/* Assistant Voice Speech Bubble */}
-      <div className="speech-bubble-container">
-        <div className="speech-bubble-speaker">
-          <MessageCircle size={18} />
-          <span>Người Đồng Hành Số:</span>
+      {/* Synchronized Subtitle & Audio Player Card */}
+      <div className="speech-subtitle-card">
+        <div className="speech-header-row">
+          <div className="speech-speaker-label">
+            <MessageCircle size={17} />
+            <span>Người Đồng Hành Số:</span>
+          </div>
+
+          {/* Soundwave animation while reading */}
+          {isSpeaking && !isPaused && (
+            <div className="audio-soundwave" title="Đang phát giọng đọc tiếng Việt">
+              <div className="soundwave-bar"></div>
+              <div className="soundwave-bar"></div>
+              <div className="soundwave-bar"></div>
+              <div className="soundwave-bar"></div>
+            </div>
+          )}
         </div>
-        <div className="speech-bubble-text">
+
+        {/* Large Readable Subtitle Text */}
+        <div className="speech-text-body">
           {assistantReply}
         </div>
 
-        <button
-          onClick={handleReplayVoice}
-          className="speech-speak-btn"
-          title="Nghe lại câu trả lời này"
-        >
-          <Volume2 size={18} />
-          <span>{isSpeaking ? "Đang đọc... Bấm để đọc lại" : "Nghe lại bằng giọng nói"}</span>
-        </button>
+        {/* Playback Controls */}
+        <div className="speech-controls-row">
+          <button
+            onClick={handleReplayVoice}
+            className={`speech-action-btn ${isSpeaking && !isPaused ? 'active' : ''}`}
+            title="Đọc lại câu trả lời này"
+          >
+            <RotateCcw size={16} />
+            <span>{isSpeaking ? 'Đọc lại từ đầu' : '🔊 Nghe đọc'}</span>
+          </button>
+
+          {isSpeaking && (
+            <>
+              <button
+                onClick={handleTogglePause}
+                className="speech-action-btn"
+                title={isPaused ? "Đọc tiếp" : "Tạm dừng giọng đọc"}
+              >
+                {isPaused ? <Play size={16} /> : <Pause size={16} />}
+                <span>{isPaused ? 'Đọc tiếp' : 'Tạm dừng'}</span>
+              </button>
+
+              <button
+                onClick={handleStopVoice}
+                className="speech-action-btn"
+                title="Dừng đọc"
+                style={{ color: '#DC2626' }}
+              >
+                <Square size={14} fill="#DC2626" />
+                <span>Dừng</span>
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Quick Prompts For Fast Interaction */}

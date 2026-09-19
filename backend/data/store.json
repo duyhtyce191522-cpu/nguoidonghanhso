@@ -1,7 +1,7 @@
 {
   "seniorProfile": {
-    "fullName": "Nguyễn Văn Hùng",
-    "preferredGreeting": "Bác Hùng",
+    "fullName": "Anh",
+    "preferredGreeting": "Bác",
     "birthYear": 1952,
     "healthNotes": "Huyết áp hơi cao, hay quên giờ uống thuốc sau ăn sáng."
   },
@@ -14,8 +14,7 @@
       "type": "medicine",
       "dosage": "1 viên sau ăn sáng 15 phút",
       "note": "Nhớ uống với 1 cốc nước ấm đầy nhé bác",
-      "completed": true,
-      "completedAt": "2026-09-19T12:54:54.948Z",
+      "completed": false,
       "createdAt": "2026-09-19T14:54:54.949Z"
     },
     {
@@ -26,8 +25,7 @@
       "type": "blood_pressure",
       "dosage": "Nghỉ ngơi 5 phút trước khi đo",
       "note": "Ghi nhớ chỉ số tâm thu và tâm trương",
-      "completed": true,
-      "completedAt": "2026-09-19T13:54:54.949Z",
+      "completed": false,
       "createdAt": "2026-09-19T14:54:54.949Z"
     },
     {
@@ -49,9 +47,8 @@
       "type": "water",
       "dosage": "300ml nước ấm",
       "note": "Đi bộ nhẹ nhàng trong sân hoặc ban công",
-      "completed": true,
-      "createdAt": "2026-09-19T14:54:54.949Z",
-      "completedAt": "2026-09-19T14:58:43.707Z"
+      "completed": false,
+      "createdAt": "2026-09-19T14:54:54.949Z"
     },
     {
       "id": "rem-5",
@@ -226,6 +223,13 @@
       "relation": "Cứu thương y tế khẩn cấp",
       "phone": "115",
       "isPrimary": false
+    },
+    {
+      "name": "con gái",
+      "relation": "con út",
+      "phone": "0347706057",
+      "isPrimary": false,
+      "id": "contact-1789831568383"
     }
   ],
   "logs": [
@@ -300,6 +304,42 @@
       "description": "Bác trò chuyện: \"Đọc tin tức ngày hôm nay\" -> AI phản hồi ân cần.",
       "id": "log-1789830965476",
       "timestamp": "2026-09-19T15:16:05.476Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"hiện tại là mấy giờ\" -> AI phản hồi ân cần.",
+      "id": "log-1789831312063",
+      "timestamp": "2026-09-19T15:21:52.063Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Tôi cần uống thuốc gì hôm nay?\" -> AI phản hồi ân cần.",
+      "id": "log-1789831409857",
+      "timestamp": "2026-09-19T15:23:29.857Z"
+    },
+    {
+      "type": "sos_alert",
+      "description": "[CẢNH BÁO KHẨN CẤP SOS] Bác đã bấm nút trợ giúp khẩn cấp! Đã kích hoạt liên lạc tới Nguyễn Thị Mai Lan (0912 345 678). Lý do: Bác bấm nút khẩn cấp SOS trên ứng dụng.",
+      "id": "log-1789831437624",
+      "timestamp": "2026-09-19T15:23:57.624Z"
+    },
+    {
+      "type": "sos_alert",
+      "description": "[CẢNH BÁO KHẨN CẤP SOS] Bác đã bấm nút trợ giúp khẩn cấp! Đã kích hoạt liên lạc tới Nguyễn Thị Mai Lan (0912 345 678). Lý do: Bác bấm nút khẩn cấp SOS trên ứng dụng.",
+      "id": "log-1789831576282",
+      "timestamp": "2026-09-19T15:26:16.282Z"
+    },
+    {
+      "type": "medicine_taken",
+      "description": "Bác đã hoàn thành lịch nhắc: \"Uống thuốc Huyết Áp (Amlodipine)\" vào lúc 22:31:22.",
+      "id": "log-1789831882300",
+      "timestamp": "2026-09-19T15:31:22.300Z"
+    },
+    {
+      "type": "medicine_taken",
+      "description": "Bác đã hoàn thành lịch nhắc: \"Uống thuốc Huyết Áp (Amlodipine)\" vào lúc 22:31:24.",
+      "id": "log-1789831884675",
+      "timestamp": "2026-09-19T15:31:24.675Z"
     }
   ],
   "chats": [
@@ -404,6 +444,30 @@
       "text": "Dạ thưa bác, bây giờ là 22:16, Thứ Bảy, 19 tháng 9, 2026 ạ.",
       "id": "chat-1789830965475",
       "timestamp": "2026-09-19T15:16:05.475Z"
+    },
+    {
+      "sender": "user",
+      "text": "hiện tại là mấy giờ",
+      "id": "chat-1789831312061",
+      "timestamp": "2026-09-19T15:21:52.061Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, bây giờ là 22:21, Thứ Bảy, 19 tháng 9, 2026 ạ.",
+      "id": "chat-1789831312062",
+      "timestamp": "2026-09-19T15:21:52.062Z"
+    },
+    {
+      "sender": "user",
+      "text": "Tôi cần uống thuốc gì hôm nay?",
+      "id": "chat-1789831409854",
+      "timestamp": "2026-09-19T15:23:29.854Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, trong ngày bác còn lịch: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" lúc 12:00 (1 viên cùng bữa ăn trưa). Bác nhớ ăn no rồi uống đúng giờ nhé ạ!",
+      "id": "chat-1789831409855",
+      "timestamp": "2026-09-19T15:23:29.855Z"
     }
   ]
 }

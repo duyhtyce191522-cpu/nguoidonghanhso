@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Heart, Volume2, UserCheck, Shield, Sparkles, Type } from 'lucide-react';
+import { Heart, UserCheck, Shield, Type, Pill, BookOpen, Newspaper } from 'lucide-react';
+import { PinModal } from './PinModal';
 
 export const Header: React.FC = () => {
   const { mode, setMode, fontScale, setFontScale, profile } = useApp();
   const [timeStr, setTimeStr] = useState<string>('');
   const [dateStr, setDateStr] = useState<string>('');
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -27,7 +29,24 @@ export const Header: React.FC = () => {
   const getFontScaleLabel = () => {
     if (fontScale === 'normal') return 'Chữ Vừa';
     if (fontScale === 'large') return 'Chữ To';
-    return 'Chữ Cực Đại';
+    return 'Cực Đại';
+  };
+
+  const handleModeClick = () => {
+    if (mode === 'senior') {
+      // Prompt for PIN to enter Caregiver mode
+      setIsPinModalOpen(true);
+    } else {
+      // Returning to Senior mode is direct
+      setMode('senior');
+    }
+  };
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -35,21 +54,21 @@ export const Header: React.FC = () => {
       <div className="header-inner">
         <div className="header-brand">
           <div className="brand-icon-wrapper">
-            <Heart size={26} strokeWidth={2.5} fill="white" />
+            <Heart size={24} strokeWidth={2.5} fill="white" />
           </div>
           <div>
             <div className="brand-title">Đồng Hành Số</div>
             <div className="brand-subtitle">
-              {mode === 'senior' ? `Trợ lý của ${profile.preferredGreeting}` : 'Bảng Quản Lý Người Thân'}
+              {mode === 'senior' ? `Trợ lý của ${profile.preferredGreeting}` : 'Bảng Quản Trị Người Thân'}
             </div>
           </div>
         </div>
 
         <div className="header-controls">
           {/* Realtime clock display */}
-          <div style={{ textAlign: 'right', marginRight: '6px' }}>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#1E293B' }}>{timeStr}</div>
-            <div style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 600 }}>{dateStr}</div>
+          <div style={{ textAlign: 'right', marginRight: '4px' }}>
+            <div style={{ fontWeight: 800, fontSize: '0.98rem', color: '#1E293B', lineHeight: 1.1 }}>{timeStr}</div>
+            <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>{dateStr}</div>
           </div>
 
           {/* Font scale toggle */}
@@ -60,40 +79,83 @@ export const Header: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '4px',
-              padding: '8px 12px',
+              padding: '6px 10px',
               background: '#F8FAFC',
               border: '2px solid #CBD5E1',
               borderRadius: '9999px',
               cursor: 'pointer',
               fontWeight: 700,
-              fontSize: '0.85rem',
+              fontSize: '0.82rem',
               color: '#334155'
             }}
           >
-            <Type size={16} />
+            <Type size={14} />
             <span>{getFontScaleLabel()}</span>
           </button>
 
-          {/* Mode Switcher */}
+          {/* Mode Switcher with PIN */}
           <button
-            onClick={() => setMode(mode === 'senior' ? 'caregiver' : 'senior')}
+            onClick={handleModeClick}
             className={`mode-toggle-btn ${mode === 'caregiver' ? 'caregiver-active' : ''}`}
-            title="Chuyển chế độ Người lớn tuổi / Người nhà"
+            title={mode === 'senior' ? "Chuyển sang Chế độ Người Nhà (Cần mã PIN)" : "Quay lại Giao diện Bác"}
           >
             {mode === 'senior' ? (
               <>
-                <Shield size={18} />
-                <span>Chế độ Người Nhà</span>
+                <Shield size={16} />
+                <span>Người Nhà</span>
               </>
             ) : (
               <>
-                <UserCheck size={18} />
+                <UserCheck size={16} />
                 <span>Về Giao Diện Bác</span>
               </>
             )}
           </button>
         </div>
       </div>
+
+      {/* Quick Jump Anchors on Senior Mode */}
+      {mode === 'senior' && (
+        <div className="quick-jump-bar">
+          <button
+            onClick={() => scrollToSection('voice-section')}
+            className="quick-jump-chip"
+          >
+            🎙️ Trợ Lý Giọng Nói
+          </button>
+          <button
+            onClick={() => scrollToSection('reminders-section')}
+            className="quick-jump-chip"
+          >
+            <Pill size={15} color="#2563EB" />
+            Lịch Thuốc Hôm Nay
+          </button>
+          <button
+            onClick={() => scrollToSection('guides-section')}
+            className="quick-jump-chip"
+          >
+            <BookOpen size={15} color="#059669" />
+            Cẩm Nang Hướng Dẫn
+          </button>
+          <button
+            onClick={() => scrollToSection('news-section')}
+            className="quick-jump-chip"
+          >
+            <Newspaper size={15} color="#D97706" />
+            Bản Tin Sức Khỏe
+          </button>
+        </div>
+      )}
+
+      {/* PIN Modal for Caregiver mode protection */}
+      <PinModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
+        onSuccess={() => {
+          setIsPinModalOpen(false);
+          setMode('caregiver');
+        }}
+      />
     </header>
   );
 };
