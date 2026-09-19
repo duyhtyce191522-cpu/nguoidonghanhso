@@ -18,7 +18,9 @@ import {
   Calendar,
   FileText,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  X,
+  Loader2
 } from 'lucide-react';
 import { notificationService } from '../../services/notificationService';
 
@@ -105,10 +107,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
     }
   };
 
-  const handleDeleteContact = async (id: string, name: string) => {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa "${name}" khỏi danh bạ khẩn cấp không?`)) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteSuccessMsg, setDeleteSuccessMsg] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirmDelete = async (id: string, name: string) => {
+    setIsDeleting(true);
+    try {
       await api.deleteContact(id);
+      setDeletingId(null);
+      setDeleteSuccessMsg(`Đã xóa liên hệ "${name}" khỏi danh bạ khẩn cấp!`);
+      setTimeout(() => setDeleteSuccessMsg(null), 3000);
       onRefreshContacts();
+    } catch (e) {
+      console.error("Delete contact error", e);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -168,6 +182,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
           </span>
         </div>
 
+        {/* Success Alert Toast */}
+        {deleteSuccessMsg && (
+          <div style={{
+            background: '#ECFDF5',
+            border: '1.5px solid #10B981',
+            borderRadius: '12px',
+            padding: '10px 16px',
+            marginBottom: '14px',
+            color: '#065F46',
+            fontWeight: 800,
+            fontSize: '0.92rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)'
+          }}>
+            <CheckCircle2 size={18} color="#059669" />
+            <span>{deleteSuccessMsg}</span>
+          </div>
+        )}
+
         {/* Contact List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
           {contacts.length === 0 ? (
@@ -188,76 +223,141 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ contacts, onRefres
           ) : (
             contacts.map((c) => {
               const initial = c.name ? c.name.charAt(0).toUpperCase() : '👤';
+              const isConfirming = deletingId === c.id;
+
               return (
                 <div key={c.id} className="contact-item-card">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-                    <div className="contact-avatar-badge">
-                      {initial}
-                    </div>
+                  {isConfirming ? (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      padding: '4px 0',
+                      gap: '12px',
+                      flexWrap: 'wrap'
+                    }}>
+                      <div style={{ fontSize: '0.92rem', color: '#991B1B', fontWeight: 800 }}>
+                        Bạn có chắc muốn xóa số của <strong>{c.name}</strong> ({c.phone})?
+                      </div>
 
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A' }}>
-                          {c.name}
-                        </span>
-                        <span style={{
-                          fontSize: '0.78rem',
-                          background: '#E2E8F0',
-                          color: '#334155',
-                          padding: '2px 8px',
-                          borderRadius: '6px',
-                          fontWeight: 700
-                        }}>
-                          {c.relation}
-                        </span>
-                        {c.isPrimary && (
-                          <span style={{
-                            fontSize: '0.75rem',
-                            background: '#FEE2E2',
-                            color: '#DC2626',
-                            padding: '2px 8px',
-                            borderRadius: '6px',
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                        <button
+                          onClick={() => handleConfirmDelete(c.id, c.name)}
+                          disabled={isDeleting}
+                          style={{
+                            padding: '8px 16px',
+                            background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '10px',
                             fontWeight: 800,
+                            fontSize: '0.85rem',
+                            cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '3px'
-                          }}>
-                            ★ Gọi Đầu Tiên
-                          </span>
-                        )}
-                      </div>
+                            gap: '5px',
+                            boxShadow: '0 2px 6px rgba(220, 38, 38, 0.3)'
+                          }}
+                        >
+                          {isDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                          <span>Xác Nhận Xóa</span>
+                        </button>
 
-                      <div style={{
-                        fontSize: '1rem',
-                        color: '#0284C7',
-                        fontWeight: 800,
-                        marginTop: '3px',
-                        letterSpacing: '0.02em'
-                      }}>
-                        {c.phone}
+                        <button
+                          onClick={() => setDeletingId(null)}
+                          disabled={isDeleting}
+                          style={{
+                            padding: '8px 14px',
+                            background: '#E2E8F0',
+                            color: '#334155',
+                            border: 'none',
+                            borderRadius: '10px',
+                            fontWeight: 700,
+                            fontSize: '0.85rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <X size={14} />
+                          <span>Hủy</span>
+                        </button>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                        <div className="contact-avatar-badge">
+                          {initial}
+                        </div>
 
-                  {/* Actions: Direct Test Call & Delete */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                    <a
-                      href={`tel:${c.phone.replace(/\s+/g, '')}`}
-                      className="contact-call-btn"
-                      title="Gọi kiểm tra trực tiếp số điện thoại này"
-                    >
-                      <Phone size={14} />
-                      <span>Gọi Thử</span>
-                    </a>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A' }}>
+                              {c.name}
+                            </span>
+                            <span style={{
+                              fontSize: '0.78rem',
+                              background: '#E2E8F0',
+                              color: '#334155',
+                              padding: '2px 8px',
+                              borderRadius: '6px',
+                              fontWeight: 700
+                            }}>
+                              {c.relation}
+                            </span>
+                            {c.isPrimary && (
+                              <span style={{
+                                fontSize: '0.75rem',
+                                background: '#FEE2E2',
+                                color: '#DC2626',
+                                padding: '2px 8px',
+                                borderRadius: '6px',
+                                fontWeight: 800,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '3px'
+                              }}>
+                                ★ Gọi Đầu Tiên
+                              </span>
+                            )}
+                          </div>
 
-                    <button
-                      onClick={() => handleDeleteContact(c.id, c.name)}
-                      className="contact-delete-btn"
-                      title="Xóa người liên hệ này"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                          <div style={{
+                            fontSize: '1rem',
+                            color: '#0284C7',
+                            fontWeight: 800,
+                            marginTop: '3px',
+                            letterSpacing: '0.02em'
+                          }}>
+                            {c.phone}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actions: Direct Test Call & Delete */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                        <a
+                          href={`tel:${c.phone.replace(/\s+/g, '')}`}
+                          className="contact-call-btn"
+                          title="Gọi kiểm tra trực tiếp số điện thoại này"
+                        >
+                          <Phone size={14} />
+                          <span>Gọi Thử</span>
+                        </a>
+
+                        <button
+                          onClick={() => setDeletingId(c.id)}
+                          className="contact-delete-btn"
+                          title="Xóa người liên hệ này"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })

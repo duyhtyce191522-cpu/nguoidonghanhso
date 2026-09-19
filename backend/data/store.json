@@ -226,13 +226,6 @@
       "relation": "Cứu thương y tế khẩn cấp",
       "phone": "115",
       "isPrimary": false
-    },
-    {
-      "name": "con gái",
-      "relation": "con út",
-      "phone": "0347706057",
-      "isPrimary": false,
-      "id": "contact-1789831568383"
     }
   ],
   "logs": [
@@ -505,129 +498,69 @@
       "description": "[CẢNH BÁO KHẨN CẤP SOS] Bác đã bấm nút trợ giúp khẩn cấp! Đã kích hoạt liên lạc tới Nguyễn Thị Mai Lan (0912 345 678). Lý do: Bác bấm nút khẩn cấp SOS trên ứng dụng.",
       "id": "log-1789843943075",
       "timestamp": "2026-09-19T18:52:23.075Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube\" -> AI phản hồi.",
+      "id": "log-1789845293026",
+      "timestamp": "2026-09-19T19:14:53.026Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở Facebook\" -> AI phản hồi.",
+      "id": "log-1789845360919",
+      "timestamp": "2026-09-19T19:16:00.919Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở Tik Tok\" -> AI phản hồi.",
+      "id": "log-1789845375504",
+      "timestamp": "2026-09-19T19:16:15.504Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube cho tôi\" -> AI phản hồi.",
+      "id": "log-1789845435794",
+      "timestamp": "2026-09-19T19:17:15.794Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube xem cải lương\" -> AI phản hồi.",
+      "id": "log-1789845442203",
+      "timestamp": "2026-09-19T19:17:22.203Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube\" -> AI phản hồi.",
+      "id": "log-1789845771625",
+      "timestamp": "2026-09-19T19:22:51.625Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở Facebook\" -> AI phản hồi.",
+      "id": "log-1789845852886",
+      "timestamp": "2026-09-19T19:24:12.886Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở Tik Tok\" -> AI phản hồi.",
+      "id": "log-1789845932639",
+      "timestamp": "2026-09-19T19:25:32.639Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube\" -> AI phản hồi.",
+      "id": "log-1789846052077",
+      "timestamp": "2026-09-19T19:27:32.077Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở Tik Tok\" -> AI phản hồi.",
+      "id": "log-1789846105330",
+      "timestamp": "2026-09-19T19:28:25.330Z"
     }
   ],
   "chats": [
-    {
-      "sender": "user",
-      "text": "Đọc tin tức ngày hôm nay",
-      "id": "chat-1789830965474",
-      "timestamp": "2026-09-19T15:16:05.474Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, bây giờ là 22:16, Thứ Bảy, 19 tháng 9, 2026 ạ.",
-      "id": "chat-1789830965475",
-      "timestamp": "2026-09-19T15:16:05.475Z"
-    },
-    {
-      "sender": "user",
-      "text": "hiện tại là mấy giờ",
-      "id": "chat-1789831312061",
-      "timestamp": "2026-09-19T15:21:52.061Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, bây giờ là 22:21, Thứ Bảy, 19 tháng 9, 2026 ạ.",
-      "id": "chat-1789831312062",
-      "timestamp": "2026-09-19T15:21:52.062Z"
-    },
-    {
-      "sender": "user",
-      "text": "Tôi cần uống thuốc gì hôm nay?",
-      "id": "chat-1789831409854",
-      "timestamp": "2026-09-19T15:23:29.854Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa Bác Hùng, trong ngày bác còn lịch: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" lúc 12:00 (1 viên cùng bữa ăn trưa). Bác nhớ ăn no rồi uống đúng giờ nhé ạ!",
-      "id": "chat-1789831409855",
-      "timestamp": "2026-09-19T15:23:29.855Z"
-    },
-    {
-      "sender": "user",
-      "text": "Hôm nay thời tiết như thế nào",
-      "id": "chat-1789839709615",
-      "timestamp": "2026-09-19T17:41:49.615Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, thời tiết hôm nay ấm áp, gió mát và không khí rất dễ chịu. Chiều nay bác có thể ra sân hoặc ban công hít thở khí trời và đi dạo 15 phút cho khỏe gân cốt ạ!",
-      "id": "chat-1789839709617",
-      "timestamp": "2026-09-19T17:41:49.617Z"
-    },
-    {
-      "sender": "user",
-      "text": "Chỉ tôi cách gọi Zalo cho con",
-      "id": "chat-1789839722062",
-      "timestamp": "2026-09-19T17:42:02.062Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
-      "id": "chat-1789839722062",
-      "timestamp": "2026-09-19T17:42:02.062Z"
-    },
-    {
-      "sender": "user",
-      "text": "Hôm nay thời tiết như thế nào",
-      "id": "chat-1789839918671",
-      "timestamp": "2026-09-19T17:45:18.671Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, thời tiết hôm nay ấm áp, gió mát và không khí rất dễ chịu. Chiều nay bác có thể ra sân hoặc ban công hít thở khí trời và đi dạo 15 phút cho khỏe gân cốt ạ!",
-      "id": "chat-1789839918673",
-      "timestamp": "2026-09-19T17:45:18.673Z"
-    },
-    {
-      "sender": "user",
-      "text": "hãy chỉ tôi cách",
-      "id": "chat-1789839929618",
-      "timestamp": "2026-09-19T17:45:29.618Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, cháu đã nghe bác nói rồi ạ. Cháu luôn đồng hành cùng bác từng ngày. Bác muốn cháu đọc tin tức hôm nay hay nhắc nhở lịch sinh hoạt tiếp theo cho bác ạ?",
-      "id": "chat-1789839929619",
-      "timestamp": "2026-09-19T17:45:29.619Z"
-    },
-    {
-      "sender": "user",
-      "text": "hãy chỉ tôi cách qua Zalo",
-      "id": "chat-1789839934926",
-      "timestamp": "2026-09-19T17:45:34.926Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
-      "id": "chat-1789839934927",
-      "timestamp": "2026-09-19T17:45:34.927Z"
-    },
-    {
-      "sender": "user",
-      "text": "hãy chỉ tôi cách điện bên Zalo",
-      "id": "chat-1789839962317",
-      "timestamp": "2026-09-19T17:46:02.317Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
-      "id": "chat-1789839962318",
-      "timestamp": "2026-09-19T17:46:02.318Z"
-    },
-    {
-      "sender": "user",
-      "text": "Chỉ tôi cách gọi Zalo cho con",
-      "id": "chat-1789840207354",
-      "timestamp": "2026-09-19T17:50:07.354Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
-      "id": "chat-1789840207354",
-      "timestamp": "2026-09-19T17:50:07.354Z"
-    },
     {
       "sender": "user",
       "text": "Tôi muốn xem tin tức ngày hôm nay",
@@ -807,6 +740,126 @@
       "text": "Dạ thưa bác, thủ đô của nước Pháp là thành phố Paris – kinh đô ánh sáng nổi tiếng với tháp Eiffel và dòng sông Seine thơ mộng ạ.",
       "id": "chat-1789842736108",
       "timestamp": "2026-09-19T18:32:16.108Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube",
+      "id": "chat-1789845293023",
+      "timestamp": "2026-09-19T19:14:53.023Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789845293025",
+      "timestamp": "2026-09-19T19:14:53.025Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở Facebook",
+      "id": "chat-1789845360918",
+      "timestamp": "2026-09-19T19:16:00.918Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang chuyển sang Facebook cho bác đây ạ! Bác có thể xem ảnh con cháu và đọc tin tức của bạn bè nhé.",
+      "id": "chat-1789845360919",
+      "timestamp": "2026-09-19T19:16:00.919Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở Tik Tok",
+      "id": "chat-1789845375503",
+      "timestamp": "2026-09-19T19:16:15.503Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+      "id": "chat-1789845375504",
+      "timestamp": "2026-09-19T19:16:15.504Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube cho tôi",
+      "id": "chat-1789845435793",
+      "timestamp": "2026-09-19T19:17:15.793Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789845435794",
+      "timestamp": "2026-09-19T19:17:15.794Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube xem cải lương",
+      "id": "chat-1789845442202",
+      "timestamp": "2026-09-19T19:17:22.202Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789845442203",
+      "timestamp": "2026-09-19T19:17:22.203Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube",
+      "id": "chat-1789845771623",
+      "timestamp": "2026-09-19T19:22:51.623Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube phần ca nhạc và cải lương cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789845771624",
+      "timestamp": "2026-09-19T19:22:51.624Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở Facebook",
+      "id": "chat-1789845852884",
+      "timestamp": "2026-09-19T19:24:12.884Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang chuyển sang Facebook cho bác đây ạ! Bác có thể xem ảnh con cháu và đọc tin tức của bạn bè nhé.",
+      "id": "chat-1789845852885",
+      "timestamp": "2026-09-19T19:24:12.885Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở Tik Tok",
+      "id": "chat-1789845932638",
+      "timestamp": "2026-09-19T19:25:32.638Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+      "id": "chat-1789845932639",
+      "timestamp": "2026-09-19T19:25:32.639Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube",
+      "id": "chat-1789846052076",
+      "timestamp": "2026-09-19T19:27:32.076Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube phần ca nhạc và cải lương cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789846052077",
+      "timestamp": "2026-09-19T19:27:32.077Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở Tik Tok",
+      "id": "chat-1789846105329",
+      "timestamp": "2026-09-19T19:28:25.329Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+      "id": "chat-1789846105330",
+      "timestamp": "2026-09-19T19:28:25.330Z"
     }
   ]
 }
