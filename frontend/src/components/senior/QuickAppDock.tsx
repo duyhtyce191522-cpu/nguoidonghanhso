@@ -58,7 +58,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
             handleOpenApp(
               'YouTube',
               'https://www.youtube.com/results?search_query=ca+nh%E1%BA%A1c+c%E1%BA%A3i+l%C6%B0%C6%A1ng',
-              'Dạ, con đang mở YouTube có sẵn danh sách ca nhạc và cải lương cho bác xem ngay đây ạ!'
+              'Dạ, con mở YouTube ngay đây ạ!'
             )
           }
           className={`app-dock-tile app-youtube ${openingApp === 'YouTube' ? 'dock-opening' : ''}`}
@@ -79,7 +79,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
             handleOpenApp(
               'Facebook',
               'https://www.facebook.com',
-              'Dạ, con đang chuyển sang Facebook cho bác xem ảnh con cháu đây ạ!'
+              'Dạ, con đang chuyển sang Facebook đây ạ!'
             )
           }
           className={`app-dock-tile app-facebook ${openingApp === 'Facebook' ? 'dock-opening' : ''}`}
@@ -100,7 +100,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
             handleOpenApp(
               'TikTok',
               'https://www.tiktok.com',
-              'Dạ, con đang mở TikTok cho bác xem video ngắn vui nhộn đây ạ!'
+              'Dạ, con mở TikTok ngay đây ạ!'
             )
           }
           className={`app-dock-tile app-tiktok ${openingApp === 'TikTok' ? 'dock-opening' : ''}`}
@@ -121,7 +121,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
             handleOpenApp(
               'Zalo',
               'https://zalo.me/0912345678',
-              'Dạ, con đang mở Zalo để bác gọi điện cho con gái Mai Lan ngay đây ạ!'
+              'Dạ, con mở Zalo ngay đây ạ!'
             )
           }
           className={`app-dock-tile app-zalo ${openingApp === 'Zalo' ? 'dock-opening' : ''}`}

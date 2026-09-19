@@ -113,7 +113,7 @@ export class AIService {
       const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
 
       return {
-        reply: `Dạ, con đang mở YouTube phần ${genreDesc} cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.`,
+        reply: `Dạ, con mở YouTube ${genreDesc} cho bác ngay đây ạ!`,
         action: {
           type: 'open_url',
           url,
@@ -132,7 +132,7 @@ export class AIService {
       (lower.includes('xem ảnh') && lower.includes('cháu'))
     ) {
       return {
-        reply: "Dạ, con đang chuyển sang Facebook cho bác đây ạ! Bác có thể xem ảnh con cháu và đọc tin tức của bạn bè nhé.",
+        reply: "Dạ, con chuyển sang Facebook ngay đây ạ!",
         action: {
           type: 'open_url',
           url: 'https://www.facebook.com',
@@ -149,7 +149,7 @@ export class AIService {
       lower.includes('top top')
     ) {
       return {
-        reply: "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+        reply: "Dạ, con mở TikTok ngay đây ạ!",
         action: {
           type: 'open_url',
           url: 'https://www.tiktok.com',
@@ -166,7 +166,7 @@ export class AIService {
       (lower.includes('gọi cho') && (lower.includes('con') || lower.includes('cháu') || lower.includes('mai lan')))
     ) {
       return {
-        reply: "Dạ, con đang mở Zalo để bác gọi điện cho con gái Mai Lan ngay đây ạ!",
+        reply: "Dạ, con mở Zalo cho bác ngay đây ạ!",
         action: {
           type: 'open_url',
           url: 'https://zalo.me/0912345678',

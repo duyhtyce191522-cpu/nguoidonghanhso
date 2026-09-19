@@ -30,6 +30,7 @@ interface AppAction {
   type: 'open_url';
   url: string;
   appName: string;
+  shortReply?: string;
 }
 
 export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
@@ -113,7 +114,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     });
   };
 
-  const checkLocalAppIntent = (text: string): AppAction | null => {
+  const checkLocalAppIntent = (text: string): (AppAction & { shortReply: string }) | null => {
     const lower = text.toLowerCase();
     if (
       lower.includes('youtube') ||
@@ -121,85 +122,147 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       lower.includes('ca nhạc') ||
       lower.includes('du túp') ||
       lower.includes('dút tuýp') ||
+      lower.includes('dutu') ||
       lower.includes('bolero') ||
       lower.includes('nhạc vàng') ||
-      (lower.includes('xem') && (lower.includes('hài') || lower.includes('phim') || lower.includes('hát') || lower.includes('thời sự')))
+      lower.includes('nhạc xưa') ||
+      (lower.includes('xem') && (lower.includes('hài') || lower.includes('phim') || lower.includes('hát') || lower.includes('thời sự') || lower.includes('tin tức')))
     ) {
       let query = 'ca nhạc cải lương';
+      let shortReply = 'Dạ, con mở YouTube cho bác ngay đây ạ!';
+
       if (lower.includes('cải lương')) {
         query = 'cải lương việt nam tuyển chọn';
-      } else if (lower.includes('nhạc vàng') || lower.includes('nhạc xưa') || lower.includes('bolero') || lower.includes('ca nhạc') || lower.includes('nhạc') || lower.includes('hát')) {
+        shortReply = 'Dạ, con mở cải lương ngay đây ạ!';
+      } else if (lower.includes('nhạc vàng') || lower.includes('nhạc xưa') || lower.includes('bolero')) {
         query = 'nhạc vàng xưa trữ tình chọn lọc';
+        shortReply = 'Dạ, con mở nhạc vàng ngay đây ạ!';
+      } else if (lower.includes('ca nhạc') || lower.includes('hát') || lower.includes('nhạc')) {
+        query = 'nhạc trữ tình quê hương chọn lọc';
+        shortReply = 'Dạ, con mở ca nhạc ngay đây ạ!';
       } else if (lower.includes('hài') || lower.includes('tiểu phẩm')) {
         query = 'hài kịch dân gian việt nam';
+        shortReply = 'Dạ, con mở hài kịch ngay đây ạ!';
       } else if (lower.includes('phim')) {
         query = 'phim truyền hình việt nam';
+        shortReply = 'Dạ, con mở phim truyện ngay đây ạ!';
       } else if (lower.includes('thời sự') || lower.includes('tin tức')) {
         query = 'thời sự vtv1 mới nhất hôm nay';
+        shortReply = 'Dạ, con mở thời sự ngay đây ạ!';
       }
 
       const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
       return {
         type: 'open_url',
         url,
-        appName: 'YouTube'
+        appName: 'YouTube',
+        shortReply
       };
     }
-    if (lower.includes('facebook') || lower.includes('phây búc') || lower.includes('xem ảnh')) {
+
+    if (
+      lower.includes('facebook') ||
+      lower.includes('face book') ||
+      lower.includes('phây búc') ||
+      lower.includes('phây') ||
+      (lower.includes('mở') && lower.includes('fb')) ||
+      (lower.includes('xem ảnh') && lower.includes('cháu'))
+    ) {
       return {
         type: 'open_url',
         url: 'https://www.facebook.com',
-        appName: 'Facebook'
+        appName: 'Facebook',
+        shortReply: 'Dạ, con chuyển sang Facebook ngay đây ạ!'
       };
     }
-    if (lower.includes('tiktok') || lower.includes('tóp tóp')) {
+
+    if (
+      lower.includes('tiktok') ||
+      lower.includes('tik tok') ||
+      lower.includes('tóp tóp') ||
+      lower.includes('top top')
+    ) {
       return {
         type: 'open_url',
         url: 'https://www.tiktok.com',
-        appName: 'TikTok'
+        appName: 'TikTok',
+        shortReply: 'Dạ, con mở TikTok ngay đây ạ!'
       };
     }
-    if (lower.includes('zalo')) {
+
+    if (
+      lower.includes('zalo') ||
+      lower.includes('gia lô') ||
+      lower.includes('da lô') ||
+      (lower.includes('gọi cho') && (lower.includes('con') || lower.includes('cháu') || lower.includes('mai lan')))
+    ) {
       return {
         type: 'open_url',
         url: 'https://zalo.me/0912345678',
-        appName: 'Zalo'
+        appName: 'Zalo',
+        shortReply: 'Dạ, con mở Zalo cho bác ngay đây ạ!'
       };
     }
+
     return null;
   };
 
   const processUserSpeech = async (spokenText: string) => {
     setIsListening(false);
-    setIsLoadingAI(true);
     setAppAction(null);
 
-    // Immediate local intent check for snappy UX
+    // 1. Nhận diện ứng dụng tức thì và mở ngay mà không cần đợi API
     const localIntent = checkLocalAppIntent(spokenText);
     if (localIntent) {
+      setIsLoadingAI(false);
+      setAssistantReply(localIntent.shortReply);
       setAppAction(localIntent);
+
+      let opened = false;
+      const openAppNow = () => {
+        if (!opened) {
+          opened = true;
+          try {
+            window.open(localIntent.url, '_blank');
+          } catch (e) {
+            console.warn("Auto popup blocked, button ready:", e);
+          }
+        }
+      };
+
+      // Đọc câu ngắn gọn và tự động mở app ngay lập tức khi đọc xong
+      speakText(localIntent.shortReply, openAppNow);
+
+      // Fallback an toàn: nếu âm thanh bị trễ hoặc ngưng, tự động mở app sau 1.8s
+      setTimeout(openAppNow, 1800);
+      return;
     }
 
+    // 2. Nếu là câu hỏi đàm thoại / kiến thức tổng quát, gọi AI backend
+    setIsLoadingAI(true);
     try {
       const res = await api.sendChatMessage(spokenText);
       if (res && res.reply) {
         setAssistantReply(res.reply);
 
-        const actionToExecute = res.action || localIntent;
-        if (actionToExecute) {
-          setAppAction(actionToExecute);
-        }
-
-        // Mở tab SAU KHI AI ĐỌC XONG CÂU TRẢ LỜI
-        speakText(res.reply, () => {
-          if (actionToExecute) {
-            try {
-              window.open(actionToExecute.url, '_blank');
-            } catch (e) {
-              console.warn("Auto popup blocked, button available for user touch:", e);
+        if (res.action) {
+          setAppAction(res.action);
+          let opened = false;
+          const openAppNow = () => {
+            if (!opened) {
+              opened = true;
+              try {
+                window.open(res.action!.url, '_blank');
+              } catch (e) {
+                console.warn("Auto popup blocked, button available for user touch:", e);
+              }
             }
-          }
-        });
+          };
+          speakText(res.reply, openAppNow);
+          setTimeout(openAppNow, 2000);
+        } else {
+          speakText(res.reply);
+        }
 
         // Section scrolling if requested
         const lower = spokenText.toLowerCase();
@@ -214,13 +277,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     } catch (e) {
       const fallback = `Dạ thưa ${profile.preferredGreeting}, cháu luôn ở đây để giúp bác. Bác có thể hỏi cháu mọi câu hỏi hoặc bấm vào các nút bên dưới để mở YouTube, Facebook hay kiểm tra lịch thuốc nhé ạ!`;
       setAssistantReply(fallback);
-      speakText(fallback, () => {
-        if (localIntent) {
-          try {
-            window.open(localIntent.url, '_blank');
-          } catch (err) {}
-        }
-      });
+      speakText(fallback);
     } finally {
       setIsLoadingAI(false);
     }
