@@ -12,6 +12,7 @@ import { DeviceGuides } from './components/senior/DeviceGuides';
 import { SOSButton } from './components/senior/SOSButton';
 import { CaregiverHome } from './components/caregiver/CaregiverHome';
 import { PWAInstallBanner } from './components/common/PWAInstallBanner';
+import { BottomNav } from './components/common/BottomNav';
 import { notificationService } from './services/notificationService';
 
 export const AppContent: React.FC = () => {
@@ -114,6 +115,9 @@ export const AppContent: React.FC = () => {
             <CaregiverHome />
           )}
         </main>
+
+        {/* Fixed Mobile Bottom Navigation Bar */}
+        {mode === 'senior' && <BottomNav />}
       </div>
     </DeviceFrame>
   );

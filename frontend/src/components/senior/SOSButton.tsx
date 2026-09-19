@@ -50,7 +50,7 @@ export const SOSButton: React.FC = () => {
   };
 
   return (
-    <>
+    <div id="sos-section" style={{ marginTop: '18px' }}>
       <button
         onClick={handleOpenSOS}
         className="sos-banner-btn"
@@ -243,6 +243,6 @@ export const SOSButton: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

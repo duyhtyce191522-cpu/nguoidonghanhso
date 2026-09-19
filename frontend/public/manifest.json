@@ -4,8 +4,8 @@
   "description": "Ứng dụng AI thông minh bằng giọng nói hỗ trợ trò chuyện, nhắc uống thuốc và cẩm nang cho người lớn tuổi.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F4F7FB",
-  "theme_color": "#2563EB",
+  "background_color": "#FAF7F2",
+  "theme_color": "#386641",
   "orientation": "portrait-primary",
   "icons": [
     {
