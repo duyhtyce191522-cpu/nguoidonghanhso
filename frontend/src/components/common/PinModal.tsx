@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useApp } from '../../context/AppContext';
 import { Lock, Delete, X, AlertCircle, ShieldCheck } from 'lucide-react';
 
@@ -45,13 +46,13 @@ export const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSuccess }
     onClose();
   };
 
-  return (
-    <div className="modal-overlay" onClick={handleClose}>
+  return createPortal(
+    <div className="modal-overlay pin-modal-overlay" onClick={handleClose}>
       <div
         className="pin-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
               width: 38,
@@ -65,7 +66,7 @@ export const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSuccess }
             }}>
               <Lock size={20} />
             </div>
-            <strong style={{ fontSize: '1.2rem', color: '#0F172A' }}>Khóa Người Nhà</strong>
+            <strong style={{ fontSize: '1.2rem', color: '#16281E' }}>Khóa Người Nhà</strong>
           </div>
 
           <button
@@ -78,7 +79,7 @@ export const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSuccess }
           </button>
         </div>
 
-        <p style={{ fontSize: '0.95rem', color: '#475569', marginBottom: '18px', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.92rem', color: '#576B60', marginBottom: '14px', textAlign: 'center' }}>
           Nhập mã PIN 4 số để vào trang quản trị (Tránh trường hợp ông/bà bấm nhầm):
         </p>
 
@@ -129,14 +130,15 @@ export const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSuccess }
             onClick={handleDelete}
             title="Xóa 1 số"
           >
-            <Delete size={24} />
+            <Delete size={22} />
           </button>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '16px', fontSize: '0.85rem', color: '#64748B' }}>
-          💡 Mã PIN mặc định ban đầu: <strong style={{ color: '#0284C7' }}>1234</strong> (có thể đổi trong cài đặt)
+        <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.84rem', color: '#576B60' }}>
+          💡 Mã PIN mặc định: <strong style={{ color: '#386641' }}>1234</strong> (có thể đổi trong cài đặt)
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

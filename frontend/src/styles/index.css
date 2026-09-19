@@ -1102,21 +1102,29 @@ button {
    Fixing Image 1 Visual Regression!
    ========================================================= */
 
-.modal-overlay {
+.modal-overlay,
+.pin-modal-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(22, 40, 30, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(22, 40, 30, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 999999;
   padding: 16px;
   overflow-y: auto;
 }
 
 .pin-modal-content {
+  position: relative;
+  z-index: 1000000;
   background: #FFFFFF;
   border: 2px solid var(--border-nude);
   border-radius: 24px;
@@ -1124,9 +1132,10 @@ button {
   width: 100%;
   max-width: 340px;
   margin: auto; /* CRITICAL: Prevents top clipping in flexbox! */
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
   max-height: calc(100vh - 32px);
   overflow-y: auto;
+  animation: cardSlideIn 0.25s ease-out;
 }
 
 .pin-display {
