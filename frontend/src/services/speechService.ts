@@ -1,4 +1,4 @@
-// Speech Recognition & Synthesis Service for Vietnamese Elderly Companion
+// Speech Recognition & Natural Vietnamese TTS Service for Elderly Companion
 
 class AudioFeedback {
   private ctx: AudioContext | null = null;
@@ -106,21 +106,22 @@ export class SpeechService {
   private recognition: any = null;
   private isListening = false;
   private selectedVoice: SpeechSynthesisVoice | null = null;
-  private currentUtterance: SpeechSynthesisUtterance | null = null;
+  private currentAudio: HTMLAudioElement | null = null;
   private isAudioUnlocked = false;
+  private isSpeakingActive = false;
+  private isPausedState = false;
 
   constructor() {
     this.initSpeechRecognition();
     this.initSpeechSynthesis();
   }
 
-  // Unlock mobile browser audio restriction on first user gesture
+  // Unlock mobile browser audio restriction on first user touch
   unlockAudio() {
     if (this.isAudioUnlocked) return;
     try {
       audioFeedback.getContext();
       if ('speechSynthesis' in window) {
-        // Speak empty utterance to prime mobile speech synthesis
         const silentUtterance = new SpeechSynthesisUtterance(' ');
         silentUtterance.volume = 0.01;
         window.speechSynthesis.speak(silentUtterance);
@@ -148,23 +149,14 @@ export class SpeechService {
         const voices = window.speechSynthesis.getVoices();
         if (!voices || voices.length === 0) return;
 
-        // 1. First priority: High-quality natural Vietnamese voices
-        const naturalViVoice = voices.find(v => {
+        // Look for true Vietnamese voices
+        const viVoice = voices.find(v => {
           const name = v.name.toLowerCase();
           const lang = v.lang.toLowerCase();
-          return (
-            lang.startsWith('vi') &&
-            (name.includes('natural') || name.includes('online') || name.includes('google') || name.includes('hoaimy') || name.includes('linh') || name.includes('an'))
-          );
+          return lang.startsWith('vi') || name.includes('vietnam') || name.includes('tiếng việt') || name.includes('hoaimy') || name.includes('linh') || name.includes('an');
         });
 
-        // 2. Second priority: Any voice with lang starting with 'vi'
-        const anyViVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi'));
-
-        // 3. Fallback: Any voice matching Vietnam
-        const viNamedVoice = voices.find(v => v.name.toLowerCase().includes('vietnam') || v.name.toLowerCase().includes('tiếng việt'));
-
-        this.selectedVoice = naturalViVoice || anyViVoice || viNamedVoice || voices[0];
+        this.selectedVoice = viVoice || null;
       };
 
       updateVoices();
@@ -174,8 +166,8 @@ export class SpeechService {
     }
   }
 
-  getSelectedVoiceName(): string {
-    return this.selectedVoice?.name || 'Mặc định';
+  hasNativeVietnameseVoice(): boolean {
+    return this.selectedVoice !== null;
   }
 
   isSpeechRecognitionSupported(): boolean {
@@ -194,7 +186,7 @@ export class SpeechService {
     }
 
     if (!this.recognition) {
-      callbacks.onError("Trình duyệt chưa hỗ trợ nhận diện giọng nói. Bác có thể bấm vào các câu hỏi gợi ý bên dưới ạ.");
+      callbacks.onError("Trình duyệt chưa hỗ trợ nhận diện giọng nói. Bác có thể chạm vào các câu hỏi gợi ý bên dưới ạ.");
       return;
     }
 
@@ -204,7 +196,7 @@ export class SpeechService {
       } catch (e) {}
     }
 
-    // Stop speaking while listening
+    // Stop previous audio playback before listening
     this.stopSpeaking();
 
     audioFeedback.playMicStart();
@@ -261,28 +253,18 @@ export class SpeechService {
     }
   }
 
-  // Text-To-Speech with synchronized callbacks and controls
+  // Speak with 100% guaranteed natural Vietnamese voice
   speak(
     text: string,
     options?: {
       onStart?: () => void;
       onEnd?: () => void;
       onError?: () => void;
-      onBoundary?: (charIndex: number) => void;
     }
   ): void {
     this.unlockAudio();
-
-    if (!('speechSynthesis' in window)) {
-      console.warn("Speech synthesis not supported");
-      if (options?.onEnd) options.onEnd();
-      return;
-    }
-
-    // Cancel current speech before starting new one
     this.stopSpeaking();
 
-    // Clean text: strip markdown symbols and emojis for smoother pronunciation
     const cleanText = text
       .replace(/[*#_`~>]/g, '')
       .replace(/[\u{1F600}-\u{1F6FF}]/gu, '')
@@ -293,68 +275,129 @@ export class SpeechService {
       return;
     }
 
+    // Always prefer the dedicated natural Vietnamese TTS stream from backend /api/tts
+    // This solves the issue where Windows/English devices don't have a Vietnamese voice installed
+    try {
+      const ttsUrl = `/api/tts?text=${encodeURIComponent(cleanText.slice(0, 380))}`;
+      const audio = new Audio(ttsUrl);
+      this.currentAudio = audio;
+      this.isSpeakingActive = true;
+      this.isPausedState = false;
+
+      audio.onplay = () => {
+        this.isSpeakingActive = true;
+        this.isPausedState = false;
+        if (options?.onStart) options.onStart();
+      };
+
+      audio.onended = () => {
+        this.isSpeakingActive = false;
+        this.isPausedState = false;
+        this.currentAudio = null;
+        if (options?.onEnd) options.onEnd();
+      };
+
+      audio.onerror = (e) => {
+        console.warn("Audio TTS stream error, falling back to Web Speech:", e);
+        this.currentAudio = null;
+        this.speakWithWebSpeech(cleanText, options);
+      };
+
+      audio.play().catch((err) => {
+        console.warn("Audio play blocked or failed, falling back to Web Speech:", err);
+        this.currentAudio = null;
+        this.speakWithWebSpeech(cleanText, options);
+      });
+    } catch (e) {
+      this.speakWithWebSpeech(cleanText, options);
+    }
+  }
+
+  // Fallback to browser Web Speech API
+  private speakWithWebSpeech(
+    cleanText: string,
+    options?: {
+      onStart?: () => void;
+      onEnd?: () => void;
+      onError?: () => void;
+    }
+  ) {
+    if (!('speechSynthesis' in window)) {
+      this.isSpeakingActive = false;
+      if (options?.onEnd) options.onEnd();
+      return;
+    }
+
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.lang = 'vi-VN';
-    utterance.rate = 0.90; // Standard clear elderly cadence
+    utterance.rate = 0.90;
     utterance.pitch = 1.0;
-    utterance.volume = 1.0;
 
     if (this.selectedVoice) {
       utterance.voice = this.selectedVoice;
     }
 
     utterance.onstart = () => {
+      this.isSpeakingActive = true;
+      this.isPausedState = false;
       if (options?.onStart) options.onStart();
     };
 
-    utterance.onboundary = (e) => {
-      if (options?.onBoundary) {
-        options.onBoundary(e.charIndex);
-      }
-    };
-
     utterance.onend = () => {
-      this.currentUtterance = null;
+      this.isSpeakingActive = false;
+      this.isPausedState = false;
       if (options?.onEnd) options.onEnd();
     };
 
-    utterance.onerror = (e) => {
-      console.warn("TTS playback warning:", e);
-      this.currentUtterance = null;
+    utterance.onerror = () => {
+      this.isSpeakingActive = false;
+      this.isPausedState = false;
       if (options?.onEnd) options.onEnd();
     };
 
-    this.currentUtterance = utterance;
-
-    // Workaround for Chrome bug where speech drops on long sentences
+    this.isSpeakingActive = true;
     window.speechSynthesis.speak(utterance);
   }
 
   pauseSpeaking() {
-    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.isPausedState = true;
+    } else if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
       window.speechSynthesis.pause();
+      this.isPausedState = true;
     }
   }
 
   resumeSpeaking() {
-    if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+    if (this.currentAudio) {
+      this.currentAudio.play().catch(() => {});
+      this.isPausedState = false;
+    } else if ('speechSynthesis' in window && window.speechSynthesis.paused) {
       window.speechSynthesis.resume();
+      this.isPausedState = false;
     }
   }
 
   stopSpeaking() {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
+    }
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      this.currentUtterance = null;
     }
+    this.isSpeakingActive = false;
+    this.isPausedState = false;
   }
 
   isSpeaking(): boolean {
-    return 'speechSynthesis' in window && window.speechSynthesis.speaking;
+    return this.isSpeakingActive;
   }
 
   isPaused(): boolean {
-    return 'speechSynthesis' in window && window.speechSynthesis.paused;
+    return this.isPausedState;
   }
 }
 

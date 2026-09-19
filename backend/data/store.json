@@ -340,6 +340,18 @@
       "description": "Bác đã hoàn thành lịch nhắc: \"Uống thuốc Huyết Áp (Amlodipine)\" vào lúc 22:31:24.",
       "id": "log-1789831884675",
       "timestamp": "2026-09-19T15:31:24.675Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi ân cần.",
+      "id": "log-1789839709618",
+      "timestamp": "2026-09-19T17:41:49.618Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Chỉ tôi cách gọi Zalo cho con\" -> AI phản hồi ân cần.",
+      "id": "log-1789839722065",
+      "timestamp": "2026-09-19T17:42:02.065Z"
     }
   ],
   "chats": [
@@ -468,6 +480,30 @@
       "text": "Dạ thưa Bác Hùng, trong ngày bác còn lịch: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" lúc 12:00 (1 viên cùng bữa ăn trưa). Bác nhớ ăn no rồi uống đúng giờ nhé ạ!",
       "id": "chat-1789831409855",
       "timestamp": "2026-09-19T15:23:29.855Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789839709615",
+      "timestamp": "2026-09-19T17:41:49.615Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, thời tiết hôm nay ấm áp, gió mát và không khí rất dễ chịu. Chiều nay bác có thể ra sân hoặc ban công hít thở khí trời và đi dạo 15 phút cho khỏe gân cốt ạ!",
+      "id": "chat-1789839709617",
+      "timestamp": "2026-09-19T17:41:49.617Z"
+    },
+    {
+      "sender": "user",
+      "text": "Chỉ tôi cách gọi Zalo cho con",
+      "id": "chat-1789839722062",
+      "timestamp": "2026-09-19T17:42:02.062Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
+      "id": "chat-1789839722062",
+      "timestamp": "2026-09-19T17:42:02.062Z"
     }
   ]
 }

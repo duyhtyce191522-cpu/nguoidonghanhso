@@ -11,12 +11,14 @@ import { getNewsList, getSingleNews } from '../controllers/newsController';
 import { getGuidesList, getSingleGuide } from '../controllers/guideController';
 import { triggerSOS, getContacts, addContact, deleteContact } from '../controllers/sosController';
 import { getCaregiverDashboard, updateProfile, getHealthLogs } from '../controllers/caregiverController';
+import { handleTTS } from '../controllers/ttsController';
 
 const router = Router();
 
-// AI Chat
+// AI Chat & Voice TTS
 router.post('/chat', handleAIChat);
 router.get('/chat/history', getChatHistory);
+router.get('/tts', handleTTS);
 
 // Reminders
 router.get('/reminders', getReminders);
