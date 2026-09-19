@@ -113,12 +113,33 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
 
   const checkLocalAppIntent = (text: string): AppAction | null => {
     const lower = text.toLowerCase();
-    if (lower.includes('youtube') || lower.includes('cải lương') || lower.includes('du túp')) {
+    if (
+      lower.includes('youtube') ||
+      lower.includes('cải lương') ||
+      lower.includes('ca nhạc') ||
+      lower.includes('du túp') ||
+      lower.includes('dút tuýp') ||
+      lower.includes('bolero') ||
+      lower.includes('nhạc vàng') ||
+      (lower.includes('xem') && (lower.includes('hài') || lower.includes('phim') || lower.includes('hát') || lower.includes('thời sự')))
+    ) {
+      let query = 'ca nhạc cải lương';
+      if (lower.includes('cải lương')) {
+        query = 'cải lương việt nam tuyển chọn';
+      } else if (lower.includes('nhạc vàng') || lower.includes('nhạc xưa') || lower.includes('bolero') || lower.includes('ca nhạc') || lower.includes('nhạc') || lower.includes('hát')) {
+        query = 'nhạc vàng xưa trữ tình chọn lọc';
+      } else if (lower.includes('hài') || lower.includes('tiểu phẩm')) {
+        query = 'hài kịch dân gian việt nam';
+      } else if (lower.includes('phim')) {
+        query = 'phim truyền hình việt nam';
+      } else if (lower.includes('thời sự') || lower.includes('tin tức')) {
+        query = 'thời sự vtv1 mới nhất hôm nay';
+      }
+
+      const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
       return {
         type: 'open_url',
-        url: lower.includes('cải lương')
-          ? 'https://www.youtube.com/results?search_query=c%E1%BA%A3i+l%C6%B0%C6%A1ng'
-          : 'https://www.youtube.com',
+        url,
         appName: 'YouTube'
       };
     }

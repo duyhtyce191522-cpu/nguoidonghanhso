@@ -32,8 +32,8 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
           onClick={() =>
             handleOpenApp(
               'YouTube',
-              'https://www.youtube.com',
-              'Dạ, con đang mở YouTube cho bác xem ca nhạc và cải lương đây ạ!'
+              'https://www.youtube.com/results?search_query=ca+nh%E1%BA%A1c+c%E1%BA%A3i+l%C6%B0%C6%A1ng',
+              'Dạ, con đang mở YouTube có sẵn danh sách ca nhạc và cải lương cho bác xem ngay đây ạ!'
             )
           }
           className="app-dock-tile app-youtube"
@@ -43,7 +43,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
             <Youtube size={26} color="white" />
           </div>
           <span className="app-tile-name">YouTube</span>
-          <span className="app-tile-sub">Ca Nhạc, Phim</span>
+          <span className="app-tile-sub">Ca Nhạc, Cải Lương</span>
         </button>
 
         {/* Facebook */}

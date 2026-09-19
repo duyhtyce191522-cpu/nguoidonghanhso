@@ -88,17 +88,32 @@ export class AIService {
       lower.includes('du túp') ||
       lower.includes('dút tuýp') ||
       lower.includes('dutu') ||
-      (lower.includes('xem') && (lower.includes('cải lương') || lower.includes('ca nhạc') || lower.includes('hát') || lower.includes('phim')))
+      (lower.includes('xem') && (lower.includes('cải lương') || lower.includes('ca nhạc') || lower.includes('hát') || lower.includes('phim') || lower.includes('hài') || lower.includes('thời sự') || lower.includes('tin tức')))
     ) {
-      let url = 'https://www.youtube.com';
+      let query = 'ca nhạc cải lương';
+      let genreDesc = 'ca nhạc và cải lương';
+
       if (lower.includes('cải lương')) {
-        url = 'https://www.youtube.com/results?search_query=c%E1%BA%A3i+l%C6%B0%C6%A1ng';
-      } else if (lower.includes('ca nhạc') || lower.includes('nhạc vàng') || lower.includes('nhạc xưa')) {
-        url = 'https://www.youtube.com/results?search_query=nh%E1%BA%A1c+v%C3%A0ng+x%C6%B0a';
+        query = 'cải lương việt nam tuyển chọn';
+        genreDesc = 'vở cải lương hay';
+      } else if (lower.includes('nhạc vàng') || lower.includes('nhạc xưa') || lower.includes('bolero') || lower.includes('ca nhạc') || lower.includes('hát') || lower.includes('nhạc')) {
+        query = 'nhạc vàng xưa trữ tình chọn lọc';
+        genreDesc = 'nhạc vàng và bolero trữ tình';
+      } else if (lower.includes('phim')) {
+        query = 'phim truyền hình việt nam';
+        genreDesc = 'phim truyện Việt Nam';
+      } else if (lower.includes('hài') || lower.includes('tiểu phẩm')) {
+        query = 'hài kịch dân gian việt nam';
+        genreDesc = 'tiểu phẩm hài kịch vui vẻ';
+      } else if (lower.includes('thời sự') || lower.includes('tin tức')) {
+        query = 'thời sự vtv1 mới nhất hôm nay';
+        genreDesc = 'bản tin thời sự mới nhất';
       }
 
+      const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+
       return {
-        reply: "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+        reply: `Dạ, con đang mở YouTube phần ${genreDesc} cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.`,
         action: {
           type: 'open_url',
           url,
