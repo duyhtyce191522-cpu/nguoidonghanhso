@@ -47,37 +47,39 @@ export const CaregiverHome: React.FC = () => {
     <div style={{ maxWidth: '900px', margin: '0 auto' }}>
       {/* Caregiver Hero & Stats */}
       <div className="caregiver-hero">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <div style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.9 }}>
+            <div style={{ fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#A7F3D0', fontWeight: 800 }}>
               Bảng Giám Sát Từ Xa Dành Cho Con Cháu
             </div>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginTop: '4px' }}>
-              Theo Dõi Sức Khỏe & Sinh Hoạt Của {profile.preferredGreeting}
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginTop: '4px', color: '#FFFFFF' }}>
+              Theo Dõi Sức Khỏe Của {profile.preferredGreeting}
             </h2>
-            <p style={{ opacity: 0.9, fontSize: '0.95rem', marginTop: '4px' }}>
-              Họ tên: {profile.fullName} ({profile.birthYear} - {new Date().getFullYear() - profile.birthYear} tuổi) • {profile.healthNotes}
+            <p style={{ color: '#E2E8F0', fontSize: '0.92rem', marginTop: '4px', lineHeight: 1.4 }}>
+              Họ tên: <strong>{profile.fullName}</strong> ({profile.birthYear} - {new Date().getFullYear() - profile.birthYear} tuổi) • {profile.healthNotes}
             </p>
           </div>
 
           <button
             onClick={loadData}
             style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              border: 'none',
+              background: 'rgba(255, 255, 255, 0.18)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
               color: 'white',
-              padding: '8px 14px',
-              borderRadius: '8px',
+              padding: '8px 16px',
+              borderRadius: '10px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
               fontSize: '0.85rem',
-              fontWeight: 700
+              fontWeight: 800,
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)'
             }}
-            title="Làm mới dữ liệu"
+            title="Làm mới dữ liệu từ xa"
           >
-            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+            <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
             <span>Cập nhật</span>
           </button>
         </div>
@@ -85,19 +87,19 @@ export const CaregiverHome: React.FC = () => {
         {/* Adherence and Task Stats */}
         <div className="stat-grid">
           <div className="stat-card">
-            <div className="stat-number">{stats.adherenceRate}%</div>
+            <div className="stat-number">🎯 {stats.adherenceRate}%</div>
             <div className="stat-label">Tỷ lệ tuân thủ thuốc hôm nay</div>
           </div>
           <div className="stat-card">
-            <div className="stat-number">{stats.completedReminders} / {stats.totalReminders}</div>
+            <div className="stat-number">💊 {stats.completedReminders} / {stats.totalReminders}</div>
             <div className="stat-label">Cữ thuốc đã hoàn thành</div>
           </div>
           <div className="stat-card">
-            <div className="stat-number">{stats.pendingReminders}</div>
+            <div className="stat-number">⏳ {stats.pendingReminders}</div>
             <div className="stat-label">Cữ thuốc còn lại trong ngày</div>
           </div>
           <div className="stat-card">
-            <div className="stat-number">{contacts.length}</div>
+            <div className="stat-number">🚨 {contacts.length}</div>
             <div className="stat-label">Số liên hệ khẩn cấp sẵn sàng</div>
           </div>
         </div>
@@ -109,13 +111,13 @@ export const CaregiverHome: React.FC = () => {
           className={`tab-item ${activeTab === 'reminders' ? 'active' : ''}`}
           onClick={() => setActiveTab('reminders')}
         >
-          💊 Quản Lý Đơn Thuốc ({reminders.length})
+          💊 Đơn Thuốc ({reminders.length})
         </button>
         <button
           className={`tab-item ${activeTab === 'logs' ? 'active' : ''}`}
           onClick={() => setActiveTab('logs')}
         >
-          📋 Nhật Ký Hoạt Động & AI ({logs.length})
+          📋 Nhật Ký & AI ({logs.length})
         </button>
         <button
           className={`tab-item ${activeTab === 'settings' ? 'active' : ''}`}
