@@ -90,7 +90,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     });
   };
 
-  const speakText = (text: string) => {
+  const speakText = (text: string, onFinish?: () => void) => {
     unlockAudio();
     setIsSpeaking(true);
     setIsPaused(false);
@@ -103,10 +103,12 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       onEnd: () => {
         setIsSpeaking(false);
         setIsPaused(false);
+        if (onFinish) onFinish();
       },
       onError: () => {
         setIsSpeaking(false);
         setIsPaused(false);
+        if (onFinish) onFinish();
       }
     });
   };
@@ -182,23 +184,22 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       const res = await api.sendChatMessage(spokenText);
       if (res && res.reply) {
         setAssistantReply(res.reply);
-        speakText(res.reply);
 
-        if (res.action) {
-          setAppAction(res.action);
-          // Try to automatically open in new tab
-          try {
-            window.open(res.action.url, '_blank');
-          } catch (e) {
-            console.warn("Auto popup blocked, button available for user touch:", e);
-          }
-        } else if (localIntent) {
-          try {
-            window.open(localIntent.url, '_blank');
-          } catch (e) {
-            console.warn("Auto popup blocked:", e);
-          }
+        const actionToExecute = res.action || localIntent;
+        if (actionToExecute) {
+          setAppAction(actionToExecute);
         }
+
+        // Mở tab SAU KHI AI ĐỌC XONG CÂU TRẢ LỜI
+        speakText(res.reply, () => {
+          if (actionToExecute) {
+            try {
+              window.open(actionToExecute.url, '_blank');
+            } catch (e) {
+              console.warn("Auto popup blocked, button available for user touch:", e);
+            }
+          }
+        });
 
         // Section scrolling if requested
         const lower = spokenText.toLowerCase();
@@ -213,7 +214,13 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     } catch (e) {
       const fallback = `Dạ thưa ${profile.preferredGreeting}, cháu luôn ở đây để giúp bác. Bác có thể hỏi cháu mọi câu hỏi hoặc bấm vào các nút bên dưới để mở YouTube, Facebook hay kiểm tra lịch thuốc nhé ạ!`;
       setAssistantReply(fallback);
-      speakText(fallback);
+      speakText(fallback, () => {
+        if (localIntent) {
+          try {
+            window.open(localIntent.url, '_blank');
+          } catch (err) {}
+        }
+      });
     } finally {
       setIsLoadingAI(false);
     }
@@ -312,11 +319,17 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
           }}
         >
           {icon}
-          <span>BẤM VÀO ĐÂY ĐỂ VÀO {appAction.appName.toUpperCase()} NGAY</span>
+          <span>
+            {isSpeaking
+              ? `🔊 ĐANG ĐỌC... SẼ TỰ MỞ ${appAction.appName.toUpperCase()} KHI ĐỌC XONG`
+              : `BẤM VÀO ĐÂY ĐỂ VÀO ${appAction.appName.toUpperCase()} NGAY`}
+          </span>
           <ExternalLink size={18} />
         </button>
         <div style={{ textAlign: 'center', fontSize: '0.85rem', color: '#576B60', marginTop: '6px' }}>
-          *(Nếu trình duyệt chưa tự mở tab mới, bác chỉ cần chạm vào nút phía trên)*
+          {isSpeaking
+            ? `*(Bác có thể chạm vào nút phía trên bất cứ lúc nào nếu muốn sang tab ngay lập tức)*`
+            : `*(Nếu trình duyệt chặn mở tự động, bác chạm vào nút phía trên để mở nhé)*`}
         </div>
       </div>
     );

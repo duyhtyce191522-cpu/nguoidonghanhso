@@ -125,10 +125,14 @@ export const DeviceGuides: React.FC<DeviceGuidesProps> = ({ guides, contacts = [
     const zaloUrl = `https://zalo.me/${cleanPhone}`;
 
     speechService.stopSpeaking();
-    speechService.speak(`Dạ, cháu đang chuyển sang Zalo để bác gọi cho ${currentContact.name} đây ạ!`);
-
-    // Open Zalo in a new tab or trigger Zalo native app
-    window.open(zaloUrl, '_blank');
+    speechService.speak(`Dạ, cháu đang chuyển sang Zalo để bác gọi cho ${currentContact.name} đây ạ!`, {
+      onEnd: () => {
+        window.open(zaloUrl, '_blank');
+      },
+      onError: () => {
+        window.open(zaloUrl, '_blank');
+      }
+    });
   };
 
   const handleCancelAutoZalo = () => {

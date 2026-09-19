@@ -7,11 +7,36 @@ interface QuickAppDockProps {
 }
 
 export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
+  const [openingApp, setOpeningApp] = React.useState<string | null>(null);
+
   const handleOpenApp = (name: string, url: string, voiceGreeting: string) => {
+    // Nếu người dùng chạm thêm lần nữa trong lúc đang đọc, mở tab ngay lập tức
+    if (openingApp === name) {
+      speechService.stopSpeaking();
+      setOpeningApp(null);
+      window.open(url, '_blank');
+      if (onAppOpened) onAppOpened(name);
+      return;
+    }
+
     speechService.stopSpeaking();
-    speechService.speak(voiceGreeting);
-    window.open(url, '_blank');
-    if (onAppOpened) onAppOpened(name);
+    setOpeningApp(name);
+
+    const openTab = () => {
+      setOpeningApp(null);
+      try {
+        window.open(url, '_blank');
+      } catch (e) {
+        console.warn("Popup blocked, fallback touch available:", e);
+      }
+      if (onAppOpened) onAppOpened(name);
+    };
+
+    // Đọc lời chào trước, mở tab ngay khi đọc xong
+    speechService.speak(voiceGreeting, {
+      onEnd: openTab,
+      onError: openTab
+    });
   };
 
   return (
@@ -22,7 +47,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
           <span>Mở Ứng Dụng Yêu Thích</span>
         </div>
         <span className="section-badge-soft">
-          Chạm 1 lần để mở
+          {openingApp ? '🔊 Đang đọc lời chào...' : 'Chạm 1 lần để mở'}
         </span>
       </div>
 
@@ -36,14 +61,16 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang mở YouTube có sẵn danh sách ca nhạc và cải lương cho bác xem ngay đây ạ!'
             )
           }
-          className="app-dock-tile app-youtube"
+          className={`app-dock-tile app-youtube ${openingApp === 'YouTube' ? 'dock-opening' : ''}`}
           title="Mở YouTube xem ca nhạc, cải lương, phim"
         >
           <div className="app-tile-icon youtube-bg">
             <Youtube size={26} color="white" />
           </div>
           <span className="app-tile-name">YouTube</span>
-          <span className="app-tile-sub">Ca Nhạc, Cải Lương</span>
+          <span className="app-tile-sub">
+            {openingApp === 'YouTube' ? '🔊 Sắp mở...' : 'Ca Nhạc, Cải Lương'}
+          </span>
         </button>
 
         {/* Facebook */}
@@ -55,14 +82,16 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang chuyển sang Facebook cho bác xem ảnh con cháu đây ạ!'
             )
           }
-          className="app-dock-tile app-facebook"
+          className={`app-dock-tile app-facebook ${openingApp === 'Facebook' ? 'dock-opening' : ''}`}
           title="Mở Facebook xem ảnh con cháu và bạn bè"
         >
           <div className="app-tile-icon facebook-bg">
             <Facebook size={26} color="white" />
           </div>
           <span className="app-tile-name">Facebook</span>
-          <span className="app-tile-sub">Xem Ảnh Con</span>
+          <span className="app-tile-sub">
+            {openingApp === 'Facebook' ? '🔊 Sắp mở...' : 'Xem Ảnh Con'}
+          </span>
         </button>
 
         {/* TikTok */}
@@ -74,14 +103,16 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang mở TikTok cho bác xem video ngắn vui nhộn đây ạ!'
             )
           }
-          className="app-dock-tile app-tiktok"
+          className={`app-dock-tile app-tiktok ${openingApp === 'TikTok' ? 'dock-opening' : ''}`}
           title="Mở TikTok xem video vui nhộn"
         >
           <div className="app-tile-icon tiktok-bg">
             <PlaySquare size={26} color="white" />
           </div>
           <span className="app-tile-name">TikTok</span>
-          <span className="app-tile-sub">Video Vui</span>
+          <span className="app-tile-sub">
+            {openingApp === 'TikTok' ? '🔊 Sắp mở...' : 'Video Vui'}
+          </span>
         </button>
 
         {/* Zalo */}
@@ -93,14 +124,16 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang mở Zalo để bác gọi điện cho con gái Mai Lan ngay đây ạ!'
             )
           }
-          className="app-dock-tile app-zalo"
+          className={`app-dock-tile app-zalo ${openingApp === 'Zalo' ? 'dock-opening' : ''}`}
           title="Mở Zalo gọi điện cho người thân"
         >
           <div className="app-tile-icon zalo-bg">
             <span style={{ fontWeight: 900, fontSize: '1.05rem', color: 'white' }}>Zalo</span>
           </div>
           <span className="app-tile-name">Zalo</span>
-          <span className="app-tile-sub">Gọi Cho Con</span>
+          <span className="app-tile-sub">
+            {openingApp === 'Zalo' ? '🔊 Sắp mở...' : 'Gọi Cho Con'}
+          </span>
         </button>
       </div>
     </section>

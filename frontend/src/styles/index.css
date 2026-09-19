@@ -709,6 +709,14 @@ button {
   transform: scale(0.92);
 }
 
+.app-dock-tile.dock-opening {
+  background: #FFFBEB;
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.28), var(--shadow-md);
+  transform: translateY(-2px);
+  animation: pulseGlow 1.4s infinite;
+}
+
 .app-tile-icon {
   width: 46px;
   height: 46px;
