@@ -1,7 +1,7 @@
 import React from 'react';
 import { Reminder } from '../../types';
 import { audioFeedback } from '../../services/speechService';
-import { Pill, Activity, Droplets, Dumbbell, Calendar, Check, Clock } from 'lucide-react';
+import { Pill, Activity, Droplets, Dumbbell, Calendar, Check, Clock, CheckCircle2 } from 'lucide-react';
 
 interface ReminderCardProps {
   reminders: Reminder[];
@@ -12,13 +12,13 @@ export const ReminderCard: React.FC<ReminderCardProps> = ({ reminders, onToggle 
   const getIcon = (type: Reminder['type']) => {
     switch (type) {
       case 'medicine':
-        return <Pill size={22} color="#2563EB" />;
+        return <Pill size={22} color="#059669" />;
       case 'blood_pressure':
         return <Activity size={22} color="#DC2626" />;
       case 'water':
         return <Droplets size={22} color="#0284C7" />;
       case 'exercise':
-        return <Dumbbell size={22} color="#059669" />;
+        return <Dumbbell size={22} color="#D97706" />;
       default:
         return <Calendar size={22} color="#7C3AED" />;
     }
@@ -44,89 +44,92 @@ export const ReminderCard: React.FC<ReminderCardProps> = ({ reminders, onToggle 
   const isAllDone = reminders.length > 0 && completedCount === reminders.length;
 
   return (
-    <div id="reminders-section" style={{ marginTop: '16px' }}>
+    <section className="reminder-section-container" id="reminders-section" aria-label="Lịch uống thuốc">
       <div className="section-header">
         <div className="section-title">
-          <Clock size={24} color="#1E40AF" />
+          <Clock size={24} color="#386641" />
           <span>Lịch Uống Thuốc Hôm Nay</span>
         </div>
-        <div style={{
-          fontWeight: 800,
-          color: '#059669',
-          fontSize: '0.88rem',
-          background: '#ECFDF5',
-          padding: '5px 12px',
-          borderRadius: '9999px',
-          border: '1.5px solid #A7F3D0'
-        }}>
-          Đã xong: {completedCount}/{reminders.length}
+        <div className="reminder-progress-badge">
+          {isAllDone ? "✓ Hoàn thành tất cả" : `Đã uống: ${completedCount}/${reminders.length}`}
         </div>
       </div>
 
       {isAllDone && (
-        <div style={{
-          background: '#ECFDF5',
-          border: '2px solid #86EFAC',
-          borderRadius: '16px',
-          padding: '14px 18px',
-          marginBottom: '14px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          color: '#166534',
-          fontWeight: 700,
-          fontSize: '1.05rem',
-          lineHeight: 1.4
-        }}>
-          🎉 Hoan hô bác! Bác đã hoàn thành trọn vẹn các cữ thuốc trong ngày rồi ạ!
+        <div className="reminder-celebration-banner">
+          <div className="celebration-icon">🎉</div>
+          <div>
+            <strong>Hoan hô bác!</strong> Bác đã uống đủ tất cả các cữ thuốc hôm nay rồi ạ. Bác nhớ nghỉ ngơi thật thoải mái nhé!
+          </div>
         </div>
       )}
 
-      {reminders.map((rem) => (
-        <div key={rem.id} className={`reminder-card ${rem.completed ? 'completed' : ''}`}>
-          <div className="reminder-card-left">
-            <div className={`reminder-time-badge ${rem.period}`}>
-              <div>{rem.time}</div>
-              <div style={{ fontSize: '0.74rem', fontWeight: 700, opacity: 0.9 }}>{getPeriodLabel(rem.period)}</div>
-            </div>
-
-            <div className="reminder-details">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                {getIcon(rem.type)}
-                <div className="reminder-title">{rem.title}</div>
+      <div className="reminders-list">
+        {reminders.map((rem) => {
+          const isDone = rem.completed;
+          return (
+            <div
+              key={rem.id}
+              className={`med-card-item period-${rem.period} ${isDone ? 'is-completed' : ''}`}
+            >
+              {/* Card Header: Period badge & Time */}
+              <div className="med-card-header">
+                <div className={`med-period-tag tag-${rem.period}`}>
+                  <span className="period-dot"></span>
+                  <span>{getPeriodLabel(rem.period)}</span>
+                </div>
+                <div className="med-time-display">
+                  <Clock size={16} />
+                  <span>{rem.time}</span>
+                </div>
               </div>
 
-              {rem.dosage && (
-                <div className="reminder-subtext">
-                  💊 <strong>Liều dùng:</strong> {rem.dosage}
+              {/* Card Content: Title & Dosage */}
+              <div className="med-card-body">
+                <div className="med-title-row">
+                  <div className="med-icon-box">
+                    {getIcon(rem.type)}
+                  </div>
+                  <h4 className="med-title">{rem.title}</h4>
                 </div>
-              )}
 
-              {rem.note && (
-                <div className="reminder-note">
-                  💡 {rem.note}
-                </div>
-              )}
+                {rem.dosage && (
+                  <div className="med-dosage-box">
+                    <span className="dosage-icon">💊</span>
+                    <span><strong>Liều dùng:</strong> {rem.dosage}</span>
+                  </div>
+                )}
 
-              {rem.completed && rem.completedAt && (
-                <div style={{ fontSize: '0.82rem', color: '#166534', marginTop: '6px', fontWeight: 700 }}>
-                  ✓ Đã uống lúc {new Date(rem.completedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
-                </div>
-              )}
+                {rem.note && (
+                  <div className="med-note-box">
+                    <span className="note-icon">💡</span>
+                    <span>{rem.note}</span>
+                  </div>
+                )}
+
+                {isDone && rem.completedAt && (
+                  <div className="med-done-timestamp">
+                    <CheckCircle2 size={16} color="#15803D" />
+                    <span>Đã xác nhận uống lúc {new Date(rem.completedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Big Full-Width 3D Action Button */}
+              <div className="med-action-wrapper">
+                <button
+                  onClick={() => handleToggle(rem)}
+                  className={`med-check-btn ${isDone ? 'btn-done' : 'btn-active'}`}
+                  title={isDone ? "Bấm để đánh dấu chưa uống" : "Bấm để xác nhận đã uống thuốc"}
+                >
+                  <Check size={24} strokeWidth={3} />
+                  <span>{isDone ? "ĐÃ UỐNG XONG ✓" : "BẤM ĐÃ UỐNG THUỐC"}</span>
+                </button>
+              </div>
             </div>
-          </div>
-
-          {/* Full-width Big Touch Button for Seniors */}
-          <button
-            onClick={() => handleToggle(rem)}
-            className={`btn-check-medicine ${rem.completed ? 'done' : 'not-done'}`}
-            title={rem.completed ? "Bấm để bỏ đánh dấu" : "Bấm để xác nhận đã uống"}
-          >
-            <Check size={22} strokeWidth={3} />
-            <span>{rem.completed ? "Đã Uống Xong ✓" : "BẤM ĐÃ UỐNG THUỐC"}</span>
-          </button>
-        </div>
-      ))}
-    </div>
+          );
+        })}
+      </div>
+    </section>
   );
 };

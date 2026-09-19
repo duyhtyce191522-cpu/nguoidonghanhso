@@ -38,8 +38,9 @@
       "type": "medicine",
       "dosage": "1 viên cùng bữa ăn trưa",
       "note": "Uống đúng bữa trưa để hấp thụ tốt nhất",
-      "completed": false,
-      "createdAt": "2026-09-19T14:54:54.949Z"
+      "completed": true,
+      "createdAt": "2026-09-19T14:54:54.949Z",
+      "completedAt": "2026-09-19T18:48:44.009Z"
     },
     {
       "id": "rem-4",
@@ -492,6 +493,18 @@
       "description": "Bác trò chuyện: \"Thủ đô của nước Pháp là gì?\" -> AI phản hồi.",
       "id": "log-1789842736109",
       "timestamp": "2026-09-19T18:32:16.109Z"
+    },
+    {
+      "type": "medicine_taken",
+      "description": "Bác đã hoàn thành lịch nhắc: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" vào lúc 01:48:44.",
+      "id": "log-1789843724024",
+      "timestamp": "2026-09-19T18:48:44.024Z"
+    },
+    {
+      "type": "sos_alert",
+      "description": "[CẢNH BÁO KHẨN CẤP SOS] Bác đã bấm nút trợ giúp khẩn cấp! Đã kích hoạt liên lạc tới Nguyễn Thị Mai Lan (0912 345 678). Lý do: Bác bấm nút khẩn cấp SOS trên ứng dụng.",
+      "id": "log-1789843943075",
+      "timestamp": "2026-09-19T18:52:23.075Z"
     }
   ],
   "chats": [

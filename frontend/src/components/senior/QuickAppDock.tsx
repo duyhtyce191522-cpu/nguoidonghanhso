@@ -19,7 +19,7 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
       <div className="section-header">
         <div className="section-title">
           <Smartphone size={24} color="#386641" />
-          <span>Bấm Mở Ứng Dụng Yêu Thích</span>
+          <span>Mở Ứng Dụng Yêu Thích</span>
         </div>
         <span className="section-badge-soft">
           Chạm 1 lần để mở
@@ -36,19 +36,14 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang mở YouTube cho bác xem ca nhạc và cải lương đây ạ!'
             )
           }
-          className="app-dock-card app-youtube"
+          className="app-dock-tile app-youtube"
           title="Mở YouTube xem ca nhạc, cải lương, phim"
         >
-          <div className="app-dock-icon-wrapper youtube-bg">
-            <Youtube size={32} color="white" />
+          <div className="app-tile-icon youtube-bg">
+            <Youtube size={26} color="white" />
           </div>
-          <div className="app-dock-info">
-            <div className="app-dock-title">
-              <span>YouTube</span>
-              <ExternalLink size={15} />
-            </div>
-            <div className="app-dock-desc">Xem Cải Lương, Ca Nhạc, Phim</div>
-          </div>
+          <span className="app-tile-name">YouTube</span>
+          <span className="app-tile-sub">Ca Nhạc, Phim</span>
         </button>
 
         {/* Facebook */}
@@ -60,19 +55,14 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang chuyển sang Facebook cho bác xem ảnh con cháu đây ạ!'
             )
           }
-          className="app-dock-card app-facebook"
+          className="app-dock-tile app-facebook"
           title="Mở Facebook xem ảnh con cháu và bạn bè"
         >
-          <div className="app-dock-icon-wrapper facebook-bg">
-            <Facebook size={32} color="white" />
+          <div className="app-tile-icon facebook-bg">
+            <Facebook size={26} color="white" />
           </div>
-          <div className="app-dock-info">
-            <div className="app-dock-title">
-              <span>Facebook</span>
-              <ExternalLink size={15} />
-            </div>
-            <div className="app-dock-desc">Xem Ảnh Con Cháu & Bạn Bè</div>
-          </div>
+          <span className="app-tile-name">Facebook</span>
+          <span className="app-tile-sub">Xem Ảnh Con</span>
         </button>
 
         {/* TikTok */}
@@ -84,19 +74,14 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang mở TikTok cho bác xem video ngắn vui nhộn đây ạ!'
             )
           }
-          className="app-dock-card app-tiktok"
+          className="app-dock-tile app-tiktok"
           title="Mở TikTok xem video vui nhộn"
         >
-          <div className="app-dock-icon-wrapper tiktok-bg">
-            <PlaySquare size={32} color="white" />
+          <div className="app-tile-icon tiktok-bg">
+            <PlaySquare size={26} color="white" />
           </div>
-          <div className="app-dock-info">
-            <div className="app-dock-title">
-              <span>TikTok</span>
-              <ExternalLink size={15} />
-            </div>
-            <div className="app-dock-desc">Video Vui Nhộn, Nấu Ăn</div>
-          </div>
+          <span className="app-tile-name">TikTok</span>
+          <span className="app-tile-sub">Video Vui</span>
         </button>
 
         {/* Zalo */}
@@ -108,19 +93,14 @@ export const QuickAppDock: React.FC<QuickAppDockProps> = ({ onAppOpened }) => {
               'Dạ, con đang mở Zalo để bác gọi điện cho con gái Mai Lan ngay đây ạ!'
             )
           }
-          className="app-dock-card app-zalo"
+          className="app-dock-tile app-zalo"
           title="Mở Zalo gọi điện cho người thân"
         >
-          <div className="app-dock-icon-wrapper zalo-bg">
-            <span style={{ fontWeight: 900, fontSize: '1.25rem', color: 'white', letterSpacing: '-0.5px' }}>Zalo</span>
+          <div className="app-tile-icon zalo-bg">
+            <span style={{ fontWeight: 900, fontSize: '1.05rem', color: 'white' }}>Zalo</span>
           </div>
-          <div className="app-dock-info">
-            <div className="app-dock-title">
-              <span>Zalo</span>
-              <ExternalLink size={15} />
-            </div>
-            <div className="app-dock-desc">Gọi Điện & Nhắn Tin Cho Con</div>
-          </div>
+          <span className="app-tile-name">Zalo</span>
+          <span className="app-tile-sub">Gọi Cho Con</span>
         </button>
       </div>
     </section>
