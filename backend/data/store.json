@@ -14,8 +14,9 @@
       "type": "medicine",
       "dosage": "1 viên sau ăn sáng 15 phút",
       "note": "Nhớ uống với 1 cốc nước ấm đầy nhé bác",
-      "completed": false,
-      "createdAt": "2026-09-19T14:54:54.949Z"
+      "completed": true,
+      "createdAt": "2026-09-19T14:54:54.949Z",
+      "completedAt": "2026-09-19T18:19:17.852Z"
     },
     {
       "id": "rem-2",
@@ -25,8 +26,9 @@
       "type": "blood_pressure",
       "dosage": "Nghỉ ngơi 5 phút trước khi đo",
       "note": "Ghi nhớ chỉ số tâm thu và tâm trương",
-      "completed": false,
-      "createdAt": "2026-09-19T14:54:54.949Z"
+      "completed": true,
+      "createdAt": "2026-09-19T14:54:54.949Z",
+      "completedAt": "2026-09-19T18:19:20.913Z"
     },
     {
       "id": "rem-3",
@@ -400,99 +402,99 @@
       "description": "Bác trò chuyện: \"nay là ngày mấy\" -> AI phản hồi ân cần.",
       "id": "log-1789840917157",
       "timestamp": "2026-09-19T18:01:57.157Z"
+    },
+    {
+      "type": "medicine_taken",
+      "description": "Bác đã hoàn thành lịch nhắc: \"Uống thuốc Huyết Áp (Amlodipine)\" vào lúc 01:19:17.",
+      "id": "log-1789841957853",
+      "timestamp": "2026-09-19T18:19:17.853Z"
+    },
+    {
+      "type": "medicine_taken",
+      "description": "Bác đã hoàn thành lịch nhắc: \"Đo huyết áp & nhịp tim buổi sáng\" vào lúc 01:19:20.",
+      "id": "log-1789841960913",
+      "timestamp": "2026-09-19T18:19:20.913Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube xem cải lương\" -> AI phản hồi.",
+      "id": "log-1789842435406",
+      "timestamp": "2026-09-19T18:27:15.406Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Vào Facebook xem ảnh con cháu\" -> AI phản hồi.",
+      "id": "log-1789842439646",
+      "timestamp": "2026-09-19T18:27:19.646Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Bật TikTok giải trí\" -> AI phản hồi.",
+      "id": "log-1789842444581",
+      "timestamp": "2026-09-19T18:27:24.581Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Thủ đô của nước Pháp là gì?\" -> AI phản hồi.",
+      "id": "log-1789842448693",
+      "timestamp": "2026-09-19T18:27:28.693Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Thủ đô của nước Pháp là gì?\" -> AI phản hồi.",
+      "id": "log-1789842490479",
+      "timestamp": "2026-09-19T18:28:10.479Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Trái đất cách mặt trời bao xa?\" -> AI phản hồi.",
+      "id": "log-1789842490490",
+      "timestamp": "2026-09-19T18:28:10.490Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Bác Hồ sinh năm nào?\" -> AI phản hồi.",
+      "id": "log-1789842490504",
+      "timestamp": "2026-09-19T18:28:10.504Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"25 cộng 35 bằng mấy?\" -> AI phản hồi.",
+      "id": "log-1789842490519",
+      "timestamp": "2026-09-19T18:28:10.519Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube xem cải lương\" -> AI phản hồi.",
+      "id": "log-1789842490534",
+      "timestamp": "2026-09-19T18:28:10.534Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Vào Facebook xem ảnh\" -> AI phản hồi.",
+      "id": "log-1789842490540",
+      "timestamp": "2026-09-19T18:28:10.540Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Bật TikTok giải trí\" -> AI phản hồi.",
+      "id": "log-1789842490545",
+      "timestamp": "2026-09-19T18:28:10.545Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mở YouTube xem cải lương\" -> AI phản hồi.",
+      "id": "log-1789842606811",
+      "timestamp": "2026-09-19T18:30:06.811Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Thủ đô của nước Pháp là gì?\" -> AI phản hồi.",
+      "id": "log-1789842736109",
+      "timestamp": "2026-09-19T18:32:16.109Z"
     }
   ],
   "chats": [
-    {
-      "id": "chat-1",
-      "sender": "assistant",
-      "text": "Dạ, con chào bác Hùng ạ! Chúc bác một ngày mới thật an vui và dồi dào sức khỏe. Bác cần con hỗ trợ hoặc trò chuyện điều gì không ạ?",
-      "timestamp": "2026-09-19T11:54:54.949Z"
-    },
-    {
-      "sender": "user",
-      "text": "Ch�u oi h�m nay tr?i c� mua kh�ng?",
-      "id": "chat-1789829700665",
-      "timestamp": "2026-09-19T14:55:00.665Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, cháu đã nghe bác nói rồi ạ. Cháu luôn đồng hành cùng bác từng ngày. Bác muốn cháu đọc tin tức hôm nay hay nhắc nhở lịch sinh hoạt tiếp theo cho bác ạ?",
-      "id": "chat-1789829700666",
-      "timestamp": "2026-09-19T14:55:00.666Z"
-    },
-    {
-      "sender": "user",
-      "text": "Hôm nay thời tiết thế nào?",
-      "id": "chat-1789829804165",
-      "timestamp": "2026-09-19T14:56:44.165Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, thời tiết hôm nay ấm áp, gió mát và không khí rất dễ chịu. Chiều nay bác có thể ra sân hoặc ban công hít thở khí trời và đi dạo 15 phút cho khỏe gân cốt ạ!",
-      "id": "chat-1789829804167",
-      "timestamp": "2026-09-19T14:56:44.167Z"
-    },
-    {
-      "sender": "user",
-      "text": "alo alo",
-      "id": "chat-1789830894077",
-      "timestamp": "2026-09-19T15:14:54.077Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ con đây ạ! Cháu luôn ở đây để trò chuyện và đồng hành cùng bác. Bác có muốn nghe tin tức, kiểm tra lịch thuốc hay tâm sự điều gì với cháu không ạ?",
-      "id": "chat-1789830894078",
-      "timestamp": "2026-09-19T15:14:54.078Z"
-    },
-    {
-      "sender": "user",
-      "text": "Tôi muốn xem lịch trình ngày hôm nay",
-      "id": "chat-1789830900928",
-      "timestamp": "2026-09-19T15:15:00.928Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa Bác Hùng, trong ngày bác còn lịch: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" lúc 12:00 (1 viên cùng bữa ăn trưa). Bác nhớ ăn no rồi uống đúng giờ nhé ạ!",
-      "id": "chat-1789830900929",
-      "timestamp": "2026-09-19T15:15:00.929Z"
-    },
-    {
-      "sender": "user",
-      "text": "Hôm nay thời tiết như thế nào",
-      "id": "chat-1789830913515",
-      "timestamp": "2026-09-19T15:15:13.515Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, thời tiết hôm nay ấm áp, gió mát và không khí rất dễ chịu. Chiều nay bác có thể ra sân hoặc ban công hít thở khí trời và đi dạo 15 phút cho khỏe gân cốt ạ!",
-      "id": "chat-1789830913516",
-      "timestamp": "2026-09-19T15:15:13.516Z"
-    },
-    {
-      "sender": "user",
-      "text": "Chỉ tôi cách gọi Zalo cho con",
-      "id": "chat-1789830923760",
-      "timestamp": "2026-09-19T15:15:23.760Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục \"Cẩm nang hướng dẫn\" trên màn hình, rồi chọn \"Gọi Video Zalo\", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!",
-      "id": "chat-1789830923761",
-      "timestamp": "2026-09-19T15:15:23.761Z"
-    },
-    {
-      "sender": "user",
-      "text": "có thể giúp tôi điện cho con gái được không",
-      "id": "chat-1789830950922",
-      "timestamp": "2026-09-19T15:15:50.922Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, cháu đã nghe bác nói rồi ạ. Cháu luôn đồng hành cùng bác từng ngày. Bác muốn cháu đọc tin tức hôm nay hay nhắc nhở lịch sinh hoạt tiếp theo cho bác ạ?",
-      "id": "chat-1789830950923",
-      "timestamp": "2026-09-19T15:15:50.923Z"
-    },
     {
       "sender": "user",
       "text": "Đọc tin tức ngày hôm nay",
@@ -636,6 +638,162 @@
       "text": "Dạ thưa bác, bây giờ là 01:01, Chủ Nhật, 20 tháng 9, 2026 ạ.",
       "id": "chat-1789840917156",
       "timestamp": "2026-09-19T18:01:57.156Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube xem cải lương",
+      "id": "chat-1789842435405",
+      "timestamp": "2026-09-19T18:27:15.405Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789842435405",
+      "timestamp": "2026-09-19T18:27:15.405Z"
+    },
+    {
+      "sender": "user",
+      "text": "Vào Facebook xem ảnh con cháu",
+      "id": "chat-1789842439645",
+      "timestamp": "2026-09-19T18:27:19.645Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang chuyển sang Facebook cho bác đây ạ! Bác có thể xem ảnh con cháu và đọc tin tức của bạn bè nhé.",
+      "id": "chat-1789842439646",
+      "timestamp": "2026-09-19T18:27:19.646Z"
+    },
+    {
+      "sender": "user",
+      "text": "Bật TikTok giải trí",
+      "id": "chat-1789842444581",
+      "timestamp": "2026-09-19T18:27:24.581Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+      "id": "chat-1789842444581",
+      "timestamp": "2026-09-19T18:27:24.581Z"
+    },
+    {
+      "sender": "user",
+      "text": "Thủ đô của nước Pháp là gì?",
+      "id": "chat-1789842447703",
+      "timestamp": "2026-09-19T18:27:27.703Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, theo kiến thức ghi nhận: Tên cậu là gì. là một bộ phim điện ảnh hoạt hình Nhật Bản thuộc thể loại tình cảm lãng mạn, kỳ ảo, chính kịch do Shinkai Makoto làm đạo diễn. Bác có muốn hỏi thêm điều gì về chủ đề này không ạ?",
+      "id": "chat-1789842448692",
+      "timestamp": "2026-09-19T18:27:28.692Z"
+    },
+    {
+      "sender": "user",
+      "text": "Thủ đô của nước Pháp là gì?",
+      "id": "chat-1789842490477",
+      "timestamp": "2026-09-19T18:28:10.477Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, thủ đô của nước Pháp là thành phố Paris – kinh đô ánh sáng nổi tiếng với tháp Eiffel và dòng sông Seine thơ mộng ạ.",
+      "id": "chat-1789842490479",
+      "timestamp": "2026-09-19T18:28:10.479Z"
+    },
+    {
+      "sender": "user",
+      "text": "Trái đất cách mặt trời bao xa?",
+      "id": "chat-1789842490489",
+      "timestamp": "2026-09-19T18:28:10.489Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, Trái Đất cách Mặt Trời khoảng 149,6 triệu kilômét. Ánh sáng từ Mặt Trời mất khoảng 8 phút 20 giây để chiếu tới Trái Đất của chúng ta đấy ạ.",
+      "id": "chat-1789842490490",
+      "timestamp": "2026-09-19T18:28:10.490Z"
+    },
+    {
+      "sender": "user",
+      "text": "Bác Hồ sinh năm nào?",
+      "id": "chat-1789842490503",
+      "timestamp": "2026-09-19T18:28:10.503Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, Chủ tịch Hồ Chí Minh kính yêu sinh ngày 19 tháng 5 năm 1890 tại làng Sen, xã Kim Liên, huyện Nam Đàn, tỉnh Nghệ An ạ.",
+      "id": "chat-1789842490503",
+      "timestamp": "2026-09-19T18:28:10.503Z"
+    },
+    {
+      "sender": "user",
+      "text": "25 cộng 35 bằng mấy?",
+      "id": "chat-1789842490518",
+      "timestamp": "2026-09-19T18:28:10.518Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, kết quả phép tính 25 cộng 35 bằng 60 ạ.",
+      "id": "chat-1789842490519",
+      "timestamp": "2026-09-19T18:28:10.519Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube xem cải lương",
+      "id": "chat-1789842490533",
+      "timestamp": "2026-09-19T18:28:10.533Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789842490534",
+      "timestamp": "2026-09-19T18:28:10.534Z"
+    },
+    {
+      "sender": "user",
+      "text": "Vào Facebook xem ảnh",
+      "id": "chat-1789842490539",
+      "timestamp": "2026-09-19T18:28:10.539Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang chuyển sang Facebook cho bác đây ạ! Bác có thể xem ảnh con cháu và đọc tin tức của bạn bè nhé.",
+      "id": "chat-1789842490539",
+      "timestamp": "2026-09-19T18:28:10.539Z"
+    },
+    {
+      "sender": "user",
+      "text": "Bật TikTok giải trí",
+      "id": "chat-1789842490543",
+      "timestamp": "2026-09-19T18:28:10.543Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+      "id": "chat-1789842490544",
+      "timestamp": "2026-09-19T18:28:10.544Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mở YouTube xem cải lương",
+      "id": "chat-1789842606810",
+      "timestamp": "2026-09-19T18:30:06.810Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+      "id": "chat-1789842606811",
+      "timestamp": "2026-09-19T18:30:06.811Z"
+    },
+    {
+      "sender": "user",
+      "text": "Thủ đô của nước Pháp là gì?",
+      "id": "chat-1789842736107",
+      "timestamp": "2026-09-19T18:32:16.107Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, thủ đô của nước Pháp là thành phố Paris – kinh đô ánh sáng nổi tiếng với tháp Eiffel và dòng sông Seine thơ mộng ạ.",
+      "id": "chat-1789842736108",
+      "timestamp": "2026-09-19T18:32:16.108Z"
     }
   ]
 }

@@ -1,17 +1,28 @@
 import { store } from './dataStore';
+import { knowledgeService } from './knowledgeService';
+
+export interface AIResponse {
+  reply: string;
+  action?: {
+    type: 'open_url';
+    url: string;
+    appName: string;
+  };
+}
 
 const SYSTEM_PROMPT = `
-Bạn là "Người Đồng Hành Số" - một trợ lý AI thông minh, hiền hậu, kiên nhẫn và ân cần chuyên tâm sự, hỗ trợ người cao tuổi Việt Nam.
-Tên của người bạn đang đồng hành là: Bác Hùng (khoảng hơn 70 tuổi).
-Khi nói chuyện, hãy tuân thủ nghiêm ngặt các nguyên tắc sau:
-1. Xưng hô: Luôn xưng là "con" hoặc "cháu" và gọi người lớn tuổi là "bác" (hoặc "ông/bà" nếu được yêu cầu). Luôn có "dạ", "thưa bác" ở đầu hoặc cuối câu để thể hiện sự kính trọng, lễ phép của người Việt.
-2. Giọng điệu: Ấm áp, nhẹ nhàng, lạc quan, tôn trọng và kiên nhẫn tuyệt đối. Không bao giờ cộc lốc hay dùng từ ngữ mỉa mai.
-3. Độ dài câu: Câu trả lời cần ngắn gọn, súc tích (khoảng 2-4 câu dễ nghe), dùng từ thuần Việt, giản dị, dễ hiểu. KHÔNG dùng thuật ngữ công nghệ tiếng Anh phức tạp.
-4. Trợ giúp thiết thực:
-   - Nếu hỏi về giờ giấc, ngày tháng, thời tiết: Trả lời rõ ràng, thêm lời dặn dò sức khỏe (ví dụ: "Dạ hôm nay trời nắng đẹp, bác nhớ đội mũ và uống nước nhé").
-   - Nếu hỏi về thuốc: Nhắc bác xem kỹ hướng dẫn hoặc đơn bác sĩ, nhắc uống đúng giờ, không tự ý tăng liều.
-   - Nếu bác tâm sự buồn bã, cô đơn: Hãy lắng nghe chân thành, an ủi, nhắc về niềm vui con cháu, gợi ý bác nghe nhạc xưa hoặc đi dạo.
-   - Nếu có dấu hiệu nguy hiểm hoặc cấp cứu: Khuyên bác bấm ngay nút SOS màu đỏ trên màn hình hoặc gọi người nhà ngay.
+Bạn là "Người Đồng Hành Số" - một trợ lý AI thông minh toàn năng như Google Assistant, nhưng cực kỳ hiền hậu, kiên nhẫn, lễ phép và ân cần dành riêng cho người cao tuổi Việt Nam.
+Người đồng hành của bạn là Bác Hùng (khoảng hơn 70 tuổi).
+Nguyên tắc ứng xử và giao tiếp:
+1. Xưng hô: Luôn xưng là "con" hoặc "cháu", gọi là "bác". Luôn có "Dạ thưa bác" ở đầu hoặc cuối câu để thể hiện sự hiếu kính, lễ phép.
+2. Trả lời mọi câu hỏi: Bạn có thể giải đáp MỌI câu hỏi từ kiến thức đời sống, khoa học, lịch sử, văn hóa Việt Nam, danh lam thắng cảnh, ca dao tục ngữ, thời tiết, giải toán đơn giản, đến mẹo vặt gia đình, chăm sóc sức khỏe tuổi già.
+3. Ngắn gọn & Dễ hiểu: Câu trả lời cần súc tích (khoảng 2-4 câu), ngôn từ thuần Việt, giản dị, trong sáng, không dùng thuật ngữ công nghệ tiếng Anh khó hiểu.
+4. Điều hướng ứng dụng:
+   - Nếu bác muốn xem ca nhạc, cải lương, video, hoặc nói "mở YouTube" -> khích lệ và sẵn sàng mở YouTube.
+   - Nếu bác muốn xem ảnh con cháu, vào "Facebook" -> sẵn sàng chuyển sang Facebook.
+   - Nếu bác muốn xem video vui nhộn hoặc nói "TikTok", "Tóp tóp" -> sẵn sàng chuyển sang TikTok.
+   - Nếu bác muốn gọi con cháu hoặc nói "Zalo" -> hướng dẫn và mở Zalo.
+5. Sức khỏe & Cấp cứu: Khi bác mệt mỏi, dặn bác uống nước ấm nghỉ ngơi, nhắc nhở lịch thuốc hoặc bấm nút SOS màu đỏ khi cần trợ giúp khẩn cấp.
 `;
 
 export class AIService {
@@ -21,35 +32,138 @@ export class AIService {
     this.apiKey = process.env.GEMINI_API_KEY;
   }
 
-  async generateReply(userMessage: string): Promise<string> {
+  async generateReply(userMessage: string): Promise<AIResponse> {
     const trimmed = userMessage.trim();
     if (!trimmed) {
-      return "Dạ bác ơi, cháu chưa nghe rõ. Bác có thể nói lại hoặc bấm vào nút micro để nói chuyện với cháu nhé ạ!";
+      return {
+        reply: "Dạ bác ơi, cháu chưa nghe rõ. Bác có thể nói lại hoặc bấm vào nút micro để nói chuyện với cháu nhé ạ!"
+      };
     }
 
-    // Try Gemini API if key is present
+    const lower = trimmed.toLowerCase();
+
+    // 1. App Switcher Intent Detection (YouTube, Facebook, TikTok, Zalo)
+    const appIntent = this.detectAppIntent(trimmed, lower);
+    if (appIntent) {
+      return appIntent;
+    }
+
+    // 2. Try Gemini Generative AI if key is present
     if (this.apiKey) {
       try {
         const { GoogleGenerativeAI } = await import('@google/generative-ai');
         const genAI = new GoogleGenerativeAI(this.apiKey);
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nNgười lớn tuổi nói: "${trimmed}"\n\nHãy trả lời ân cần bằng tiếng Việt ngắn gọn:`);
+        const prompt = `${SYSTEM_PROMPT}\n\nBác Hùng nói: "${trimmed}"\n\nHãy trả lời lễ phép, ngắn gọn, súc tích (khoảng 2-3 câu) bằng tiếng Việt:`;
+        const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
-        if (text) {
-          return text.trim();
+        if (text && text.trim()) {
+          return { reply: text.trim() };
         }
       } catch (err) {
-        console.warn("Gemini API call failed, switching to empathetic fallback:", err);
+        console.warn("Gemini API call failed, falling back to local knowledge engine:", err);
       }
     }
 
-    // High quality intelligent empathetic fallback
-    return this.getEmpatheticFallbackReply(trimmed);
+    // 3. Fallback: Check Universal Real-time Knowledge Engine (Wikipedia, Math, DuckDuckGo)
+    const universalAnswer = await knowledgeService.answerUniversalQuestion(trimmed);
+    if (universalAnswer) {
+      return { reply: universalAnswer };
+    }
+
+    // 4. Empathetic elderly care fallback
+    const fallbackText = this.getEmpatheticFallbackReply(trimmed, lower);
+    return { reply: fallbackText };
   }
 
-  private getEmpatheticFallbackReply(query: string): string {
-    const lower = query.toLowerCase();
+  /**
+   * Detect voice intents for YouTube, Facebook, TikTok, and Zalo
+   */
+  private detectAppIntent(raw: string, lower: string): AIResponse | null {
+    // YouTube detection
+    if (
+      lower.includes('youtube') ||
+      lower.includes('you tube') ||
+      lower.includes('du túp') ||
+      lower.includes('dút tuýp') ||
+      lower.includes('dutu') ||
+      (lower.includes('xem') && (lower.includes('cải lương') || lower.includes('ca nhạc') || lower.includes('hát') || lower.includes('phim')))
+    ) {
+      let url = 'https://www.youtube.com';
+      if (lower.includes('cải lương')) {
+        url = 'https://www.youtube.com/results?search_query=c%E1%BA%A3i+l%C6%B0%C6%A1ng';
+      } else if (lower.includes('ca nhạc') || lower.includes('nhạc vàng') || lower.includes('nhạc xưa')) {
+        url = 'https://www.youtube.com/results?search_query=nh%E1%BA%A1c+v%C3%A0ng+x%C6%B0a';
+      }
+
+      return {
+        reply: "Dạ, con đang mở YouTube cho bác xem ngay đây ạ! Chúc bác có những phút giây thư giãn, nghe nhạc và xem video thật vui vẻ nhé.",
+        action: {
+          type: 'open_url',
+          url,
+          appName: 'YouTube'
+        }
+      };
+    }
+
+    // Facebook detection
+    if (
+      lower.includes('facebook') ||
+      lower.includes('face book') ||
+      lower.includes('phây búc') ||
+      lower.includes('phây') ||
+      (lower.includes('mở') && lower.includes('fb')) ||
+      (lower.includes('xem ảnh') && lower.includes('cháu'))
+    ) {
+      return {
+        reply: "Dạ, con đang chuyển sang Facebook cho bác đây ạ! Bác có thể xem ảnh con cháu và đọc tin tức của bạn bè nhé.",
+        action: {
+          type: 'open_url',
+          url: 'https://www.facebook.com',
+          appName: 'Facebook'
+        }
+      };
+    }
+
+    // TikTok detection
+    if (
+      lower.includes('tiktok') ||
+      lower.includes('tik tok') ||
+      lower.includes('tóp tóp') ||
+      lower.includes('top top')
+    ) {
+      return {
+        reply: "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
+        action: {
+          type: 'open_url',
+          url: 'https://www.tiktok.com',
+          appName: 'TikTok'
+        }
+      };
+    }
+
+    // Zalo detection
+    if (
+      lower.includes('gọi zalo') ||
+      lower.includes('vào zalo') ||
+      lower.includes('mở zalo') ||
+      (lower.includes('gọi cho') && (lower.includes('con') || lower.includes('cháu') || lower.includes('mai lan')))
+    ) {
+      return {
+        reply: "Dạ, con đang mở Zalo để bác gọi điện cho con gái Mai Lan ngay đây ạ!",
+        action: {
+          type: 'open_url',
+          url: 'https://zalo.me/0912345678',
+          appName: 'Zalo'
+        }
+      };
+    }
+
+    return null;
+  }
+
+  private getEmpatheticFallbackReply(query: string, lower: string): string {
     const reminders = store.getReminders();
     const profile = store.getProfile();
     const incompleteReminders = reminders.filter(r => !r.completed);
@@ -83,12 +197,7 @@ export class AIService {
 
     // Cô đơn, buồn, con cháu
     if (lower.includes('buồn') || lower.includes('cô đơn') || lower.includes('nhớ con') || lower.includes('nhớ cháu')) {
-      return `Dạ thưa bác, các con các cháu lúc nào cũng yêu thương và nhớ đến bác nhiều lắm. Lát nữa bác có muốn cháu hướng dẫn bác bấm nút gọi Zalo để nhìn mặt con cháu cho vui cửa vui nhà không ạ?`;
-    }
-
-    // Hướng dẫn công nghệ, gọi điện, zalo
-    if (lower.includes('zalo') || lower.includes('gọi') || lower.includes('điện thoại') || lower.includes('máy tính')) {
-      return `Dạ thưa bác, để gọi cho con cháu, bác bấm vào mục "Cẩm nang hướng dẫn" trên màn hình, rồi chọn "Gọi Video Zalo", cháu có ghi từng bước rất to và rõ ràng cho bác xem rồi đấy ạ!`;
+      return `Dạ thưa bác, các con các cháu lúc nào cũng yêu thương và nhớ đến bác nhiều lắm. Lát nữa bác có muốn cháu mở Zalo để nhìn mặt con cháu cho vui cửa vui nhà không ạ?`;
     }
 
     // Lừa đảo, cảnh giác
@@ -98,7 +207,7 @@ export class AIService {
 
     // Chào hỏi
     if (lower.includes('chào') || lower.includes('alo') || lower.includes('ơi') || lower.includes('có đó không')) {
-      return `Dạ con đây ạ! Cháu luôn ở đây để trò chuyện và đồng hành cùng bác. Bác có muốn nghe tin tức, kiểm tra lịch thuốc hay tâm sự điều gì với cháu không ạ?`;
+      return `Dạ con đây ạ! Cháu luôn ở đây như một trợ lý Google riêng của bác để trò chuyện và trả lời mọi điều bác muốn biết. Bác có muốn hỏi gì hay mở YouTube nghe nhạc không ạ?`;
     }
 
     // Khen ngợi, cảm ơn
@@ -107,7 +216,7 @@ export class AIService {
     }
 
     // Mặc định
-    return `Dạ thưa bác, cháu đã nghe bác nói rồi ạ. Cháu luôn đồng hành cùng bác từng ngày. Bác muốn cháu đọc tin tức hôm nay hay nhắc nhở lịch sinh hoạt tiếp theo cho bác ạ?`;
+    return `Dạ thưa bác, cháu đã nghe bác nói rồi ạ. Bác có thể hỏi cháu bất kỳ điều gì về thời tiết, lịch thuốc, kiến thức khoa học, hoặc bảo cháu mở YouTube, Facebook, TikTok cho bác xem nhé!`;
   }
 }
 

@@ -12,13 +12,24 @@ import {
   Pause,
   Play,
   Square,
-  RotateCcw
+  RotateCcw,
+  ExternalLink,
+  Youtube,
+  Facebook,
+  PlaySquare,
+  PhoneCall
 } from 'lucide-react';
 
 interface VoiceAssistantProps {
   onOpenNews?: () => void;
   onOpenGuides?: () => void;
   onRefreshReminders?: () => void;
+}
+
+interface AppAction {
+  type: 'open_url';
+  url: string;
+  appName: string;
 }
 
 export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
@@ -32,8 +43,9 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [appAction, setAppAction] = useState<AppAction | null>(null);
   const [assistantReply, setAssistantReply] = useState<string>(
-    `Dạ, con chào ${profile.preferredGreeting}! Hôm nay bác thấy trong người thế nào ạ? Bác có thể chạm vào chiếc Micro to màu xanh bên dưới để trò chuyện cùng con nhé!`
+    `Dạ, con chào ${profile.preferredGreeting}! Cháu là Trợ lý Đồng Hành Số. Bác có thể hỏi cháu mọi câu hỏi về đời sống, khoa học, thời tiết, lịch uống thuốc hoặc nói cháu mở YouTube, Facebook, TikTok cho bác xem nhé!`
   );
 
   useEffect(() => {
@@ -99,17 +111,75 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     });
   };
 
+  const checkLocalAppIntent = (text: string): AppAction | null => {
+    const lower = text.toLowerCase();
+    if (lower.includes('youtube') || lower.includes('cải lương') || lower.includes('du túp')) {
+      return {
+        type: 'open_url',
+        url: lower.includes('cải lương')
+          ? 'https://www.youtube.com/results?search_query=c%E1%BA%A3i+l%C6%B0%C6%A1ng'
+          : 'https://www.youtube.com',
+        appName: 'YouTube'
+      };
+    }
+    if (lower.includes('facebook') || lower.includes('phây búc') || lower.includes('xem ảnh')) {
+      return {
+        type: 'open_url',
+        url: 'https://www.facebook.com',
+        appName: 'Facebook'
+      };
+    }
+    if (lower.includes('tiktok') || lower.includes('tóp tóp')) {
+      return {
+        type: 'open_url',
+        url: 'https://www.tiktok.com',
+        appName: 'TikTok'
+      };
+    }
+    if (lower.includes('zalo')) {
+      return {
+        type: 'open_url',
+        url: 'https://zalo.me/0912345678',
+        appName: 'Zalo'
+      };
+    }
+    return null;
+  };
+
   const processUserSpeech = async (spokenText: string) => {
     setIsListening(false);
     setIsLoadingAI(true);
+    setAppAction(null);
+
+    // Immediate local intent check for snappy UX
+    const localIntent = checkLocalAppIntent(spokenText);
+    if (localIntent) {
+      setAppAction(localIntent);
+    }
+
     try {
       const res = await api.sendChatMessage(spokenText);
       if (res && res.reply) {
         setAssistantReply(res.reply);
-        // Automatic speech playback in Vietnamese as approved in grill-me
         speakText(res.reply);
 
-        // Smooth jump if user asked about features
+        if (res.action) {
+          setAppAction(res.action);
+          // Try to automatically open in new tab
+          try {
+            window.open(res.action.url, '_blank');
+          } catch (e) {
+            console.warn("Auto popup blocked, button available for user touch:", e);
+          }
+        } else if (localIntent) {
+          try {
+            window.open(localIntent.url, '_blank');
+          } catch (e) {
+            console.warn("Auto popup blocked:", e);
+          }
+        }
+
+        // Section scrolling if requested
         const lower = spokenText.toLowerCase();
         if (lower.includes('tin tức') && onOpenNews) {
           setTimeout(onOpenNews, 1500);
@@ -120,7 +190,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
         }
       }
     } catch (e) {
-      const fallback = `Dạ thưa ${profile.preferredGreeting}, cháu luôn ở bên cạnh bác ạ. Bác muốn kiểm tra lịch uống thuốc hay nghe đọc tin tức không ạ?`;
+      const fallback = `Dạ thưa ${profile.preferredGreeting}, cháu luôn ở đây để giúp bác. Bác có thể hỏi cháu mọi câu hỏi hoặc bấm vào các nút bên dưới để mở YouTube, Facebook hay kiểm tra lịch thuốc nhé ạ!`;
       setAssistantReply(fallback);
       speakText(fallback);
     } finally {
@@ -156,10 +226,88 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     setIsPaused(false);
   };
 
+  const renderAppActionCard = () => {
+    if (!appAction) return null;
+
+    let icon = <ExternalLink size={24} />;
+    let btnStyle = {
+      background: 'linear-gradient(135deg, #386641 0%, #2D5A3D 100%)',
+      color: 'white',
+      border: 'none'
+    };
+
+    if (appAction.appName === 'YouTube') {
+      icon = <Youtube size={26} color="white" />;
+      btnStyle = {
+        background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+        color: 'white',
+        border: 'none'
+      };
+    } else if (appAction.appName === 'Facebook') {
+      icon = <Facebook size={26} color="white" />;
+      btnStyle = {
+        background: 'linear-gradient(135deg, #1877F2 0%, #0C63D4 100%)',
+        color: 'white',
+        border: 'none'
+      };
+    } else if (appAction.appName === 'TikTok') {
+      icon = <PlaySquare size={26} color="white" />;
+      btnStyle = {
+        background: 'linear-gradient(135deg, #111827 0%, #000000 100%)',
+        color: 'white',
+        border: 'none'
+      };
+    } else if (appAction.appName === 'Zalo') {
+      icon = <PhoneCall size={24} color="white" />;
+      btnStyle = {
+        background: 'linear-gradient(135deg, #0068FF 0%, #0052CC 100%)',
+        color: 'white',
+        border: 'none'
+      };
+    }
+
+    return (
+      <div className="voice-app-action-box" style={{ marginTop: '14px' }}>
+        <button
+          onClick={() => {
+            speechService.stopSpeaking();
+            window.open(appAction.url, '_blank');
+          }}
+          className="voice-app-action-button"
+          style={{
+            ...btnStyle,
+            width: '100%',
+            padding: '14px 20px',
+            borderRadius: '16px',
+            fontWeight: 800,
+            fontSize: '1.05rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            cursor: 'pointer',
+            boxShadow: '0 6px 18px rgba(0, 0, 0, 0.15)',
+            transition: 'transform 0.15s ease'
+          }}
+        >
+          {icon}
+          <span>BẤM VÀO ĐÂY ĐỂ VÀO {appAction.appName.toUpperCase()} NGAY</span>
+          <ExternalLink size={18} />
+        </button>
+        <div style={{ textAlign: 'center', fontSize: '0.85rem', color: '#576B60', marginTop: '6px' }}>
+          *(Nếu trình duyệt chưa tự mở tab mới, bác chỉ cần chạm vào nút phía trên)*
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="voice-hero-card" id="voice-section">
       <div className="voice-greeting">
-        Người Đồng Hành Cùng {profile.preferredGreeting}
+        🌿 Trợ Lý Thông Minh Đồng Hành Cùng {profile.preferredGreeting}
+      </div>
+      <div className="voice-subgreeting">
+        Như trợ lý Google riêng, con có thể giải đáp mọi câu hỏi và mở ứng dụng cho bác
       </div>
 
       {/* Live Status indicator */}
@@ -182,7 +330,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
         ) : (
           <span className="voice-status-pill">
             <Sparkles size={15} />
-            Chạm vào Micro để nói chuyện
+            Chạm vào Micro để hỏi bất kỳ câu gì
           </span>
         )}
       </div>
@@ -203,7 +351,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
 
       {/* Spoken transcript if available */}
       {transcript && (
-        <div style={{ marginBottom: 10, fontStyle: 'italic', color: '#475569', fontSize: '1rem' }}>
+        <div style={{ marginBottom: 10, fontStyle: 'italic', color: '#386641', fontSize: '1.02rem', fontWeight: 600 }}>
           "{transcript}"
         </div>
       )}
@@ -212,8 +360,8 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       <div className="speech-subtitle-card">
         <div className="speech-header-row">
           <div className="speech-speaker-label">
-            <MessageCircle size={17} />
-            <span>Người Đồng Hành Số:</span>
+            <MessageCircle size={18} />
+            <span>Trợ Lý Trả Lời:</span>
           </div>
 
           {/* Soundwave animation while reading */}
@@ -267,67 +415,60 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
           )}
         </div>
 
-        {/* Quick Zalo Trigger if mentioned */}
-        {(assistantReply.toLowerCase().includes('zalo') || transcript.toLowerCase().includes('zalo')) && (
-          <button
-            onClick={() => {
-              speechService.stopSpeaking();
-              speechService.speak("Dạ, cháu đang mở ứng dụng Zalo để bác gọi cho con gái Mai Lan đây ạ!");
-              window.open('https://zalo.me/0912345678', '_blank');
-            }}
-            style={{
-              marginTop: '12px',
-              width: '100%',
-              padding: '12px 18px',
-              background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '12px',
-              fontWeight: 900,
-              fontSize: '1.02rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
-            }}
-          >
-            <span>📱 BẤM ĐỂ MỞ ZALO GỌI CHO CON GÁI NGAY</span>
-          </button>
-        )}
+        {/* Interactive App Action Button (YouTube / Facebook / TikTok / Zalo) */}
+        {renderAppActionCard()}
       </div>
 
-      {/* Quick Prompts For Fast Interaction */}
+      {/* Quick Prompts For Fast Google Assistant Q&A */}
       <div className="quick-prompts-title">
-        Hoặc bác có thể chạm vào các câu hỏi thường gặp:
+        💡 Hoặc bác có thể chạm vào các câu hỏi gợi ý:
       </div>
       <div className="quick-prompts-list">
         <button
-          className="prompt-chip"
-          style={{ background: '#F0F9FF', borderColor: '#BAE6FD', color: '#0369A1' }}
+          className="prompt-chip app-youtube-chip"
+          onClick={() => handlePromptClick("Mở YouTube xem cải lương")}
+        >
+          ▶️ Mở YouTube xem cải lương
+        </button>
+        <button
+          className="prompt-chip app-facebook-chip"
+          onClick={() => handlePromptClick("Vào Facebook xem ảnh con cháu")}
+        >
+          👥 Vào Facebook xem ảnh
+        </button>
+        <button
+          className="prompt-chip app-tiktok-chip"
+          onClick={() => handlePromptClick("Bật TikTok giải trí")}
+        >
+          🎵 Bật TikTok giải trí
+        </button>
+        <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Trái đất cách mặt trời bao xa?")}
+        >
+          ❓ Trái đất cách mặt trời bao xa?
+        </button>
+        <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Thủ đô của nước Pháp là gì?")}
+        >
+          🗼 Thủ đô của Pháp là gì?
+        </button>
+        <button
+          className="prompt-chip question-chip"
           onClick={() => handlePromptClick("Hôm nay thời tiết thế nào?")}
         >
           🌤️ Hôm nay thời tiết thế nào?
         </button>
         <button
-          className="prompt-chip"
-          style={{ background: '#F0FDF4', borderColor: '#BBF7D0', color: '#15803D' }}
+          className="prompt-chip question-chip"
           onClick={() => handlePromptClick("Tôi cần uống thuốc gì hôm nay?")}
         >
           💊 Tôi cần uống thuốc gì?
         </button>
         <button
-          className="prompt-chip"
-          style={{ background: '#FFFBEB', borderColor: '#FDE68A', color: '#B45309' }}
-          onClick={() => handlePromptClick("Đọc tin tức hôm nay cho tôi")}
-        >
-          📰 Đọc tin tức hôm nay
-        </button>
-        <button
-          className="prompt-chip"
-          style={{ background: '#EFF6FF', borderColor: '#BFDBFE', color: '#1D4ED8' }}
-          onClick={() => handlePromptClick("Chỉ tôi cách gọi Zalo cho con")}
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Chỉ tôi cách gọi Zalo cho con gái")}
         >
           📱 Chỉ tôi cách gọi Zalo
         </button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Heart, UserCheck, Shield, Type, Pill, BookOpen, Newspaper } from 'lucide-react';
+import { Heart, UserCheck, Shield, Type, Pill, BookOpen, Newspaper, Smartphone } from 'lucide-react';
 import { PinModal } from './PinModal';
 
 export const Header: React.FC = () => {
@@ -67,27 +67,15 @@ export const Header: React.FC = () => {
         <div className="header-controls">
           {/* Realtime clock display */}
           <div style={{ textAlign: 'right', marginRight: '4px' }}>
-            <div style={{ fontWeight: 800, fontSize: '0.98rem', color: '#1E293B', lineHeight: 1.1 }}>{timeStr}</div>
-            <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>{dateStr}</div>
+            <div style={{ fontWeight: 800, fontSize: '0.98rem', color: '#16281E', lineHeight: 1.1 }}>{timeStr}</div>
+            <div style={{ fontSize: '0.75rem', color: '#576B60', fontWeight: 600 }}>{dateStr}</div>
           </div>
 
           {/* Font scale toggle */}
           <button
             onClick={cycleFontScale}
             title="Đổi kích cỡ chữ"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '6px 10px',
-              background: '#F8FAFC',
-              border: '2px solid #CBD5E1',
-              borderRadius: '9999px',
-              cursor: 'pointer',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              color: '#334155'
-            }}
+            className="font-scale-button"
           >
             <Type size={14} />
             <span>{getFontScaleLabel()}</span>
@@ -124,24 +112,31 @@ export const Header: React.FC = () => {
             🎙️ Trợ Lý Giọng Nói
           </button>
           <button
+            onClick={() => scrollToSection('quick-apps-section')}
+            className="quick-jump-chip"
+          >
+            <Smartphone size={15} color="#386641" />
+            Mở Ứng Dụng
+          </button>
+          <button
             onClick={() => scrollToSection('reminders-section')}
             className="quick-jump-chip"
           >
-            <Pill size={15} color="#2563EB" />
-            Lịch Thuốc Hôm Nay
+            <Pill size={15} color="#4A7C59" />
+            Lịch Thuốc
           </button>
           <button
             onClick={() => scrollToSection('guides-section')}
             className="quick-jump-chip"
           >
-            <BookOpen size={15} color="#059669" />
-            Cẩm Nang Hướng Dẫn
+            <BookOpen size={15} color="#386641" />
+            Cẩm Nang
           </button>
           <button
             onClick={() => scrollToSection('news-section')}
             className="quick-jump-chip"
           >
-            <Newspaper size={15} color="#D97706" />
+            <Newspaper size={15} color="#8C705F" />
             Bản Tin Sức Khỏe
           </button>
         </div>

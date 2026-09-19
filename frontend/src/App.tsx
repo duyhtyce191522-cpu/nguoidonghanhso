@@ -5,6 +5,7 @@ import { Reminder, NewsItem, GuideItem, EmergencyContact } from './types';
 import { Header } from './components/common/Header';
 import { DeviceFrame } from './components/common/DeviceFrame';
 import { VoiceAssistant } from './components/senior/VoiceAssistant';
+import { QuickAppDock } from './components/senior/QuickAppDock';
 import { ReminderCard } from './components/senior/ReminderCard';
 import { NewsReader } from './components/senior/NewsReader';
 import { DeviceGuides } from './components/senior/DeviceGuides';
@@ -73,8 +74,8 @@ export const AppContent: React.FC = () => {
 
         <main className="main-content">
           {mode === 'senior' ? (
-            <div>
-              {/* Senior Voice Assistant Section */}
+            <div className="senior-flow-layout">
+              {/* 1. Senior Voice & Google Knowledge Assistant */}
               <VoiceAssistant
                 onOpenNews={() => {
                   const el = document.getElementById('news-section');
@@ -87,23 +88,26 @@ export const AppContent: React.FC = () => {
                 onRefreshReminders={fetchData}
               />
 
-              {/* Reminders & Medications */}
+              {/* 2. Quick App Dock (YouTube, Facebook, TikTok, Zalo) */}
+              <QuickAppDock />
+
+              {/* 3. Medication & Health Reminders */}
               <ReminderCard
                 reminders={reminders}
                 onToggle={handleToggleReminder}
               />
 
-              {/* Step-by-Step Tech Guides */}
+              {/* 4. Step-by-Step Tech Guides */}
               <div id="guides-section">
                 <DeviceGuides guides={guides} contacts={contacts} />
               </div>
 
-              {/* Elderly News & Weather Reader */}
+              {/* 5. Elderly News & Weather Reader */}
               <div id="news-section">
                 <NewsReader newsList={news} />
               </div>
 
-              {/* Emergency SOS Fixed / Banner Action */}
+              {/* 6. Emergency SOS Action */}
               <SOSButton />
             </div>
           ) : (

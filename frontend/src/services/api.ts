@@ -4,7 +4,15 @@ const BASE_URL = '/api';
 
 export const api = {
   // AI Chat
-  async sendChatMessage(message: string): Promise<{ reply: string; messageId: string }> {
+  async sendChatMessage(message: string): Promise<{
+    reply: string;
+    messageId: string;
+    action?: {
+      type: 'open_url';
+      url: string;
+      appName: string;
+    };
+  }> {
     const res = await fetch(`${BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

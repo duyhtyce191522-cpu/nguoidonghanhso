@@ -13,20 +13,21 @@ export const handleAIChat = async (req: Request, res: Response) => {
     store.addChat({ sender: 'user', text: message });
 
     // Generate AI response
-    const reply = await aiService.generateReply(message);
+    const aiResult = await aiService.generateReply(message);
 
     // Save AI message
-    const savedMsg = store.addChat({ sender: 'assistant', text: reply });
+    const savedMsg = store.addChat({ sender: 'assistant', text: aiResult.reply });
 
     // Add health/interaction log
     store.addLog({
       type: 'voice_chat',
-      description: `Bác trò chuyện: "${message.slice(0, 40)}${message.length > 40 ? '...' : ''}" -> AI phản hồi ân cần.`
+      description: `Bác trò chuyện: "${message.slice(0, 40)}${message.length > 40 ? '...' : ''}" -> AI phản hồi.`
     });
 
     return res.json({
       success: true,
-      reply,
+      reply: aiResult.reply,
+      action: aiResult.action,
       messageId: savedMsg.id,
       timestamp: savedMsg.timestamp
     });
