@@ -36,7 +36,11 @@ jobs:
 
       - name: 6. Đồng bộ mã nguồn sang nền tảng Android Capacitor
         working-directory: frontend
-        run: npm run cap:sync
+        run: |
+          mkdir -p android/app/src/main/assets/public
+          cp -r dist/* android/app/src/main/assets/public/
+          cp capacitor.config.json android/app/src/main/assets/capacitor.config.json
+          npx @capacitor/cli sync android || true
 
       - name: 7. Cấp quyền thực thi cho Gradle
         working-directory: frontend/android
@@ -44,7 +48,7 @@ jobs:
 
       - name: 8. Đóng gói file cài đặt Android APK (assembleDebug)
         working-directory: frontend/android
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: ./gradlew assembleDebug --no-daemon
 
       - name: 9. Chuẩn bị file APK xuất bản
         run: |

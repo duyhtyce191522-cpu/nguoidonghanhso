@@ -1,0 +1,9 @@
+{
+  "appId": "com.donghanhso.app",
+  "appName": "Đồng Hành Số",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}
