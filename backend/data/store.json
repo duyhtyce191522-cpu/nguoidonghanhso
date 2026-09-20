@@ -200,32 +200,11 @@
   ],
   "contacts": [
     {
-      "id": "contact-1",
-      "name": "Nguyễn Thị Mai Lan",
-      "relation": "Con gái cả",
-      "phone": "0912 345 678",
-      "isPrimary": true
-    },
-    {
-      "id": "contact-2",
-      "name": "Nguyễn Minh Tuấn",
-      "relation": "Con trai út",
-      "phone": "0987 654 321",
-      "isPrimary": false
-    },
-    {
-      "id": "contact-3",
-      "name": "BS. Trần Hoài Nam",
-      "relation": "Bác sĩ tim mạch gia đình",
-      "phone": "0903 115 115",
-      "isPrimary": false
-    },
-    {
-      "id": "contact-4",
-      "name": "Cấp cứu 115",
-      "relation": "Cứu thương y tế khẩn cấp",
-      "phone": "115",
-      "isPrimary": false
+      "name": "duy",
+      "relation": "Con gái",
+      "phone": "0347706057",
+      "isPrimary": true,
+      "id": "contact-1789847937580"
     }
   ],
   "logs": [

@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { store } from '../services/dataStore';
+import { getStoreFromReq } from '../services/dataStore';
 
 export const triggerSOS = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { reason } = req.body;
   const primaryContact = store.getContacts().find(c => c.isPrimary) || store.getContacts()[0];
 
@@ -20,10 +21,12 @@ export const triggerSOS = (req: Request, res: Response) => {
 };
 
 export const getContacts = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   res.json({ success: true, contacts: store.getContacts() });
 };
 
 export const addContact = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { name, relation, phone, isPrimary } = req.body;
   if (!name || !phone) {
     return res.status(400).json({ error: 'Thiếu tên hoặc số điện thoại người thân' });
@@ -33,6 +36,7 @@ export const addContact = (req: Request, res: Response) => {
 };
 
 export const deleteContact = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { id } = req.params;
   const ok = store.deleteContact(id);
   if (!ok) return res.status(404).json({ error: 'Không tìm thấy số liên lạc' });

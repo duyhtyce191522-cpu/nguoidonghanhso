@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { store } from '../services/dataStore';
+import { getStoreFromReq } from '../services/dataStore';
 
 export const getCaregiverDashboard = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const reminders = store.getReminders();
   const logs = store.getLogs();
   const profile = store.getProfile();
@@ -22,16 +23,20 @@ export const getCaregiverDashboard = (req: Request, res: Response) => {
         adherenceRate
       },
       recentLogs: logs.slice(0, 10),
-      contacts
+      contacts,
+      familyCode: store.getFamilyCode(),
+      phone: store.getPhone()
     }
   });
 };
 
 export const updateProfile = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const updated = store.updateProfile(req.body);
   res.json({ success: true, profile: updated });
 };
 
 export const getHealthLogs = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   res.json({ success: true, logs: store.getLogs() });
 };

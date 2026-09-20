@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { aiService } from '../services/geminiService';
-import { store } from '../services/dataStore';
+import { getStoreFromReq } from '../services/dataStore';
 
 export const handleAIChat = async (req: Request, res: Response) => {
   try {
+    const store = getStoreFromReq(req);
     const { message } = req.body;
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Nội dung tin nhắn không hợp lệ' });
@@ -41,6 +42,7 @@ export const handleAIChat = async (req: Request, res: Response) => {
 };
 
 export const getChatHistory = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const chats = store.getChats();
   res.json({ success: true, chats });
 };

@@ -135,7 +135,11 @@ export const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSuccess }
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '0.84rem', color: '#576B60' }}>
-          💡 Mã PIN mặc định: <strong style={{ color: '#386641' }}>1234</strong> (có thể đổi trong cài đặt)
+          {caregiverPin === '1234' ? (
+            <span>💡 Mã PIN mặc định: <strong style={{ color: '#386641' }}>1234</strong> (có thể đổi trong cài đặt)</span>
+          ) : (
+            <span>🔒 Nhập mã PIN 4 số do bạn thiết lập cho gia đình</span>
+          )}
         </div>
       </div>
     </div>,

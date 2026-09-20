@@ -3,9 +3,10 @@ import { SeniorProfile } from '../types';
 import { api } from '../services/api';
 import { speechService } from '../services/speechService';
 
-type AppMode = 'senior' | 'caregiver';
-type FontScale = 'normal' | 'large' | 'extra-large';
-type DeviceMode = 'mobile' | 'tablet' | 'fullscreen';
+export type AppMode = 'senior' | 'caregiver';
+export type FamilyRole = 'caregiver' | 'senior';
+export type FontScale = 'normal' | 'large' | 'extra-large';
+export type DeviceMode = 'mobile' | 'tablet' | 'fullscreen';
 
 interface AppContextType {
   mode: AppMode;
@@ -20,22 +21,51 @@ interface AppContextType {
   caregiverPin: string;
   setCaregiverPin: (pin: string) => void;
   unlockAudio: () => void;
+
+  // Multi-Family Authentication & Pairing
+  userPhone: string;
+  familyRole: FamilyRole | null;
+  familyCode: string;
+  isRegistered: boolean;
+  loginCaregiver: (phone: string, pin: string, familyCode?: string) => void;
+  pairSenior: (phone: string, familyCode: string, newProfile?: SeniorProfile) => void;
+  logout: () => void;
+  showOnboarding: boolean;
+  setShowOnboarding: (show: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mode, setMode] = useState<AppMode>('senior');
-  const [fontScale, setFontScale] = useState<FontScale>('large');
-  const [deviceMode, setDeviceMode] = useState<DeviceMode>('mobile');
+  const [userPhone, setUserPhone] = useState<string>(() => {
+    return localStorage.getItem('user_phone') || '';
+  });
+
+  const [familyRole, setFamilyRole] = useState<FamilyRole | null>(() => {
+    return (localStorage.getItem('family_role') as FamilyRole) || null;
+  });
+
+  const [familyCode, setFamilyCode] = useState<string>(() => {
+    return localStorage.getItem('family_code') || '';
+  });
+
   const [caregiverPin, setCaregiverPinState] = useState<string>(() => {
     return localStorage.getItem('caregiver_pin') || '1234';
   });
 
-  const setCaregiverPin = (pin: string) => {
-    setCaregiverPinState(pin);
-    localStorage.setItem('caregiver_pin', pin);
-  };
+  // If already registered, start in their saved mode. Otherwise default to senior.
+  const [mode, setMode] = useState<AppMode>(() => {
+    const savedRole = localStorage.getItem('family_role');
+    if (savedRole === 'caregiver') return 'caregiver';
+    return 'senior';
+  });
+
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
+    return !localStorage.getItem('user_phone');
+  });
+
+  const [fontScale, setFontScale] = useState<FontScale>('large');
+  const [deviceMode, setDeviceMode] = useState<DeviceMode>('mobile');
 
   const [profile, setProfile] = useState<SeniorProfile>({
     fullName: 'Nguyễn Văn Hùng',
@@ -43,6 +73,60 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     birthYear: 1952,
     healthNotes: 'Huyết áp hơi cao, hay quên giờ uống thuốc sau ăn sáng.'
   });
+
+  const isRegistered = Boolean(userPhone && familyRole);
+
+  const setCaregiverPin = (pin: string) => {
+    setCaregiverPinState(pin);
+    localStorage.setItem('caregiver_pin', pin);
+    api.setPin(pin, userPhone).catch(e => console.warn("Failed to sync PIN with server", e));
+  };
+
+  const loginCaregiver = (phone: string, pin: string, code?: string) => {
+    setUserPhone(phone);
+    setFamilyRole('caregiver');
+    localStorage.setItem('user_phone', phone);
+    localStorage.setItem('family_role', 'caregiver');
+    if (pin) {
+      setCaregiverPinState(pin);
+      localStorage.setItem('caregiver_pin', pin);
+    }
+    if (code) {
+      setFamilyCode(code);
+      localStorage.setItem('family_code', code);
+    }
+    setMode('caregiver');
+    setShowOnboarding(false);
+    refreshProfile();
+  };
+
+  const pairSenior = (phone: string, code: string, newProfile?: SeniorProfile) => {
+    setUserPhone(phone);
+    setFamilyRole('senior');
+    setFamilyCode(code);
+    localStorage.setItem('user_phone', phone);
+    localStorage.setItem('family_role', 'senior');
+    localStorage.setItem('family_code', code);
+    if (newProfile) {
+      setProfile(newProfile);
+    }
+    setMode('senior');
+    setShowOnboarding(false);
+    refreshProfile();
+  };
+
+  const logout = () => {
+    localStorage.removeItem('user_phone');
+    localStorage.removeItem('family_role');
+    localStorage.removeItem('family_code');
+    localStorage.removeItem('caregiver_pin');
+    setUserPhone('');
+    setFamilyRole(null);
+    setFamilyCode('');
+    setCaregiverPinState('1234');
+    setMode('senior');
+    setShowOnboarding(true);
+  };
 
   const unlockAudio = () => {
     speechService.unlockAudio();
@@ -53,6 +137,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await api.getCaregiverDashboard();
       if (data && data.profile) {
         setProfile(data.profile);
+        if (data.familyCode) {
+          setFamilyCode(data.familyCode);
+          localStorage.setItem('family_code', data.familyCode);
+        }
       }
     } catch (e) {
       console.warn("Could not fetch profile", e);
@@ -69,7 +157,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     window.addEventListener('click', handleFirstGesture, { once: true });
     window.addEventListener('touchstart', handleFirstGesture, { once: true });
-  }, []);
+  }, [userPhone]);
 
   useEffect(() => {
     document.body.setAttribute('data-font', fontScale);
@@ -90,7 +178,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         refreshProfile,
         caregiverPin,
         setCaregiverPin,
-        unlockAudio
+        unlockAudio,
+        userPhone,
+        familyRole,
+        familyCode,
+        isRegistered,
+        loginCaregiver,
+        pairSenior,
+        logout,
+        showOnboarding,
+        setShowOnboarding
       }}
     >
       {children}

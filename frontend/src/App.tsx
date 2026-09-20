@@ -13,10 +13,11 @@ import { SOSButton } from './components/senior/SOSButton';
 import { CaregiverHome } from './components/caregiver/CaregiverHome';
 import { PWAInstallBanner } from './components/common/PWAInstallBanner';
 import { BottomNav } from './components/common/BottomNav';
+import { OnboardingModal } from './components/auth/OnboardingModal';
 import { notificationService } from './services/notificationService';
 
 export const AppContent: React.FC = () => {
-  const { mode } = useApp();
+  const { mode, userPhone, showOnboarding, setShowOnboarding } = useApp();
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
   const [guides, setGuides] = useState<GuideItem[]>([]);
@@ -44,7 +45,7 @@ export const AppContent: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [userPhone]);
 
   // Run notification scheduler in background for active reminders
   useEffect(() => {
@@ -68,6 +69,15 @@ export const AppContent: React.FC = () => {
   return (
     <DeviceFrame>
       <div className="app-container">
+        {/* Onboarding & Family Pairing Modal */}
+        <OnboardingModal
+          isOpen={showOnboarding}
+          onClose={() => {
+            setShowOnboarding(false);
+            fetchData();
+          }}
+        />
+
         {/* PWA Home Screen Install Banner */}
         <PWAInstallBanner />
 

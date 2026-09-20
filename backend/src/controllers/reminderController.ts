@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
-import { store } from '../services/dataStore';
+import { getStoreFromReq } from '../services/dataStore';
 
 export const getReminders = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const reminders = store.getReminders();
   res.json({ success: true, reminders });
 };
 
 export const toggleReminder = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { id } = req.params;
   const updated = store.toggleReminderComplete(id);
   if (!updated) {
@@ -16,6 +18,7 @@ export const toggleReminder = (req: Request, res: Response) => {
 };
 
 export const createReminder = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { title, time, period, type, dosage, note } = req.body;
   if (!title || !time) {
     return res.status(400).json({ error: 'Thiếu tên thuốc/lịch hoặc thời gian' });
@@ -35,6 +38,7 @@ export const createReminder = (req: Request, res: Response) => {
 };
 
 export const updateReminder = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { id } = req.params;
   const updated = store.updateReminder(id, req.body);
   if (!updated) {
@@ -44,6 +48,7 @@ export const updateReminder = (req: Request, res: Response) => {
 };
 
 export const deleteReminder = (req: Request, res: Response) => {
+  const store = getStoreFromReq(req);
   const { id } = req.params;
   const deleted = store.deleteReminder(id);
   if (!deleted) {

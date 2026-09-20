@@ -12,8 +12,24 @@ import { getGuidesList, getSingleGuide } from '../controllers/guideController';
 import { triggerSOS, getContacts, addContact, deleteContact } from '../controllers/sosController';
 import { getCaregiverDashboard, updateProfile, getHealthLogs } from '../controllers/caregiverController';
 import { handleTTS } from '../controllers/ttsController';
+import {
+  sendOtp,
+  verifyOtp,
+  setPin,
+  verifyPin,
+  pairFamilyCode,
+  getAccountInfo
+} from '../controllers/authController';
 
 const router = Router();
+
+// Authentication & Family Pairing
+router.post('/auth/send-otp', sendOtp);
+router.post('/auth/verify-otp', verifyOtp);
+router.post('/auth/set-pin', setPin);
+router.post('/auth/verify-pin', verifyPin);
+router.post('/auth/pair', pairFamilyCode);
+router.get('/auth/account', getAccountInfo);
 
 // AI Chat & Voice TTS
 router.post('/chat', handleAIChat);

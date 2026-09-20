@@ -1,25 +1,37 @@
 import fs from 'fs';
 import path from 'path';
+import { Request } from 'express';
 import { Reminder, NewsItem, GuideItem, EmergencyContact, HealthLog, ChatMessage } from '../types';
 
-const DATA_FILE = path.join(__dirname, '../../data/store.json');
+const DATA_DIR = path.join(__dirname, '../../data');
+const USERS_DIR = path.join(DATA_DIR, 'users');
+const FAMILY_CODES_FILE = path.join(DATA_DIR, 'family_codes.json');
+const DEFAULT_DATA_FILE = path.join(DATA_DIR, 'store.json');
 
-interface StoreData {
-  reminders: Reminder[];
-  news: NewsItem[];
-  guides: GuideItem[];
-  contacts: EmergencyContact[];
-  logs: HealthLog[];
-  chats: ChatMessage[];
+export interface StoreData {
+  phone?: string;
+  pin?: string;
+  familyCode?: string;
+  createdAt?: string;
+  updatedAt?: string;
   seniorProfile: {
     fullName: string;
     preferredGreeting: string;
     birthYear: number;
     healthNotes: string;
   };
+  reminders: Reminder[];
+  news: NewsItem[];
+  guides: GuideItem[];
+  contacts: EmergencyContact[];
+  logs: HealthLog[];
+  chats: ChatMessage[];
 }
 
 const defaultData: StoreData = {
+  phone: '0912345678',
+  pin: '1234',
+  familyCode: '829104',
   seniorProfile: {
     fullName: "Nguyễn Văn Hùng",
     preferredGreeting: "Bác Hùng",
@@ -279,35 +291,63 @@ const defaultData: StoreData = {
 };
 
 export class DataStore {
+  private filePath: string;
   private data: StoreData;
 
-  constructor() {
-    this.data = this.loadData();
+  constructor(filePath: string, initialData?: StoreData) {
+    this.filePath = filePath;
+    this.data = this.loadData(initialData);
   }
 
-  private loadData(): StoreData {
+  private loadData(initialData?: StoreData): StoreData {
     try {
-      if (fs.existsSync(DATA_FILE)) {
-        const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+      if (fs.existsSync(this.filePath)) {
+        const raw = fs.readFileSync(this.filePath, 'utf-8');
         return JSON.parse(raw);
       }
     } catch (e) {
-      console.warn("Could not load stored data, using default initial data.", e);
+      console.warn(`Could not load store at ${this.filePath}, initializing.`, e);
     }
-    this.saveData(defaultData);
-    return defaultData;
+    const dataToSave = initialData ? { ...initialData } : JSON.parse(JSON.stringify(defaultData));
+    this.saveData(dataToSave);
+    return dataToSave;
   }
 
-  private saveData(data: StoreData): void {
+  private saveData(data?: StoreData): void {
     try {
-      const dir = path.dirname(DATA_FILE);
+      const dir = path.dirname(this.filePath);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+      const dataToPersist = data || this.data;
+      dataToPersist.updatedAt = new Date().toISOString();
+      fs.writeFileSync(this.filePath, JSON.stringify(dataToPersist, null, 2), 'utf-8');
     } catch (e) {
-      console.error("Failed to save data store:", e);
+      console.error(`Failed to save data store at ${this.filePath}:`, e);
     }
+  }
+
+  // Auth & Account Details
+  getPhone(): string {
+    return this.data.phone || '';
+  }
+
+  getPin(): string {
+    return this.data.pin || '1234';
+  }
+
+  setPin(newPin: string): void {
+    this.data.pin = newPin;
+    this.saveData();
+  }
+
+  getFamilyCode(): string {
+    return this.data.familyCode || '';
+  }
+
+  setFamilyCode(code: string): void {
+    this.data.familyCode = code;
+    this.saveData();
   }
 
   // Reminders
@@ -330,7 +370,7 @@ export class DataStore {
       type: 'medicine_taken',
       description: `Người nhà đã thêm lịch nhắc mới: "${newRem.title}" lúc ${newRem.time}.`
     });
-    this.saveData(this.data);
+    this.saveData();
     return newRem;
   }
 
@@ -338,7 +378,7 @@ export class DataStore {
     const idx = this.data.reminders.findIndex(r => r.id === id);
     if (idx === -1) return null;
     this.data.reminders[idx] = { ...this.data.reminders[idx], ...updates };
-    this.saveData(this.data);
+    this.saveData();
     return this.data.reminders[idx];
   }
 
@@ -346,7 +386,7 @@ export class DataStore {
     const initialLen = this.data.reminders.length;
     this.data.reminders = this.data.reminders.filter(r => r.id !== id);
     if (this.data.reminders.length !== initialLen) {
-      this.saveData(this.data);
+      this.saveData();
       return true;
     }
     return false;
@@ -365,7 +405,7 @@ export class DataStore {
       });
     }
 
-    this.saveData(this.data);
+    this.saveData();
     return rem;
   }
 
@@ -389,13 +429,13 @@ export class DataStore {
       id: 'contact-' + Date.now()
     };
     this.data.contacts.push(newContact);
-    this.saveData(this.data);
+    this.saveData();
     return newContact;
   }
 
   deleteContact(id: string): boolean {
     this.data.contacts = this.data.contacts.filter(c => c.id !== id);
-    this.saveData(this.data);
+    this.saveData();
     return true;
   }
 
@@ -411,7 +451,7 @@ export class DataStore {
       timestamp: new Date().toISOString()
     };
     this.data.logs.push(newLog);
-    this.saveData(this.data);
+    this.saveData();
     return newLog;
   }
 
@@ -427,11 +467,10 @@ export class DataStore {
       timestamp: new Date().toISOString()
     };
     this.data.chats.push(newMsg);
-    // Keep max 50 recent messages
     if (this.data.chats.length > 50) {
       this.data.chats = this.data.chats.slice(-50);
     }
-    this.saveData(this.data);
+    this.saveData();
     return newMsg;
   }
 
@@ -441,9 +480,127 @@ export class DataStore {
 
   updateProfile(profile: Partial<StoreData['seniorProfile']>) {
     this.data.seniorProfile = { ...this.data.seniorProfile, ...profile };
-    this.saveData(this.data);
+    this.saveData();
     return this.data.seniorProfile;
   }
 }
 
-export const store = new DataStore();
+// Global default store
+export const store = new DataStore(DEFAULT_DATA_FILE);
+
+// Multi-tenant Store Manager
+export const cleanPhone = (phone: string): string => {
+  if (!phone) return '';
+  let cleaned = phone.replace(/[^0-9+]/g, '');
+  if (cleaned.startsWith('+84')) {
+    cleaned = '0' + cleaned.slice(3);
+  } else if (cleaned.startsWith('84') && cleaned.length > 9) {
+    cleaned = '0' + cleaned.slice(2);
+  }
+  return cleaned;
+};
+
+// Family Code Manager
+export const familyCodeManager = {
+  loadCodes(): Record<string, string> {
+    try {
+      if (fs.existsSync(FAMILY_CODES_FILE)) {
+        return JSON.parse(fs.readFileSync(FAMILY_CODES_FILE, 'utf-8'));
+      }
+    } catch (e) {
+      console.warn("Could not read family codes file", e);
+    }
+    return { '829104': '0912345678' };
+  },
+
+  saveCodes(codes: Record<string, string>): void {
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+      fs.writeFileSync(FAMILY_CODES_FILE, JSON.stringify(codes, null, 2), 'utf-8');
+    } catch (e) {
+      console.error("Could not save family codes file", e);
+    }
+  },
+
+  getPhoneByCode(code: string): string | null {
+    const cleanCode = code.replace(/[^0-9]/g, '');
+    const codes = this.loadCodes();
+    return codes[cleanCode] || null;
+  },
+
+  generateUniqueCode(phone: string): string {
+    const codes = this.loadCodes();
+    // Check if phone already has an existing code
+    for (const [code, p] of Object.entries(codes)) {
+      if (p === phone) {
+        return code;
+      }
+    }
+    // Generate new 6-digit code
+    let newCode = '';
+    do {
+      newCode = Math.floor(100000 + Math.random() * 900000).toString();
+    } while (codes[newCode]);
+
+    codes[newCode] = phone;
+    this.saveCodes(codes);
+    return newCode;
+  }
+};
+
+// User Store Cache Map
+const userStores = new Map<string, DataStore>();
+
+export const getUserStore = (rawPhone: string): DataStore => {
+  const phone = cleanPhone(rawPhone);
+  if (!phone) return store;
+
+  if (userStores.has(phone)) {
+    return userStores.get(phone)!;
+  }
+
+  const userFilePath = path.join(USERS_DIR, `${phone}.json`);
+  let initialUserData: StoreData | undefined = undefined;
+
+  if (!fs.existsSync(userFilePath)) {
+    const familyCode = familyCodeManager.generateUniqueCode(phone);
+    initialUserData = {
+      ...JSON.parse(JSON.stringify(defaultData)),
+      phone,
+      familyCode,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  const userStore = new DataStore(userFilePath, initialUserData);
+  // Ensure family code mapping exists
+  const currentCode = userStore.getFamilyCode();
+  if (currentCode) {
+    const codes = familyCodeManager.loadCodes();
+    if (!codes[currentCode]) {
+      codes[currentCode] = phone;
+      familyCodeManager.saveCodes(codes);
+    }
+  }
+
+  userStores.set(phone, userStore);
+  return userStore;
+};
+
+// Helper to extract store from Express Request
+export const getStoreFromReq = (req: Request): DataStore => {
+  const headerPhone = req.headers['x-user-phone'];
+  const queryPhone = req.query.userPhone || req.query.phone;
+  const bodyPhone = req.body && (req.body.userPhone || req.body.phone);
+
+  const phoneCandidate = (typeof headerPhone === 'string' && headerPhone) ||
+                         (typeof queryPhone === 'string' && queryPhone) ||
+                         (typeof bodyPhone === 'string' && bodyPhone);
+
+  if (phoneCandidate) {
+    return getUserStore(phoneCandidate);
+  }
+  return store;
+};

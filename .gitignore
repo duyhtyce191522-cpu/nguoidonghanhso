@@ -8,6 +8,13 @@ dist/
 build/
 */build/
 
+# Android build & caches
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/android/build/
+frontend/android/local.properties
+frontend/android/.idea/
+
 # Environment variables
 .env
 .env.local
