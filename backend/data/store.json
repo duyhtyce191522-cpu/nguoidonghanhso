@@ -537,21 +537,15 @@
       "description": "Bác trò chuyện: \"Mở Tik Tok\" -> AI phản hồi.",
       "id": "log-1789846105330",
       "timestamp": "2026-09-19T19:28:25.330Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi.",
+      "id": "log-1789894494176",
+      "timestamp": "2026-09-20T08:54:54.176Z"
     }
   ],
   "chats": [
-    {
-      "sender": "user",
-      "text": "Tôi muốn xem tin tức ngày hôm nay",
-      "id": "chat-1789840793624",
-      "timestamp": "2026-09-19T17:59:53.624Z"
-    },
-    {
-      "sender": "assistant",
-      "text": "Dạ thưa bác, bây giờ là 00:59, Chủ Nhật, 20 tháng 9, 2026 ạ.",
-      "id": "chat-1789840793645",
-      "timestamp": "2026-09-19T17:59:53.645Z"
-    },
     {
       "sender": "user",
       "text": "nay là ngày mấy",
@@ -839,6 +833,19 @@
       "text": "Dạ, con đang mở ứng dụng TikTok cho bác đây ạ! Chúc bác xem nhiều video ngắn vui nhộn và học được nhiều mẹo hay đời sống nhé.",
       "id": "chat-1789846105330",
       "timestamp": "2026-09-19T19:28:25.330Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789894493195",
+      "timestamp": "2026-09-20T08:54:53.195Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, chiều nay thời tiết khoảng 32 độ C, trời nắng dịu, có mây che mát mẻ ạ. Buổi chiều mát bác có thể ra sân đi dạo 15 phút cho khoan khoái gân cốt nhé ạ.",
+      "id": "chat-1789894494175",
+      "timestamp": "2026-09-20T08:54:54.175Z"
     }
-  ]
+  ],
+  "updatedAt": "2026-09-20T08:54:54.176Z"
 }

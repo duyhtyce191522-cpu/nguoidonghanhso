@@ -13,8 +13,8 @@ export const handleAIChat = async (req: Request, res: Response) => {
     // Save user message
     store.addChat({ sender: 'user', text: message });
 
-    // Generate AI response
-    const aiResult = await aiService.generateReply(message);
+    // Generate AI response with user store context
+    const aiResult = await aiService.generateReply(message, store);
 
     // Save AI message
     const savedMsg = store.addChat({ sender: 'assistant', text: aiResult.reply });

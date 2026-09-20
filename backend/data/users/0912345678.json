@@ -1,0 +1,677 @@
+{
+  "phone": "0912345678",
+  "pin": "1111",
+  "familyCode": "829104",
+  "seniorProfile": {
+    "fullName": "Nguyễn Văn Hùng",
+    "preferredGreeting": "Bác Hùng",
+    "birthYear": 1952,
+    "healthNotes": "Huyết áp hơi cao, hay quên giờ uống thuốc sau ăn sáng."
+  },
+  "reminders": [
+    {
+      "id": "rem-1",
+      "title": "Uống thuốc Huyết Áp (Amlodipine)",
+      "time": "07:30",
+      "period": "morning",
+      "type": "medicine",
+      "dosage": "1 viên sau ăn sáng 15 phút",
+      "note": "Nhớ uống với 1 cốc nước ấm đầy nhé bác",
+      "completed": true,
+      "completedAt": "2026-09-20T06:25:14.969Z",
+      "createdAt": "2026-09-20T08:25:14.971Z"
+    },
+    {
+      "id": "rem-2",
+      "title": "Đo huyết áp & nhịp tim buổi sáng",
+      "time": "08:00",
+      "period": "morning",
+      "type": "blood_pressure",
+      "dosage": "Nghỉ ngơi 5 phút trước khi đo",
+      "note": "Ghi nhớ chỉ số tâm thu và tâm trương",
+      "completed": true,
+      "completedAt": "2026-09-20T07:25:14.971Z",
+      "createdAt": "2026-09-20T08:25:14.971Z"
+    },
+    {
+      "id": "rem-3",
+      "title": "Uống thuốc Bổ Não & Khớp (Glucosamine)",
+      "time": "12:00",
+      "period": "noon",
+      "type": "medicine",
+      "dosage": "1 viên cùng bữa ăn trưa",
+      "note": "Uống đúng bữa trưa để hấp thụ tốt nhất",
+      "completed": false,
+      "createdAt": "2026-09-20T08:25:14.971Z"
+    },
+    {
+      "id": "rem-4",
+      "title": "Uống 1 cốc nước ấm và đi dạo 15 phút",
+      "time": "16:30",
+      "period": "afternoon",
+      "type": "water",
+      "dosage": "300ml nước ấm",
+      "note": "Đi bộ nhẹ nhàng trong sân hoặc ban công",
+      "completed": false,
+      "createdAt": "2026-09-20T08:25:14.971Z"
+    },
+    {
+      "id": "rem-5",
+      "title": "Uống thuốc Tiểu Đường / Canxi",
+      "time": "20:00",
+      "period": "evening",
+      "type": "medicine",
+      "dosage": "1 viên sau bữa tối",
+      "note": "Uống xong chuẩn bị ngâm chân nước ấm trước khi ngủ",
+      "completed": false,
+      "createdAt": "2026-09-20T08:25:14.971Z"
+    }
+  ],
+  "news": [
+    {
+      "id": "news-1",
+      "title": "Thời tiết hôm nay: Nắng ấm dịu dàng, thích hợp đi dạo thể dục",
+      "summary": "Nhiệt độ dao động 25-29 độ C, gió nhẹ, độ ẩm dễ chịu. Các bác nên tập thể dục nhẹ ngoài trời lúc sáng sớm hoặc chiều mát.",
+      "category": "weather",
+      "date": "Hôm nay",
+      "source": "Đài Khí Tượng Thủy Văn",
+      "audioText": "Dạ thưa bác, thời tiết hôm nay rất đẹp, trời nắng nhẹ từ 25 đến 29 độ C. Buổi chiều mát bác có thể đi dạo 15 phút trong sân để thư giãn gân cốt nhé ạ."
+    },
+    {
+      "id": "news-2",
+      "title": "5 thói quen đơn giản giúp huyết áp ổn định cho người cao tuổi",
+      "summary": "Uống đủ nước ấm rải đều trong ngày, giảm ăn mặn, ngủ đủ 7 tiếng và giữ tinh thần vui tươi giúp tim mạch luôn khỏe mạnh.",
+      "category": "health",
+      "date": "Sáng nay",
+      "source": "Bác Sĩ Gia Đình",
+      "audioText": "Thưa bác, các bác sĩ khuyên người cao tuổi nên uống nước ấm từng ngụm nhỏ, ăn nhạt bớt muối, và giữ tâm trạng an vui để huyết áp luôn ở mức lý tưởng."
+    },
+    {
+      "id": "news-3",
+      "title": "Cảnh giác: Tuyệt đối không bấm vào đường link lạ tự xưng cơ quan công an",
+      "summary": "Cơ quan nhà nước không bao giờ gọi điện yêu cầu chuyển tiền hoặc tải app lạ. Nếu có số lạ gọi đe dọa, hãy gọi ngay cho con cái hoặc công an phường.",
+      "category": "tips",
+      "date": "Hôm qua",
+      "source": "Cổng Thông Tin An Ninh Mạng",
+      "audioText": "Bác lưu ý giúp cháu: Nếu có số điện thoại lạ gọi đến xưng là công an hay tòa án đòi nợ tiền hoặc bảo bấm vào đường link, bác hãy tắt máy ngay và gọi cho con cháu nhé!"
+    },
+    {
+      "id": "news-4",
+      "title": "Mẹo ngâm chân nước gừng ấm buổi tối giúp ngủ sâu giấc",
+      "summary": "Nước ấm khoảng 40 độ pha chút muối hạt và gừng đập dập, ngâm 15 phút trước khi ngủ giúp lưu thông khí huyết, tránh chuột rút ban đêm.",
+      "category": "health",
+      "date": "2 ngày trước",
+      "source": "Sức Khỏe Đời Sống",
+      "audioText": "Tối nay bác có thể bảo người nhà nấu một chậu nước gừng ấm pha chút muối để ngâm chân 15 phút trước khi đi ngủ, vừa ấm chân vừa ngủ rất ngon giấc ạ."
+    }
+  ],
+  "guides": [
+    {
+      "id": "guide-zalo-call",
+      "title": "Cách gọi Video Zalo cho Con Cháu",
+      "description": "Xem mặt và trò chuyện trực tiếp với con cháu ở xa qua màn hình",
+      "category": "phone",
+      "difficulty": "rất dễ",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "title": "Mở ứng dụng Zalo",
+          "instruction": "Tìm biểu tượng hình chữ 'Zalo' màu xanh da trời trên màn hình chính và chạm nhẹ vào đó.",
+          "tip": "Chạm 1 lần dứt khoát vào giữa biểu tượng."
+        },
+        {
+          "stepNumber": 2,
+          "title": "Chọn tên người thân",
+          "instruction": "Trong danh sách, chạm vào tên con gái (ví dụ: 'Con Gái Lan') hoặc bấm vào ô tìm kiếm.",
+          "tip": "Tên người thân thường có ảnh đại diện quen thuộc của con cháu."
+        },
+        {
+          "stepNumber": 3,
+          "title": "Bấm vào biểu tượng Máy Quay Phim",
+          "instruction": "Nhìn lên góc trên cùng bên phải màn hình, bác sẽ thấy hình một chiếc máy quay phim nhỏ. Bấm vào đó để gọi có hình ảnh.",
+          "tip": "Nếu chỉ muốn nghe tiếng không mở camera, hãy bấm vào hình chiếc Ống nghe điện thoại bên cạnh."
+        },
+        {
+          "stepNumber": 4,
+          "title": "Trò chuyện và tắt máy",
+          "instruction": "Khi con cháu bắt máy, bác sẽ thấy hình con cháu. Khi nói chuyện xong, bấm nút tròn màu đỏ để tắt cuộc gọi.",
+          "tip": "Cầm máy thẳng trước mặt cách khoảng 40cm để con cháu nhìn rõ mặt bác."
+        }
+      ]
+    },
+    {
+      "id": "guide-fraud-avoid",
+      "title": "Cách Nhận Biết & Tránh Cuộc Gọi Lừa Đảo",
+      "description": "Bảo vệ tiền tiết kiệm và an toàn thông tin cá nhân",
+      "category": "security",
+      "difficulty": "rất dễ",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "title": "Giữ bình tĩnh khi nghe giọng lạ",
+          "instruction": "Kẻ lừa đảo thường dùng giọng đe dọa, nói bác dính líu vi phạm pháp luật hoặc con cháu đang gặp nạn cần tiền gấp.",
+          "tip": "Hãy nhớ: Cơ quan công an KHÔNG BAO GIỜ làm việc qua điện thoại."
+        },
+        {
+          "stepNumber": 2,
+          "title": "Tuyệt đối không cung cấp mã số",
+          "instruction": "Không đọc mã OTP ngân hàng, không đọc số thẻ CCCD, không bấm vào bất kỳ đường dẫn (link) nào gửi qua tin nhắn.",
+          "tip": "Không có ai được quyền đòi mật khẩu hay mã ngân hàng của bác."
+        },
+        {
+          "stepNumber": 3,
+          "title": "Tắt máy ngay lập tức",
+          "instruction": "Bác chỉ cần bấm nút màu đỏ kết thúc cuộc gọi, không cần tranh cãi hay giải thích.",
+          "tip": "Bấm nút nguồn hoặc nút đỏ là cuộc gọi sẽ ngắt ngay lập tức."
+        },
+        {
+          "stepNumber": 4,
+          "title": "Gọi ngay cho con cái",
+          "instruction": "Mở nút SOS trong ứng dụng này hoặc gọi cho con gái/con trai để hỏi lại thông tin cho an tâm.",
+          "tip": "Con cháu luôn sẵn sàng lắng nghe và bảo vệ bác 24/7."
+        }
+      ]
+    },
+    {
+      "id": "guide-ac-remote",
+      "title": "Cách Chỉnh Điều Hòa Nhiệt Độ Tốt Cho Sức Khỏe",
+      "description": "Giữ phòng mát mẻ mà không bị cảm lạnh hoặc khô họng",
+      "category": "home_appliance",
+      "difficulty": "dễ",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "title": "Bật điều hòa",
+          "instruction": "Bấm nút màu VÀNG hoặc ĐỎ có chữ 'ON/OFF' hoặc 'POWER' trên điều khiển từ xa.",
+          "tip": "Nghe tiếng 'tít' và cánh gió điều hòa mở ra là đã bật thành công."
+        },
+        {
+          "stepNumber": 2,
+          "title": "Chỉnh nhiệt độ phù hợp (26 - 28 độ)",
+          "instruction": "Bấm nút mũi tên Hướng Lên (▲) để tăng nhiệt độ và Hướng Xuống (▼) để giảm. Đặt ở mức 26 hoặc 27 độ C là tốt nhất cho người lớn tuổi.",
+          "tip": "Không nên để dưới 25 độ vì dễ gây nghẹt mũi và đau nhức khớp."
+        },
+        {
+          "stepNumber": 3,
+          "title": "Chỉnh cánh gió không thổi thẳng vào người",
+          "instruction": "Bấm nút 'SWING' để cánh đảo gió hướng lên cao hoặc sang ngang, tránh gió lạnh phả trực tiếp vào đầu hoặc ngực.",
+          "tip": "Nên để một chậu nước nhỏ hoặc máy tạo ẩm trong phòng."
+        }
+      ]
+    }
+  ],
+  "contacts": [
+    {
+      "id": "contact-1",
+      "name": "Nguyễn Thị Mai Lan",
+      "relation": "Con gái cả",
+      "phone": "0912 345 678",
+      "isPrimary": true
+    },
+    {
+      "id": "contact-2",
+      "name": "Nguyễn Minh Tuấn",
+      "relation": "Con trai út",
+      "phone": "0987 654 321",
+      "isPrimary": false
+    },
+    {
+      "id": "contact-3",
+      "name": "BS. Trần Hoài Nam",
+      "relation": "Bác sĩ tim mạch gia đình",
+      "phone": "0903 115 115",
+      "isPrimary": false
+    },
+    {
+      "id": "contact-4",
+      "name": "Cấp cứu 115",
+      "relation": "Cứu thương y tế khẩn cấp",
+      "phone": "115",
+      "isPrimary": false
+    }
+  ],
+  "logs": [
+    {
+      "id": "log-1",
+      "timestamp": "2026-09-20T06:25:14.971Z",
+      "type": "medicine_taken",
+      "description": "Đã uống thuốc Huyết Áp (Amlodipine) sáng đúng giờ (07:32)."
+    },
+    {
+      "id": "log-2",
+      "timestamp": "2026-09-20T07:25:14.971Z",
+      "type": "blood_pressure",
+      "description": "Đo huyết áp sáng: 125/80 mmHg, nhịp tim 74 bpm (Mức độ: Tốt, ổn định)."
+    },
+    {
+      "id": "log-3",
+      "timestamp": "2026-09-20T07:55:14.972Z",
+      "type": "voice_chat",
+      "description": "Hỏi AI: 'Cháu ơi hôm nay thời tiết thế nào?' - AI đã trả lời và khuyên đi dạo."
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"alo\" -> AI phản hồi.",
+      "id": "log-1789894124698",
+      "timestamp": "2026-09-20T08:48:44.698Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi.",
+      "id": "log-1789894149473",
+      "timestamp": "2026-09-20T08:49:09.473Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"như thế nào Hôm nay thời tiết như thế nà...\" -> AI phản hồi.",
+      "id": "log-1789894255791",
+      "timestamp": "2026-09-20T08:50:55.791Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi.",
+      "id": "log-1789894265695",
+      "timestamp": "2026-09-20T08:51:05.695Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi.",
+      "id": "log-1789894280655",
+      "timestamp": "2026-09-20T08:51:20.655Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay ngày mấy âm lịch\" -> AI phản hồi.",
+      "id": "log-1789894500632",
+      "timestamp": "2026-09-20T08:55:00.632Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Bây giờ là mấy giờ rồi cháu ơi\" -> AI phản hồi.",
+      "id": "log-1789894500647",
+      "timestamp": "2026-09-20T08:55:00.647Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Tôi còn thuốc gì phải uống không\" -> AI phản hồi.",
+      "id": "log-1789894500656",
+      "timestamp": "2026-09-20T08:55:00.656Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Bác bị đau khớp gối thì làm sao\" -> AI phản hồi.",
+      "id": "log-1789894500665",
+      "timestamp": "2026-09-20T08:55:00.665Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Huyết áp cao thì nên làm gì\" -> AI phản hồi.",
+      "id": "log-1789894500685",
+      "timestamp": "2026-09-20T08:55:00.685Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Dạo này bác khó ngủ quá cháu ơi\" -> AI phản hồi.",
+      "id": "log-1789894500693",
+      "timestamp": "2026-09-20T08:55:00.693Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"50 nghìn cộng 35 nghìn bằng bao nhiêu\" -> AI phản hồi.",
+      "id": "log-1789894500706",
+      "timestamp": "2026-09-20T08:55:00.706Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Đọc cho bác nghe một bài thơ\" -> AI phản hồi.",
+      "id": "log-1789894501664",
+      "timestamp": "2026-09-20T08:55:01.664Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Cháu tên là gì thế\" -> AI phản hồi.",
+      "id": "log-1789894502697",
+      "timestamp": "2026-09-20T08:55:02.697Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay thời tiết như thế nào\" -> AI phản hồi.",
+      "id": "log-1789894623827",
+      "timestamp": "2026-09-20T08:57:03.827Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Hôm nay ngày mấy âm lịch\" -> AI phản hồi.",
+      "id": "log-1789894623876",
+      "timestamp": "2026-09-20T08:57:03.876Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Tôi còn thuốc gì phải uống không\" -> AI phản hồi.",
+      "id": "log-1789894623899",
+      "timestamp": "2026-09-20T08:57:03.899Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Huyết áp cao nên làm gì\" -> AI phản hồi.",
+      "id": "log-1789894623914",
+      "timestamp": "2026-09-20T08:57:03.914Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Mất ngủ phải làm sao\" -> AI phản hồi.",
+      "id": "log-1789894623928",
+      "timestamp": "2026-09-20T08:57:03.928Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Đau khớp gối\" -> AI phản hồi.",
+      "id": "log-1789894623936",
+      "timestamp": "2026-09-20T08:57:03.936Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Đọc cho bác một bài thơ\" -> AI phản hồi.",
+      "id": "log-1789894623950",
+      "timestamp": "2026-09-20T08:57:03.950Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"50 nghìn cộng 35 nghìn bằng bao nhiêu\" -> AI phản hồi.",
+      "id": "log-1789894623964",
+      "timestamp": "2026-09-20T08:57:03.964Z"
+    },
+    {
+      "type": "voice_chat",
+      "description": "Bác trò chuyện: \"Thủ đô của nước Pháp là gì\" -> AI phản hồi.",
+      "id": "log-1789894623975",
+      "timestamp": "2026-09-20T08:57:03.975Z"
+    }
+  ],
+  "chats": [
+    {
+      "id": "chat-1",
+      "sender": "assistant",
+      "text": "Dạ, con chào bác Hùng ạ! Chúc bác một ngày mới thật an vui và dồi dào sức khỏe. Bác cần con hỗ trợ hoặc trò chuyện điều gì không ạ?",
+      "timestamp": "2026-09-20T05:25:14.972Z"
+    },
+    {
+      "sender": "user",
+      "text": "alo",
+      "id": "chat-1789894123828",
+      "timestamp": "2026-09-20T08:48:43.828Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, theo kiến thức ghi nhận: Vòng loại Cúp bóng đá U-20 châu Á 2027 là giải đấu bóng đá quốc tế dành cho các đội tuyển nam quốc gia thuộc lứa tuổi U-20 do Liên đoàn bóng đá châu Á (AFC) tổ chức. Giải đấu diễn ra từ ngày 31 tháng 8 đến ngày 6 tháng 9 năm 2026, nhằm xác định các đội tuyển giành quyền tham dự Cúp bóng đá U-20 châu Á 2027. Bác có muốn hỏi thêm điều gì về chủ đề này không ạ?",
+      "id": "chat-1789894124697",
+      "timestamp": "2026-09-20T08:48:44.697Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789894148570",
+      "timestamp": "2026-09-20T08:49:08.570Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, theo kiến thức ghi nhận: Dự báo thời tiết là một ngành ứng dụng của khoa học và công nghệ để tiên đoán các trạng thái và vị trí của bầu khí quyển trong tương lai gần sắp tới. Loài người đã nỗ lực dự báo thời tiết bằng một cách không chính thức từ nhiều thiên niên kỳ trước, và việc dự báo thời tiết một cách chính thức bắt đầu từ thế kỷ mười chín. Bác có muốn hỏi thêm điều gì về chủ đề này không ạ?",
+      "id": "chat-1789894149473",
+      "timestamp": "2026-09-20T08:49:09.473Z"
+    },
+    {
+      "sender": "user",
+      "text": "như thế nào Hôm nay thời tiết như thế nào",
+      "id": "chat-1789894254877",
+      "timestamp": "2026-09-20T08:50:54.877Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, theo kiến thức ghi nhận: Dự báo thời tiết là một ngành ứng dụng của khoa học và công nghệ để tiên đoán các trạng thái và vị trí của bầu khí quyển trong tương lai gần sắp tới. Loài người đã nỗ lực dự báo thời tiết bằng một cách không chính thức từ nhiều thiên niên kỳ trước, và việc dự báo thời tiết một cách chính thức bắt đầu từ thế kỷ mười chín. Bác có muốn hỏi thêm điều gì về chủ đề này không ạ?",
+      "id": "chat-1789894255790",
+      "timestamp": "2026-09-20T08:50:55.790Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789894265002",
+      "timestamp": "2026-09-20T08:51:05.002Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, theo kiến thức ghi nhận: Dự báo thời tiết là một ngành ứng dụng của khoa học và công nghệ để tiên đoán các trạng thái và vị trí của bầu khí quyển trong tương lai gần sắp tới. Loài người đã nỗ lực dự báo thời tiết bằng một cách không chính thức từ nhiều thiên niên kỳ trước, và việc dự báo thời tiết một cách chính thức bắt đầu từ thế kỷ mười chín. Bác có muốn hỏi thêm điều gì về chủ đề này không ạ?",
+      "id": "chat-1789894265694",
+      "timestamp": "2026-09-20T08:51:05.694Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789894280015",
+      "timestamp": "2026-09-20T08:51:20.015Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, theo kiến thức ghi nhận: Dự báo thời tiết là một ngành ứng dụng của khoa học và công nghệ để tiên đoán các trạng thái và vị trí của bầu khí quyển trong tương lai gần sắp tới. Loài người đã nỗ lực dự báo thời tiết bằng một cách không chính thức từ nhiều thiên niên kỳ trước, và việc dự báo thời tiết một cách chính thức bắt đầu từ thế kỷ mười chín. Bác có muốn hỏi thêm điều gì về chủ đề này không ạ?",
+      "id": "chat-1789894280654",
+      "timestamp": "2026-09-20T08:51:20.654Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay ngày mấy âm lịch",
+      "id": "chat-1789894500615",
+      "timestamp": "2026-09-20T08:55:00.615Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, bây giờ là 15:55, Chủ Nhật, ngày 20 tháng 9 năm 2026 Dương lịch; tức ngày 10 tháng 7 Âm lịch (Năm Bính Ngọ) ạ.",
+      "id": "chat-1789894500632",
+      "timestamp": "2026-09-20T08:55:00.632Z"
+    },
+    {
+      "sender": "user",
+      "text": "Bây giờ là mấy giờ rồi cháu ơi",
+      "id": "chat-1789894500646",
+      "timestamp": "2026-09-20T08:55:00.646Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, bây giờ là 15:55, Chủ Nhật, ngày 20 tháng 9 năm 2026 Dương lịch; tức ngày 10 tháng 7 Âm lịch (Năm Bính Ngọ) ạ.",
+      "id": "chat-1789894500647",
+      "timestamp": "2026-09-20T08:55:00.647Z"
+    },
+    {
+      "sender": "user",
+      "text": "Tôi còn thuốc gì phải uống không",
+      "id": "chat-1789894500654",
+      "timestamp": "2026-09-20T08:55:00.654Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, trong ngày bác còn cữ thuốc: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" lúc 12:00 buổi trưa - 1 viên cùng bữa ăn trưa. Bác nhớ ăn no và chuẩn bị uống thuốc đúng giờ nhé ạ! (Hôm nay bác đã hoàn thành 2 cữ thuốc rồi ạ).",
+      "id": "chat-1789894500655",
+      "timestamp": "2026-09-20T08:55:00.655Z"
+    },
+    {
+      "sender": "user",
+      "text": "Bác bị đau khớp gối thì làm sao",
+      "id": "chat-1789894500663",
+      "timestamp": "2026-09-20T08:55:00.663Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, bệnh xương khớp tuổi già rất kỵ gió lạnh và ẩm ướt. Bác nhớ giữ ấm hai đầu gối và bàn chân, có thể xoa bóp dầu ấm nhẹ nhàng, ngâm chân nước ấm và tập co duỗi chân tay từ tốn vào sáng sớm nhé ạ!",
+      "id": "chat-1789894500665",
+      "timestamp": "2026-09-20T08:55:00.665Z"
+    },
+    {
+      "sender": "user",
+      "text": "Huyết áp cao thì nên làm gì",
+      "id": "chat-1789894500684",
+      "timestamp": "2026-09-20T08:55:00.684Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, khi bị huyết áp cao, bác hãy ngồi yên tĩnh dưỡng, thở chậm đều, uống một ngụm nước ấm và uống thuốc huyết áp theo chỉ định bác sĩ. Bác tuyệt đối tránh xúc động, hạn chế ăn mặn và đo lại huyết áp sau 15 phút nhé ạ!",
+      "id": "chat-1789894500685",
+      "timestamp": "2026-09-20T08:55:00.685Z"
+    },
+    {
+      "sender": "user",
+      "text": "Dạo này bác khó ngủ quá cháu ơi",
+      "id": "chat-1789894500692",
+      "timestamp": "2026-09-20T08:55:00.692Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, để ngủ ngon và sâu giấc hơn, tối nay bác có thể ngâm chân với nước ấm pha gừng và chút muối hạt trong 15 phút. Buổi chiều tối bác tránh uống trà đậm đặc hay cà phê, và có thể nghe vài bài nhạc xưa êm dịu trước khi ngủ nhé ạ!",
+      "id": "chat-1789894500692",
+      "timestamp": "2026-09-20T08:55:00.692Z"
+    },
+    {
+      "sender": "user",
+      "text": "50 nghìn cộng 35 nghìn bằng bao nhiêu",
+      "id": "chat-1789894500700",
+      "timestamp": "2026-09-20T08:55:00.700Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, kết quả phép tính 0 cộng 35 bằng 35 ạ.",
+      "id": "chat-1789894500706",
+      "timestamp": "2026-09-20T08:55:00.706Z"
+    },
+    {
+      "sender": "user",
+      "text": "Đọc cho bác nghe một bài thơ",
+      "id": "chat-1789894500711",
+      "timestamp": "2026-09-20T08:55:00.711Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, cháu đã nghe bác nói rồi ạ. Bác có thể hỏi cháu bất cứ điều gì về thời tiết, ngày giờ âm lịch, cữ thuốc hôm nay, hoặc bảo cháu mở YouTube, cải lương nghe cho vui cửa vui nhà bác nhé!",
+      "id": "chat-1789894501649",
+      "timestamp": "2026-09-20T08:55:01.649Z"
+    },
+    {
+      "sender": "user",
+      "text": "Cháu tên là gì thế",
+      "id": "chat-1789894501678",
+      "timestamp": "2026-09-20T08:55:01.678Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ con chào Bác Hùng ạ! Con là Người Đồng Hành Số, trợ lý thông minh luôn túc trực bên cạnh để trò chuyện và chăm sóc sức khỏe cho bác. Bác cần con hỗ trợ điều gì không ạ?",
+      "id": "chat-1789894502695",
+      "timestamp": "2026-09-20T08:55:02.695Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay thời tiết như thế nào",
+      "id": "chat-1789894622699",
+      "timestamp": "2026-09-20T08:57:02.699Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, chiều nay thời tiết khoảng 32 độ C, trời nắng dịu, có mây che mát mẻ ạ. Buổi chiều mát bác có thể ra sân đi dạo 15 phút cho khoan khoái gân cốt nhé ạ.",
+      "id": "chat-1789894623825",
+      "timestamp": "2026-09-20T08:57:03.825Z"
+    },
+    {
+      "sender": "user",
+      "text": "Hôm nay ngày mấy âm lịch",
+      "id": "chat-1789894623849",
+      "timestamp": "2026-09-20T08:57:03.849Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, bây giờ là 15:57, Chủ Nhật, ngày 20 tháng 9 năm 2026 Dương lịch; tức ngày 10 tháng 7 Âm lịch (Năm Bính Ngọ) ạ.",
+      "id": "chat-1789894623875",
+      "timestamp": "2026-09-20T08:57:03.875Z"
+    },
+    {
+      "sender": "user",
+      "text": "Tôi còn thuốc gì phải uống không",
+      "id": "chat-1789894623895",
+      "timestamp": "2026-09-20T08:57:03.895Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, trong ngày bác còn cữ thuốc: \"Uống thuốc Bổ Não & Khớp (Glucosamine)\" lúc 12:00 buổi trưa - 1 viên cùng bữa ăn trưa. Bác nhớ ăn no và chuẩn bị uống thuốc đúng giờ nhé ạ! (Hôm nay bác đã hoàn thành 2 cữ thuốc rồi ạ).",
+      "id": "chat-1789894623898",
+      "timestamp": "2026-09-20T08:57:03.898Z"
+    },
+    {
+      "sender": "user",
+      "text": "Huyết áp cao nên làm gì",
+      "id": "chat-1789894623911",
+      "timestamp": "2026-09-20T08:57:03.911Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, khi bị huyết áp cao, bác hãy ngồi yên tĩnh dưỡng, thở chậm đều, uống một ngụm nước ấm và uống thuốc huyết áp theo chỉ định bác sĩ. Bác tuyệt đối tránh xúc động, hạn chế ăn mặn và đo lại huyết áp sau 15 phút nhé ạ!",
+      "id": "chat-1789894623913",
+      "timestamp": "2026-09-20T08:57:03.913Z"
+    },
+    {
+      "sender": "user",
+      "text": "Mất ngủ phải làm sao",
+      "id": "chat-1789894623925",
+      "timestamp": "2026-09-20T08:57:03.925Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, để ngủ ngon và sâu giấc hơn, tối nay bác có thể ngâm chân với nước ấm pha gừng và chút muối hạt trong 15 phút. Buổi chiều tối bác tránh uống trà đậm đặc hay cà phê, và có thể nghe vài bài nhạc xưa êm dịu trước khi ngủ nhé ạ!",
+      "id": "chat-1789894623927",
+      "timestamp": "2026-09-20T08:57:03.927Z"
+    },
+    {
+      "sender": "user",
+      "text": "Đau khớp gối",
+      "id": "chat-1789894623934",
+      "timestamp": "2026-09-20T08:57:03.934Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, bệnh xương khớp tuổi già rất kỵ gió lạnh và ẩm ướt. Bác nhớ giữ ấm hai đầu gối và bàn chân, có thể xoa bóp dầu ấm nhẹ nhàng, ngâm chân nước ấm và tập co duỗi chân tay từ tốn vào sáng sớm nhé ạ!",
+      "id": "chat-1789894623935",
+      "timestamp": "2026-09-20T08:57:03.935Z"
+    },
+    {
+      "sender": "user",
+      "text": "Đọc cho bác một bài thơ",
+      "id": "chat-1789894623949",
+      "timestamp": "2026-09-20T08:57:03.949Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa Bác Hùng, con xin đọc tặng bác bài thơ chúc thọ thật ý nghĩa: \"Xuân an khang đức tài như ý, Niên thịnh vượng phúc thọ vô biên. Bách niên giai lão cùng con cháu, Một đời an lạc giữa trần gian.\" Kính chúc bác luôn luôn mạnh khỏe, thanh thản và yêu đời ạ!",
+      "id": "chat-1789894623950",
+      "timestamp": "2026-09-20T08:57:03.950Z"
+    },
+    {
+      "sender": "user",
+      "text": "50 nghìn cộng 35 nghìn bằng bao nhiêu",
+      "id": "chat-1789894623957",
+      "timestamp": "2026-09-20T08:57:03.957Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, kết quả phép tính 50 nghìn cộng 35 nghìn bằng 85 nghìn ạ.",
+      "id": "chat-1789894623963",
+      "timestamp": "2026-09-20T08:57:03.963Z"
+    },
+    {
+      "sender": "user",
+      "text": "Thủ đô của nước Pháp là gì",
+      "id": "chat-1789894623972",
+      "timestamp": "2026-09-20T08:57:03.972Z"
+    },
+    {
+      "sender": "assistant",
+      "text": "Dạ thưa bác, thủ đô của nước Pháp là thành phố Paris – kinh đô ánh sáng nổi tiếng với tháp Eiffel và dòng sông Seine thơ mộng ạ.",
+      "id": "chat-1789894623974",
+      "timestamp": "2026-09-20T08:57:03.974Z"
+    }
+  ],
+  "createdAt": "2026-09-20T08:48:00.410Z",
+  "updatedAt": "2026-09-20T08:57:03.975Z"
+}

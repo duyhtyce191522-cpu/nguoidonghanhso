@@ -516,6 +516,36 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       </div>
       <div className="quick-prompts-list">
         <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Hôm nay thời tiết thế nào?")}
+        >
+          🌤️ Hôm nay thời tiết thế nào?
+        </button>
+        <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Hôm nay ngày mấy âm lịch?")}
+        >
+          📅 Hôm nay ngày mấy âm lịch?
+        </button>
+        <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Tôi còn thuốc gì phải uống không?")}
+        >
+          💊 Tôi còn thuốc gì phải uống không?
+        </button>
+        <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Bị huyết áp cao thì nên làm gì?")}
+        >
+          🩺 Bị huyết áp cao nên làm gì?
+        </button>
+        <button
+          className="prompt-chip question-chip"
+          onClick={() => handlePromptClick("Đọc cho bác nghe một bài thơ")}
+        >
+          📜 Đọc cho bác nghe một bài thơ
+        </button>
+        <button
           className="prompt-chip app-youtube-chip"
           onClick={() => handlePromptClick("Mở YouTube xem cải lương")}
         >
@@ -532,30 +562,6 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
           onClick={() => handlePromptClick("Bật TikTok giải trí")}
         >
           🎵 Bật TikTok giải trí
-        </button>
-        <button
-          className="prompt-chip question-chip"
-          onClick={() => handlePromptClick("Trái đất cách mặt trời bao xa?")}
-        >
-          ❓ Trái đất cách mặt trời bao xa?
-        </button>
-        <button
-          className="prompt-chip question-chip"
-          onClick={() => handlePromptClick("Thủ đô của nước Pháp là gì?")}
-        >
-          🗼 Thủ đô của Pháp là gì?
-        </button>
-        <button
-          className="prompt-chip question-chip"
-          onClick={() => handlePromptClick("Hôm nay thời tiết thế nào?")}
-        >
-          🌤️ Hôm nay thời tiết thế nào?
-        </button>
-        <button
-          className="prompt-chip question-chip"
-          onClick={() => handlePromptClick("Tôi cần uống thuốc gì hôm nay?")}
-        >
-          💊 Tôi cần uống thuốc gì?
         </button>
         <button
           className="prompt-chip question-chip"
