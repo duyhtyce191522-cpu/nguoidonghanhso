@@ -48,7 +48,7 @@ jobs:
 
       - name: 8. Đóng gói file cài đặt Android APK (assembleDebug)
         working-directory: frontend/android
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: 9. Chuẩn bị file APK xuất bản
         run: |
