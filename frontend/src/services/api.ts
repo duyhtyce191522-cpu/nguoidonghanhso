@@ -179,6 +179,13 @@ export const api = {
     return data.news || [];
   },
 
+  async getNewsAudioDigest(): Promise<{ success: boolean; text: string; items: NewsItem[] }> {
+    const res = await fetch(`${BASE_URL}/news/digest`, {
+      headers: getHeaders()
+    });
+    return await res.json();
+  },
+
   // Guides
   async getGuides(): Promise<GuideItem[]> {
     const res = await fetch(`${BASE_URL}/guides`, {

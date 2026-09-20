@@ -2,6 +2,7 @@ import { DataStore, store as defaultStore } from './dataStore';
 import { knowledgeService } from './knowledgeService';
 import { weatherService } from './weatherService';
 import { lunarService } from './lunarService';
+import { newsService } from './newsService';
 
 export interface AIResponse {
   reply: string;
@@ -115,16 +116,21 @@ export class AIService {
     ) {
       return { reply: this.handleEmergencyQuery(greeting, store) };
     }
-
     // 7. News & Current Events (Tin tức, thời sự hôm nay)
     if (
       lower.includes('tin tức') ||
       lower.includes('thời sự') ||
       lower.includes('đọc báo') ||
       lower.includes('bản tin') ||
-      lower.includes('hôm nay có gì mới')
+      lower.includes('điểm báo') ||
+      lower.includes('đài phát thanh') ||
+      lower.includes('tin mới') ||
+      lower.includes('nghe tin') ||
+      (lower.includes('tin') && (lower.includes('mới') || lower.includes('hôm nay') || lower.includes('sức khỏe') || lower.includes('gì'))) ||
+      (lower.includes('hôm nay') && (lower.includes('có gì mới') || lower.includes('xảy ra gì') || lower.includes('có tin')))
     ) {
-      return { reply: this.handleNewsQuery(greeting, store) };
+      const digest = await newsService.getAudioNewsDigest(greeting);
+      return { reply: digest.text };
     }
 
     // 8. Vietnamese Poetry, Folk Proverbs & Verse (Thơ ca, Ca dao, Tục ngữ)

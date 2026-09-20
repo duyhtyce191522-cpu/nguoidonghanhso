@@ -7,7 +7,7 @@ import {
   updateReminder,
   deleteReminder
 } from '../controllers/reminderController';
-import { getNewsList, getSingleNews } from '../controllers/newsController';
+import { getNewsList, getSingleNews, getNewsAudioDigest } from '../controllers/newsController';
 import { getGuidesList, getSingleGuide } from '../controllers/guideController';
 import { triggerSOS, getContacts, addContact, deleteContact } from '../controllers/sosController';
 import { getCaregiverDashboard, updateProfile, getHealthLogs } from '../controllers/caregiverController';
@@ -44,6 +44,7 @@ router.put('/reminders/:id', updateReminder);
 router.delete('/reminders/:id', deleteReminder);
 
 // News
+router.get('/news/digest', getNewsAudioDigest);
 router.get('/news', getNewsList);
 router.get('/news/:id', getSingleNews);
 
