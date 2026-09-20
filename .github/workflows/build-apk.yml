@@ -27,28 +27,24 @@ jobs:
           node-version: 20
 
       - name: 4. Cài đặt thư viện Frontend
-        run: |
-          cd frontend
-          npm install
+        working-directory: frontend
+        run: npm install
 
       - name: 5. Biên dịch ứng dụng Frontend
-        run: |
-          cd frontend
-          npm run build
+        working-directory: frontend
+        run: npm run build
 
       - name: 6. Đồng bộ mã nguồn sang nền tảng Android Capacitor
-        run: |
-          cd frontend
-          npx cap sync android
+        working-directory: frontend
+        run: npm run cap:sync
 
       - name: 7. Cấp quyền thực thi cho Gradle
-        run: |
-          chmod +x frontend/android/gradlew
+        working-directory: frontend/android
+        run: chmod +x gradlew
 
       - name: 8. Đóng gói file cài đặt Android APK (assembleDebug)
-        run: |
-          cd frontend/android
-          ./gradlew assembleDebug --no-daemon --stacktrace
+        working-directory: frontend/android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: 9. Chuẩn bị file APK xuất bản
         run: |
