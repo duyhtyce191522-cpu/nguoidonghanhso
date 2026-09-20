@@ -18,7 +18,9 @@ import {
   setPin,
   verifyPin,
   pairFamilyCode,
-  getAccountInfo
+  getAccountInfo,
+  registerFamily,
+  loginFamily
 } from '../controllers/authController';
 
 const router = Router();
@@ -29,6 +31,8 @@ router.post('/auth/verify-otp', verifyOtp);
 router.post('/auth/set-pin', setPin);
 router.post('/auth/verify-pin', verifyPin);
 router.post('/auth/pair', pairFamilyCode);
+router.post('/auth/register', registerFamily);
+router.post('/auth/login', loginFamily);
 router.get('/auth/account', getAccountInfo);
 
 // AI Chat & Voice TTS

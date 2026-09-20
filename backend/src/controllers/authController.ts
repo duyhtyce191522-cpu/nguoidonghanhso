@@ -160,3 +160,69 @@ export const getAccountInfo = (req: Request, res: Response) => {
     contactsCount: store.getContacts().length
   });
 };
+
+export const registerFamily = (req: Request, res: Response) => {
+  const { phone, pin, profile, contact } = req.body;
+  const targetPhone = cleanPhone(phone);
+  if (!targetPhone || targetPhone.length < 9) {
+    return res.status(400).json({ success: false, error: 'Số điện thoại không hợp lệ (tối thiểu 9 số)' });
+  }
+  if (!pin || pin.length < 4) {
+    return res.status(400).json({ success: false, error: 'Mã PIN bảo vệ tối thiểu 4 chữ số' });
+  }
+
+  const userStore = getUserStore(targetPhone);
+  userStore.setPin(pin);
+
+  if (profile) {
+    userStore.updateProfile({
+      fullName: profile.fullName || 'Người Thân Yêu',
+      preferredGreeting: profile.preferredGreeting || 'Bác',
+      birthYear: profile.birthYear || 1952,
+      healthNotes: profile.healthNotes || ''
+    });
+  }
+
+  if (contact && contact.phone) {
+    userStore.addContact({
+      name: contact.name || 'Người nhà',
+      relation: contact.relation || 'Con cái',
+      phone: contact.phone,
+      isPrimary: true
+    });
+  }
+
+  return res.json({
+    success: true,
+    message: 'Khởi tạo hồ sơ gia đình thành công!',
+    phone: targetPhone,
+    pin,
+    familyCode: userStore.getFamilyCode(),
+    profile: userStore.getProfile()
+  });
+};
+
+export const loginFamily = (req: Request, res: Response) => {
+  const { phone, pin } = req.body;
+  const targetPhone = cleanPhone(phone);
+  if (!targetPhone) {
+    return res.status(400).json({ success: false, error: 'Vui lòng nhập số điện thoại' });
+  }
+
+  const userStore = getUserStore(targetPhone);
+  const correctPin = userStore.getPin();
+
+  if (correctPin && correctPin !== pin) {
+    return res.status(401).json({ success: false, error: 'Mã PIN bảo vệ không chính xác' });
+  }
+
+  return res.json({
+    success: true,
+    message: 'Đăng nhập thành công!',
+    phone: targetPhone,
+    pin: correctPin || pin,
+    familyCode: userStore.getFamilyCode(),
+    profile: userStore.getProfile()
+  });
+};
+

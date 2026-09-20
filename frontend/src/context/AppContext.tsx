@@ -27,6 +27,7 @@ interface AppContextType {
   familyRole: FamilyRole | null;
   familyCode: string;
   isRegistered: boolean;
+  loginWithPhoneAndPin: (phone: string, pin: string, role: FamilyRole, profileData?: SeniorProfile) => void;
   loginCaregiver: (phone: string, pin: string, familyCode?: string) => void;
   pairSenior: (phone: string, familyCode: string, newProfile?: SeniorProfile) => void;
   logout: () => void;
@@ -80,6 +81,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCaregiverPinState(pin);
     localStorage.setItem('caregiver_pin', pin);
     api.setPin(pin, userPhone).catch(e => console.warn("Failed to sync PIN with server", e));
+  };
+
+  const loginWithPhoneAndPin = (phone: string, pin: string, role: FamilyRole, profileData?: SeniorProfile) => {
+    setUserPhone(phone);
+    setFamilyRole(role);
+    setCaregiverPinState(pin);
+    localStorage.setItem('user_phone', phone);
+    localStorage.setItem('family_role', role);
+    localStorage.setItem('caregiver_pin', pin);
+    if (profileData) {
+      setProfile(profileData);
+    }
+    setMode(role);
+    setShowOnboarding(false);
+    refreshProfile();
   };
 
   const loginCaregiver = (phone: string, pin: string, code?: string) => {
@@ -183,6 +199,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         familyRole,
         familyCode,
         isRegistered,
+        loginWithPhoneAndPin,
         loginCaregiver,
         pairSenior,
         logout,

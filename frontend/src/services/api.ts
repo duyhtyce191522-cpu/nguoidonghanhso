@@ -1,6 +1,6 @@
 import { Reminder, NewsItem, GuideItem, EmergencyContact, HealthLog, SeniorProfile, CaregiverStats } from '../types';
 
-const BASE_URL = '/api';
+const BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || '/api';
 
 const getHeaders = (extraHeaders?: Record<string, string>): Record<string, string> => {
   const headers: Record<string, string> = {
@@ -16,6 +16,45 @@ const getHeaders = (extraHeaders?: Record<string, string>): Record<string, strin
 
 export const api = {
   // Authentication & Pairing
+  async registerFamily(data: {
+    phone: string;
+    pin: string;
+    profile?: SeniorProfile;
+    contact?: { name: string; relation: string; phone: string };
+  }): Promise<{
+    success: boolean;
+    message?: string;
+    phone?: string;
+    pin?: string;
+    familyCode?: string;
+    profile?: SeniorProfile;
+    error?: string;
+  }> {
+    const res = await fetch(`${BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return await res.json();
+  },
+
+  async loginFamily(phone: string, pin: string): Promise<{
+    success: boolean;
+    message?: string;
+    phone?: string;
+    pin?: string;
+    familyCode?: string;
+    profile?: SeniorProfile;
+    error?: string;
+  }> {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, pin })
+    });
+    return await res.json();
+  },
+
   async sendOtp(phone: string): Promise<{
     success: boolean;
     message: string;

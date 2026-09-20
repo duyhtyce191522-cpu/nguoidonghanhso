@@ -2,18 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { audioFeedback, speechService } from '../../services/speechService';
 import { EmergencyContact } from '../../types';
-import { AlertTriangle, PhoneCall, X, ShieldCheck, Ambulance } from 'lucide-react';
+import { AlertTriangle, PhoneCall, MessageSquare, Ambulance, MapPin } from 'lucide-react';
 
 export const SOSButton: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const [isAlerting, setIsAlerting] = useState(false);
   const [contactCalled, setContactCalled] = useState<EmergencyContact | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  const fetchLocation = () => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserLocation({
+            lat: Number(pos.coords.latitude.toFixed(6)),
+            lng: Number(pos.coords.longitude.toFixed(6))
+          });
+        },
+        (err) => {
+          console.warn('Geolocation error / permission ignored:', err);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 60000 }
+      );
+    }
+  };
 
   const handleOpenSOS = () => {
     setShowConfirm(true);
     setCountdown(3);
     setIsAlerting(false);
+    fetchLocation();
     audioFeedback.playSOSTone();
   };
 
@@ -32,9 +51,13 @@ export const SOSButton: React.FC = () => {
   const triggerEmergency = async () => {
     setIsAlerting(true);
     audioFeedback.playSOSTone();
-    speechService.speak("Đang kích hoạt cuộc gọi khẩn cấp tới người nhà và cấp cứu!");
+    speechService.speak("Đang kích hoạt cuộc gọi và tin nhắn khẩn cấp gửi tới người nhà và cấp cứu!");
     try {
-      const res = await api.triggerSOS("Bác bấm nút khẩn cấp SOS trên ứng dụng");
+      const locationText = userLocation
+        ? `Tọa độ vị trí: ${userLocation.lat}, ${userLocation.lng} (Bản đồ: https://maps.google.com/?q=${userLocation.lat},${userLocation.lng})`
+        : 'Vị trí hiện tại của gia đình';
+
+      const res = await api.triggerSOS(`Bác bấm nút khẩn cấp SOS trên ứng dụng. ${locationText}`);
       if (res && res.contactToCall) {
         setContactCalled(res.contactToCall);
       }
@@ -48,6 +71,14 @@ export const SOSButton: React.FC = () => {
     setIsAlerting(false);
     speechService.stopSpeaking();
   };
+
+  const rawPhone = contactCalled?.phone || '0912345678';
+  const cleanPhone = rawPhone.replace(/[\s\-\.]/g, '');
+  const locationUrl = userLocation
+    ? `https://maps.google.com/?q=${userLocation.lat},${userLocation.lng}`
+    : '';
+  const smsBodyText = `[CỨU HỘ KHẨN CẤP SOS] Người nhà đang cần trợ giúp khẩn cấp!${locationUrl ? ` Vị trí hiện tại: ${locationUrl}` : ''}`;
+  const smsLink = `sms:${cleanPhone}?body=${encodeURIComponent(smsBodyText)}`;
 
   return (
     <div id="sos-section" style={{ marginTop: '18px' }}>
@@ -75,7 +106,7 @@ export const SOSButton: React.FC = () => {
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
-            style={{ textAlign: 'center', border: '3px solid #DC2626' }}
+            style={{ textAlign: 'center', border: '3px solid #DC2626', maxWidth: '440px' }}
           >
             {!isAlerting ? (
               <div>
@@ -98,10 +129,10 @@ export const SOSButton: React.FC = () => {
                 </h3>
 
                 <p style={{ fontSize: '1.05rem', color: '#1E293B', marginBottom: '16px', lineHeight: 1.5 }}>
-                  Ứng dụng sẽ tự động gọi cho người thân sau <strong>{countdown}</strong> giây!
+                  Ứng dụng sẽ tự động kích hoạt cuộc gọi & tin nhắn cứu hộ sau <strong>{countdown}</strong> giây!
                 </p>
 
-                <div style={{ fontSize: '2.8rem', fontWeight: 900, color: '#DC2626', marginBottom: '20px' }}>
+                <div style={{ fontSize: '3rem', fontWeight: 900, color: '#DC2626', marginBottom: '20px' }}>
                   {countdown}
                 </div>
 
@@ -157,7 +188,7 @@ export const SOSButton: React.FC = () => {
                   <PhoneCall size={42} className="animate-pulse" />
                 </div>
 
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#991B1B', marginBottom: '6px' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#991B1B', marginBottom: '6px' }}>
                   ĐANG KẾT NỐI CUỘC GỌI CỨU HỘ!
                 </h3>
 
@@ -165,25 +196,29 @@ export const SOSButton: React.FC = () => {
                   background: '#FEF2F2',
                   border: '2px solid #FECACA',
                   borderRadius: '14px',
-                  padding: '16px',
-                  margin: '16px 0',
+                  padding: '14px',
+                  margin: '14px 0',
                   textAlign: 'left'
                 }}>
                   <div style={{ fontSize: '1rem', fontWeight: 800, color: '#991B1B', marginBottom: '3px' }}>
                     📞 Người nhận: {contactCalled?.name || 'Nguyễn Thị Mai Lan (Con gái)'}
                   </div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#1E293B', marginBottom: '6px' }}>
-                    Số điện thoại: {contactCalled?.phone || '0912 345 678'}
+                    Số điện thoại: {contactCalled?.phone || rawPhone}
                   </div>
-                  <div style={{ fontSize: '0.88rem', color: '#64748B' }}>
-                    ✓ Đã gửi tin nhắn cảnh báo khẩn cấp tới người thân.
-                  </div>
+                  {userLocation && (
+                    <div style={{ fontSize: '0.88rem', color: '#047857', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}>
+                      <MapPin size={16} />
+                      <span>Đã gắn vị trí GPS tọa độ: {userLocation.lat}, {userLocation.lng}</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Direct emergency telephone links */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
+                {/* Direct emergency telephone & SMS actions */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
+                  {/* Call Direct */}
                   <a
-                    href={`tel:${contactCalled?.phone || '0912345678'}`}
+                    href={`tel:${cleanPhone}`}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -195,13 +230,37 @@ export const SOSButton: React.FC = () => {
                       padding: '14px',
                       borderRadius: '12px',
                       fontSize: '1.1rem',
-                      fontWeight: 800
+                      fontWeight: 800,
+                      boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
                     }}
                   >
-                    <PhoneCall size={20} />
-                    <span>Bấm Để Quay Số Trực Tiếp</span>
+                    <PhoneCall size={22} />
+                    <span>Bấm Để Gọi Ngay Cho Người Thân</span>
                   </a>
 
+                  {/* SMS with Location */}
+                  <a
+                    href={smsLink}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      background: '#2563EB',
+                      color: 'white',
+                      textDecoration: 'none',
+                      padding: '14px',
+                      borderRadius: '12px',
+                      fontSize: '1.05rem',
+                      fontWeight: 800,
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
+                    }}
+                  >
+                    <MessageSquare size={22} />
+                    <span>Gửi Tin Nhắn Khẩn Cấp Kèm Vị Trí</span>
+                  </a>
+
+                  {/* Ambulance 115 */}
                   <a
                     href="tel:115"
                     style={{
@@ -214,18 +273,19 @@ export const SOSButton: React.FC = () => {
                       textDecoration: 'none',
                       padding: '14px',
                       borderRadius: '12px',
-                      fontSize: '1.1rem',
+                      fontSize: '1.05rem',
                       fontWeight: 800
                     }}
                   >
-                    <Ambulance size={20} />
-                    <span>Gọi Cấp Cứu 115</span>
+                    <Ambulance size={22} />
+                    <span>Gọi Cấp Cứu Y Tế 115</span>
                   </a>
                 </div>
 
                 <button
                   onClick={handleCancel}
                   style={{
+                    width: '100%',
                     padding: '12px 20px',
                     borderRadius: '10px',
                     background: '#F1F5F9',

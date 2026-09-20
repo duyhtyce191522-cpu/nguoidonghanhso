@@ -1,50 +1,115 @@
-// Web Notification & Medication Reminder Scheduler Service
+// Web & Native Capacitor Local Notification & Medication Reminder Scheduler Service
 
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { Reminder } from '../types';
 import { speechService } from './speechService';
 
 class NotificationService {
   private notifiedRemindersToday: Set<string> = new Set();
   private schedulerInterval: any = null;
+  private isNative: boolean = false;
+  private channelCreated: boolean = false;
 
   constructor() {
-    this.listenToServiceWorkerMessages();
+    this.isNative = Capacitor.isNativePlatform();
+    this.init();
+  }
+
+  private async init() {
+    if (this.isNative) {
+      await this.setupNativeChannel();
+      this.listenToNativeNotificationAction();
+    } else {
+      this.listenToServiceWorkerMessages();
+    }
+  }
+
+  // Setup High-Priority Android Notification Channel (Loud Sound, Vibrate, Lock Screen)
+  private async setupNativeChannel() {
+    try {
+      await LocalNotifications.createChannel({
+        id: 'medication_alarms',
+        name: 'Chuông Báo Uống Thuốc Khẩn Thiết',
+        description: 'Thông báo to rõ, rung mạnh trên màn hình khóa khi đến giờ uống thuốc',
+        importance: 5, // 5 = Urgent / High priority on Android
+        visibility: 1, // 1 = Public (Display full notification on lock screen)
+        vibration: true,
+        lights: true,
+        lightColor: '#DC2626'
+      });
+      this.channelCreated = true;
+    } catch (e) {
+      console.warn('Native notification channel creation failed:', e);
+    }
   }
 
   isSupported(): boolean {
+    if (this.isNative) return true;
     return 'Notification' in window;
   }
 
-  getPermission(): NotificationPermission {
-    if (!this.isSupported()) return 'denied';
+  getPermission(): string {
+    if (this.isNative) return 'granted';
+    if (!('Notification' in window)) return 'denied';
     return Notification.permission;
   }
 
   async requestPermission(): Promise<boolean> {
-    if (!this.isSupported()) return false;
+    if (this.isNative) {
+      try {
+        const res = await LocalNotifications.requestPermissions();
+        return res.display === 'granted';
+      } catch (e) {
+        console.warn('Native permission request failed:', e);
+        return false;
+      }
+    }
+
+    if (!('Notification' in window)) return false;
     try {
       const permission = await Notification.requestPermission();
       return permission === 'granted';
     } catch (e) {
-      console.warn('Error requesting notification permission:', e);
+      console.warn('Web notification permission request failed:', e);
       return false;
     }
   }
 
-  // Trigger a standard system notification with vibration
+  // Trigger a system notification (works on both Native Android and Web)
   async sendNotification(title: string, options: {
     body: string;
     tag?: string;
     data?: any;
     vibrate?: number[];
   }): Promise<boolean> {
-    if (!this.isSupported()) return false;
+    const granted = await this.requestPermission();
+    if (!granted) return false;
 
-    if (Notification.permission !== 'granted') {
-      const granted = await this.requestPermission();
-      if (!granted) return false;
+    if (this.isNative) {
+      try {
+        const numericId = Math.floor(Math.random() * 1000000) + 1;
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              id: numericId,
+              title,
+              body: options.body,
+              channelId: 'medication_alarms',
+              schedule: { at: new Date(Date.now() + 500), allowWhileIdle: true },
+              extra: options.data || {},
+              smallIcon: 'ic_launcher',
+              iconColor: '#059669'
+            }
+          ]
+        });
+        return true;
+      } catch (e) {
+        console.warn('Native notification schedule error:', e);
+      }
     }
 
+    // Web Browser fallback
     const notificationOptions: any = {
       body: options.body,
       icon: '/icon.svg',
@@ -52,22 +117,20 @@ class NotificationService {
       tag: options.tag || 'medication-reminder',
       vibrate: options.vibrate || [200, 100, 200, 100, 300],
       data: options.data || {},
-      requireInteraction: true // Keep on screen until acknowledged
+      requireInteraction: true
     };
 
     try {
-      // Use Service Worker registration if available (preferred on Android & Chrome)
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
         await registration.showNotification(title, notificationOptions);
         return true;
       }
     } catch (e) {
-      console.warn('Service worker notification failed, falling back to Notification API:', e);
+      console.warn('Service worker notification failed:', e);
     }
 
     try {
-      // Fallback to standard window Notification
       const notif = new Notification(title, notificationOptions);
       notif.onclick = () => {
         window.focus();
@@ -77,40 +140,102 @@ class NotificationService {
       };
       return true;
     } catch (e) {
-      console.warn('Notification failed:', e);
+      console.warn('Web notification failed:', e);
       return false;
     }
   }
 
-  // Send a quick test notification to verify bell and vibration
+  // Send test notification to verify bell and vibration
   async sendTestNotification(): Promise<boolean> {
     const success = await this.sendNotification('💊 [Thử Nghiệm] Đã đến giờ uống thuốc Huyết Áp!', {
       body: 'Liều dùng: 1 viên sau ăn sáng. Nhớ uống cùng nước ấm bác nhé!',
-      vibrate: [200, 100, 200],
+      vibrate: [250, 100, 250, 100, 400],
       data: {
         title: 'Huyết Áp (Amlodipine)'
       }
     });
 
     if (success) {
-      speechService.speak("Đã kích hoạt thông báo thử nghiệm thành công!");
+      speechService.speak("Đã kích hoạt chuông báo nhắc thuốc thử nghiệm thành công!");
     }
     return success;
   }
 
-  // Start background scheduler that checks every 30 seconds
+  // Schedule native recurring daily alarms for all active reminders
+  async scheduleAllRemindersNatively(reminders: Reminder[]) {
+    if (!this.isNative) return;
+
+    try {
+      // Cancel previous pending reminders before rescheduling
+      const pending = await LocalNotifications.getPending();
+      if (pending.notifications.length > 0) {
+        await LocalNotifications.cancel({ notifications: pending.notifications });
+      }
+
+      const notifsToSchedule = [];
+      const now = new Date();
+
+      for (let i = 0; i < reminders.length; i++) {
+        const rem = reminders[i];
+        if (rem.completed) continue;
+
+        const parts = rem.time.split(':');
+        if (parts.length !== 2) continue;
+        const targetHours = parseInt(parts[0], 10);
+        const targetMinutes = parseInt(parts[1], 10);
+
+        const scheduledTime = new Date();
+        scheduledTime.setHours(targetHours, targetMinutes, 0, 0);
+
+        // If today's time has already passed, schedule for tomorrow
+        if (scheduledTime.getTime() <= now.getTime()) {
+          scheduledTime.setDate(scheduledTime.getDate() + 1);
+        }
+
+        notifsToSchedule.push({
+          id: (i + 1) * 1000 + targetHours * 60 + targetMinutes,
+          title: `💊 Bác ơi, đến giờ uống: ${rem.title}!`,
+          body: `Thời gian: ${rem.time} • Liều: ${rem.dosage || 'Theo chỉ định'}. ${rem.note || 'Nhớ uống nước ấm bác nhé!'}`,
+          channelId: 'medication_alarms',
+          schedule: {
+            at: scheduledTime,
+            repeats: true,
+            every: 'day' as const,
+            allowWhileIdle: true
+          },
+          extra: {
+            reminderId: rem.id,
+            title: rem.title
+          },
+          smallIcon: 'ic_launcher',
+          iconColor: '#059669'
+        });
+      }
+
+      if (notifsToSchedule.length > 0) {
+        await LocalNotifications.schedule({ notifications: notifsToSchedule });
+        console.log(`[NotificationService] Scheduled ${notifsToSchedule.length} native alarms.`);
+      }
+    } catch (e) {
+      console.warn('Failed to schedule native recurring alarms:', e);
+    }
+  }
+
+  // Foreground polling scheduler (runs when app is active)
   startScheduler(getReminders: () => Reminder[]) {
     if (this.schedulerInterval) {
       clearInterval(this.schedulerInterval);
     }
 
-    // Reset daily notifications cache at midnight
+    // Schedule native alarms once when reminders update
+    const initialReminders = getReminders();
+    this.scheduleAllRemindersNatively(initialReminders);
+
     const now = new Date();
     const todayDateString = now.toDateString();
 
     this.schedulerInterval = setInterval(() => {
       const currentNow = new Date();
-      // Clear cache if day changed
       if (currentNow.toDateString() !== todayDateString) {
         this.notifiedRemindersToday.clear();
       }
@@ -124,13 +249,11 @@ class NotificationService {
       const reminders = getReminders();
 
       for (const rem of reminders) {
-        // If reminder is scheduled for current minute and not completed and not yet notified
         if (rem.time === currentTimeStr && !rem.completed) {
           const cacheKey = `${todayDateString}-${rem.id}-${rem.time}`;
           if (!this.notifiedRemindersToday.has(cacheKey)) {
             this.notifiedRemindersToday.add(cacheKey);
 
-            // Fire standard system notification
             this.sendNotification(`💊 Bác ơi, đến giờ uống: ${rem.title}!`, {
               body: `Thời gian: ${rem.time} • Liều: ${rem.dosage || 'Theo chỉ định'}. ${rem.note || 'Nhớ uống nước ấm bác nhé!'}`,
               tag: `reminder-${rem.id}`,
@@ -143,7 +266,7 @@ class NotificationService {
           }
         }
       }
-    }, 25000); // Check every 25 seconds
+    }, 25000);
   }
 
   stopScheduler() {
@@ -153,18 +276,33 @@ class NotificationService {
     }
   }
 
-  // Listen to messages from Service Worker when user clicks a notification
+  // Listen to native tap actions
+  private listenToNativeNotificationAction() {
+    try {
+      LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction) => {
+        const extra = notificationAction.notification.extra;
+        const el = document.getElementById('reminders-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (extra && extra.title) {
+          speechService.speak(`Bác ơi, đã đến giờ uống thuốc ${extra.title} rồi nhé ạ! Bác uống xong nhớ bấm xác nhận đã uống nhé.`);
+        }
+      });
+    } catch (e) {
+      console.warn('Native notification listener registration failed:', e);
+    }
+  }
+
   private listenToServiceWorkerMessages() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'NOTIFICATION_CLICKED') {
           const rem = event.data.reminder;
-          // Smooth scroll to reminders section
           const el = document.getElementById('reminders-section');
           if (el) {
             el.scrollIntoView({ behavior: 'smooth' });
           }
-          // Speak aloud in Vietnamese
           if (rem && rem.title) {
             speechService.speak(`Bác ơi, đã đến giờ uống thuốc ${rem.title} rồi nhé ạ! Bác uống xong nhớ bấm xác nhận đã uống nhé.`);
           }
